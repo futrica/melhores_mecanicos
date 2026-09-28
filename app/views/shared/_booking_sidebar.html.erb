@@ -1,0 +1,145 @@
+<%# app/views/shared/_booking_sidebar.html.erb %>
+<%
+  current_state_id = params[:state_id].presence || @state&.id
+  current_city_ids = Array(params[:city_ids] || params[:city_id]).reject(&:blank?)
+  current_city_ids = [ @city.id.to_s ] if current_city_ids.empty? && @city.present?
+
+  current_neighborhood_ids = Array(params[:neighborhood_ids] || params[:neighborhood_id]).reject(&:blank?)
+  current_neighborhood_ids = [ @neighborhood.id.to_s ] if current_neighborhood_ids.empty? && @neighborhood.present?
+
+  sidebar_scope = Company.where(status: "Ativa")
+  sidebar_scope = sidebar_scope.where(state_id: current_state_id) if current_state_id.present?
+  sidebar_scope = sidebar_scope.where(city_id: current_city_ids) if current_city_ids.any?
+  sidebar_scope = sidebar_scope.where(neighborhood_id: current_neighborhood_ids) if current_neighborhood_ids.any?
+
+  phone_count = sidebar_scope.where("phone_1 IS NOT NULL AND phone_1 != '' OR phone_2 IS NOT NULL AND phone_2 != ''").count
+  category_counts = sidebar_scope.joins(:categories).group("categories.slug").count
+
+  selected_categories = params[:categories].present? ? Array(params[:categories]).map(&:to_s).reject(&:blank?) : (params[:category].present? && params[:category] != 'all' ? [params[:category].to_s] : [])
+  selected_rating_ranges = Array(params[:rating_ranges]).map(&:to_s).reject(&:blank?)
+  selected_rating_ranges << params[:min_rating].to_s if selected_rating_ranges.empty? && params[:min_rating].present?
+
+  rating_scope = sidebar_scope
+  if selected_categories.any?
+    cat_ids = Category.where(slug: selected_categories).pluck(:id)
+    if cat_ids.any?
+      rating_scope = rating_scope.where(
+        "companies.id IN (SELECT company_id FROM categories_companies WHERE category_id IN (?))",
+        cat_ids
+      )
+    end
+  end
+
+  if params[:q].present?
+    query = "%#{params[:q]}%"
+    rating_scope = rating_scope.where(
+      "companies.trade_name LIKE ? OR companies.legal_name LIKE ? OR companies.cnpj LIKE ?",
+      query, query, query
+    )
+  end
+
+  rating_48_count = rating_scope.where("companies.id IN (SELECT company_id FROM reviews GROUP BY company_id HAVING AVG(rating) >= 4.8 AND AVG(rating) <= 5.0)").count
+  rating_45_count = rating_scope.where("companies.id IN (SELECT company_id FROM reviews GROUP BY company_id HAVING AVG(rating) >= 4.5 AND AVG(rating) < 4.8)").count
+  rating_40_count = rating_scope.where("companies.id IN (SELECT company_id FROM reviews GROUP BY company_id HAVING AVG(rating) >= 4.0 AND AVG(rating) < 4.5)").count
+  rating_35_count = rating_scope.where("companies.id IN (SELECT company_id FROM reviews GROUP BY company_id HAVING AVG(rating) >= 3.5 AND AVG(rating) < 4.0)").count
+  rating_10_count = rating_scope.where("companies.id IN (SELECT company_id FROM reviews GROUP BY company_id HAVING AVG(rating) >= 1.0 AND AVG(rating) < 3.5)").count
+
+  onchange_submit = "onchange=\"setTimeout(() => { if(this.form) { this.form.requestSubmit ? this.form.requestSubmit() : this.form.submit(); } }, 10)\"".html_safe
+%>
+<aside class="w-full lg:w-80 flex-shrink-0 space-y-4 font-sans text-slate-800">
+  
+  <!-- Filters Box -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm divide-y divide-slate-100 space-y-4">
+    
+    <div class="flex items-center justify-between pb-1">
+      <h3 class="font-extrabold text-slate-900 text-base">Filtrar por:</h3>
+      <a href="<%= request.path %>" class="text-xs font-bold text-[#006ce4] hover:underline">Limpar tudo</a>
+    </div>
+
+    <form action="<%= request.path %>" method="get" id="booking-sidebar-filter-form" data-turbo="false">
+      <% if params[:q].present? %>
+        <input type="hidden" name="q" value="<%= params[:q] %>">
+      <% end %>
+      <% if current_state_id.present? %>
+        <input type="hidden" name="state_id" value="<%= current_state_id %>">
+      <% end %>
+      <% if current_city_ids.first.present? %>
+        <input type="hidden" name="city_id" value="<%= current_city_ids.first %>">
+      <% end %>
+
+      <!-- 1. Filtros Populares -->
+      <div class="py-4 space-y-3">
+        <h4 class="font-extrabold text-slate-900 text-sm">Filtros populares</h4>
+        <div class="space-y-2 text-xs font-medium text-slate-700">
+          
+          <% is_phone_disabled = (phone_count == 0) %>
+          <label class="flex items-center justify-between <%= is_phone_disabled ? 'opacity-40 cursor-not-allowed text-slate-400 line-through select-none' : 'cursor-pointer hover:text-slate-900 group' %>">
+            <div class="flex items-center gap-2.5">
+              <input type="checkbox" name="only_phone" value="1" <%= params[:only_phone] == '1' ? 'checked' : '' %> <%= is_phone_disabled ? 'disabled' : onchange_submit %> class="w-4 h-4 rounded border-slate-300 accent-[#006ce4] <%= is_phone_disabled ? 'cursor-not-allowed bg-slate-100 opacity-60' : 'cursor-pointer' %>">
+              <span>WhatsApp / Contato Direto</span>
+            </div>
+            <span class="text-[11px] <%= is_phone_disabled ? 'text-slate-300' : 'text-slate-500' %> font-semibold"><%= number_with_delimiter(phone_count) %></span>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- 2. Pontuação da Avaliação -->
+      <div class="py-4 space-y-3">
+        <h4 class="font-extrabold text-slate-900 text-sm">Pontuação da Avaliação</h4>
+        <div class="space-y-2 text-xs font-medium text-slate-700">
+          <% [
+            { val: "4.8-5.0", label: "Excelente: 4.8 a 5.0", count: rating_48_count },
+            { val: "4.5-4.7", label: "Fabuloso: 4.5 a 4.7", count: rating_45_count },
+            { val: "4.0-4.4", label: "Muito bom: 4.0 a 4.4", count: rating_40_count },
+            { val: "3.5-3.9", label: "Bom: 3.5 a 3.9", count: rating_35_count },
+            { val: "1.0-3.4", label: "Regular: abaixo de 3.5", count: rating_10_count }
+          ].each do |opt| %>
+            <% is_disabled = (opt[:count] == 0) %>
+            <% is_checked = selected_rating_ranges.include?(opt[:val]) %>
+            <label class="flex items-center justify-between <%= is_disabled ? 'opacity-40 cursor-not-allowed text-slate-400 line-through select-none' : 'cursor-pointer hover:text-slate-900 group' %>">
+              <div class="flex items-center gap-2.5">
+                <input type="checkbox" name="rating_ranges[]" value="<%= opt[:val] %>" <%= is_checked ? 'checked' : '' %> <%= is_disabled ? 'disabled' : onchange_submit %> class="w-4 h-4 rounded border-slate-300 accent-[#006ce4] <%= is_disabled ? 'cursor-not-allowed bg-slate-100 opacity-60' : 'cursor-pointer' %>">
+                <span><%= opt[:label] %></span>
+              </div>
+              <span class="text-[11px] <%= is_disabled ? 'text-slate-300' : 'text-slate-500' %> font-semibold"><%= number_with_delimiter(opt[:count]) %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- 3. Tipos de Categoria -->
+      <div class="py-4 space-y-3">
+        <h4 class="font-extrabold text-slate-900 text-sm">Categorias</h4>
+        <div class="space-y-2 text-xs font-medium text-slate-700">
+          <% grouped_categories.each do |group_name, categories| %>
+            <% categories.each do |cat| %>
+              <% count = category_counts[cat.slug] || 0 %>
+              <% is_disabled = (count == 0) %>
+              <% is_checked = selected_categories.include?(cat.slug) %>
+              <label class="flex items-center justify-between <%= is_disabled ? 'opacity-40 cursor-not-allowed text-slate-400 line-through select-none' : 'cursor-pointer hover:text-slate-900 group' %>">
+                <div class="flex items-center gap-2.5">
+                  <input type="checkbox" name="categories[]" value="<%= cat.slug %>" <%= is_checked ? 'checked' : '' %> <%= is_disabled ? 'disabled' : onchange_submit %> class="w-4 h-4 rounded border-slate-300 accent-[#006ce4] <%= is_disabled ? 'cursor-not-allowed bg-slate-100 opacity-60' : 'cursor-pointer' %>">
+                  <span><%= cat.name %></span>
+                </div>
+                <span class="text-[11px] <%= is_disabled ? 'text-slate-300' : 'text-slate-500' %> font-semibold"><%= number_with_delimiter(count) %></span>
+              </label>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Aplicar Filtros Submit Button -->
+      <div class="pt-4 pb-2">
+        <button type="submit" class="w-full py-2.5 bg-[#006ce4] hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+          <span>🔍</span>
+          <span>Aplicar Filtros</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- AdSense Sidebar Slot -->
+  <%= adsense_ad_tag(:sidebar) %>
+</aside>

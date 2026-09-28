@@ -1,0 +1,56 @@
+<div style="max-width: 600px; margin: 40px auto; padding: 0 1rem;">
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 2.5rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h1 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem;">
+        Descadastramento de E-mails
+      </h1>
+      <p style="color: #64748b; font-size: 0.95rem;">
+        Hospedagem Direta
+      </p>
+    </div>
+
+    <% if @opt_out.present? %>
+      <p style="color: #334155; font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem;">
+        Você está descadastrando o e-mail <strong><%= @opt_out.email %></strong> do recebimento de notificações e apresentações de perfis de empresas.
+      </p>
+
+      <%= form_with url: unsubscribe_path(token: @token), method: :post, local: true do |f| %>
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: block; font-weight: 600; color: #0f172a; margin-bottom: 0.75rem; font-size: 0.95rem;">
+            Por qual motivo você prefere não receber mais nossos e-mails?
+          </label>
+
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <% CompanyEmailOptOut::REASONS.each do |key, label| %>
+              <label style="display: flex; align-items: center; gap: 0.75rem; background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.75rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                <%= f.radio_button :reason, key, checked: (key == 'not_interested'), style: "accent-color: #2563eb;" %>
+                <span style="font-size: 0.9rem; color: #334155;"><%= label %></span>
+              </label>
+            <% end %>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+          <label style="display: block; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem; font-size: 0.95rem;">
+            Comentário ou feedback adicional (opcional):
+          </label>
+          <%= f.text_area :feedback, rows: 3, style: "width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.75rem; font-size: 0.9rem; font-family: inherit;", placeholder: "Escreva aqui se desejar nos dar mais detalhes..." %>
+        </div>
+
+        <button type="submit" style="width: 100%; background: #dc2626; color: #ffffff; font-weight: 700; border: none; padding: 0.875rem; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: background 0.2s;">
+          Confirmar Descadastramento
+        </button>
+      <% end %>
+    <% else %>
+      <div style="text-align: center; padding: 1.5rem 0;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+        <p style="color: #64748b; font-size: 1rem; margin-bottom: 1.5rem;">
+          Link de descadastramento não encontrado ou expirado.
+        </p>
+        <a href="/" style="display: inline-block; background: #2563eb; color: #ffffff; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600;">
+          Voltar para a Página Inicial
+        </a>
+      </div>
+    <% end %>
+  </div>
+</div>

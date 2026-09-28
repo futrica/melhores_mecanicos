@@ -1,0 +1,119 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.stripe.com/v1/customers
+    body:
+      encoding: UTF-8
+      string: email=pousada%40teste.com&name=Pousada+Realtime+VCR&metadata[company_id]=844074111
+    headers:
+      User-Agent:
+      - Stripe/v1 RubyBindings/19.5.0
+      Authorization:
+      - Bearer <STRIPE_SECRET_KEY>
+      Idempotency-Key:
+      - 4faeef9e-0a10-4aaf-ac58-821737c1c18b
+      Stripe-Version:
+      - 2026-07-29.dahlia
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"19.5.0","lang":"ruby","lang_version":"4.0.1 p0 (2026-01-13)","engine":"ruby","platform":"arm64-darwin25","telemetry_id":"d708dd63140a4b68a87c7d2a7d3d4701"}'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Thu, 13 Aug 2026 15:37:08 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '708'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, HEAD, PUT, PATCH, POST, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Expose-Headers:
+      - Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required,
+        X-Stripe-Privileged-Session-Required
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Content-Security-Policy:
+      - base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none';
+        img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src
+        'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=wlV3sdGhuvOk_06eWncNgfF1l0vyIgt4mt6milPeaCaKeN2EP4knGhAU37FwPA99VW_T6brgHXY4vR7k;
+        report-to csp
+      Idempotency-Key:
+      - 4faeef9e-0a10-4aaf-ac58-821737c1c18b
+      Original-Request:
+      - req_XVD7TNXhwvDfqH
+      Report-To:
+      - '{"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=wlV3sdGhuvOk_06eWncNgfF1l0vyIgt4mt6milPeaCaKeN2EP4knGhAU37FwPA99VW_T6brgHXY4vR7k&t=1"}],"include_subdomains":true}'
+      Reporting-Endpoints:
+      - csp="https://q.stripe.com/csp-report-v2?q=wlV3sdGhuvOk_06eWncNgfF1l0vyIgt4mt6milPeaCaKeN2EP4knGhAU37FwPA99VW_T6brgHXY4vR7k&t=1"
+      Request-Id:
+      - req_XVD7TNXhwvDfqH
+      Stripe-Should-Retry:
+      - 'false'
+      Stripe-Version:
+      - 2026-07-29.dahlia
+      Vary:
+      - Origin
+      X-Stripe-Priority-Routing-Enabled:
+      - 'true'
+      X-Stripe-Routing-Context-Priority-Tier:
+      - api-testmode
+      X-Wc:
+      - 3c3
+      Strict-Transport-Security:
+      - max-age=63072000; includeSubDomains; preload
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "id": "cus_V48ySKD2ggQmHh",
+          "object": "customer",
+          "address": null,
+          "balance": 0,
+          "created": 1786635427,
+          "currency": null,
+          "customer_account": null,
+          "default_source": null,
+          "delinquent": false,
+          "description": null,
+          "discount": null,
+          "email": "pousada@teste.com",
+          "invoice_prefix": "TZJNEALG",
+          "invoice_settings": {
+            "custom_fields": null,
+            "default_payment_method": null,
+            "footer": null,
+            "rendering_options": null
+          },
+          "livemode": false,
+          "metadata": {
+            "company_id": "844074111"
+          },
+          "name": "Pousada Realtime VCR",
+          "next_invoice_sequence": 1,
+          "phone": null,
+          "preferred_locales": [],
+          "shipping": null,
+          "tax_exempt": "none",
+          "test_clock": null
+        }
+  recorded_at: Thu, 13 Aug 2026 15:37:08 GMT
+recorded_with: VCR 6.4.0

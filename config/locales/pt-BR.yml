@@ -1,0 +1,45 @@
+"pt-BR":
+  activerecord:
+    models:
+      user: "usuário"
+      company: "hospedagem"
+      review: "avaliação"
+      favorite: "favorito"
+    attributes:
+      user:
+        email: "E-mail"
+        password: "Senha"
+        password_confirmation: "Confirmação da Senha"
+        current_password: "Senha Atual"
+        name: "Nome"
+        phone: "Telefone"
+        terms_accepted: "Termos de Uso"
+      company:
+        trade_name: "Nome Fantasia"
+        legal_name: "Razão Social"
+        cnpj: "CNPJ"
+      review:
+        rating: "Nota"
+        comment: "Comentário"
+        reviewer_name: "Nome do Avaliador"
+
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      not_saved:
+        one: "Não foi possível salvar o %{resource}: 1 erro encontrado."
+        other: "Não foi possível salvar o %{resource}: %{count} erros encontrados."
+      blank: "não pode ficar em branco"
+      empty: "não pode ficar vazio"
+      taken: "já está em uso"
+      too_short: "é muito curto (mínimo de %{count} caracteres)"
+      too_long: "é muito longo (máximo de %{count} caracteres)"
+      invalid: "não é válido"
+      confirmation: "não é igual à confirmação"
+      accepted: "deve ser aceito"
+      already_confirmed: "já foi confirmado(a). Por favor, tente fazer login"
+      not_found: "não encontrado(a)"
+      not_locked: "não foi bloqueado(a)"
+      not_saved:
+        one: "1 erro impediu que este %{resource} fosse salvo:"
+        other: "%{count} erros impediram que este %{resource} fosse salvo:"

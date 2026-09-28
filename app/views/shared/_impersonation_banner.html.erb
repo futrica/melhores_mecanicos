@@ -1,0 +1,20 @@
+<% if impersonating? %>
+  <div class="impersonation-banner" style="background: linear-gradient(90deg, #991b1b, #dc2626); color: white; padding: 0.65rem 1.25rem; position: sticky; top: 0; z-index: 99999; box-shadow: 0 4px 14px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: 0.85rem; border-bottom: 2px solid #f87171;">
+    <div style="display: flex; align-items: center; gap: 0.6rem; font-weight: 700;">
+      <span style="font-size: 1.25rem;">🎭</span>
+      <span>
+        <strong>Modo Personificação Ativo:</strong> Você está navegando como
+        <strong style="text-decoration: underline; background: rgba(255,255,255,0.15); padding: 0.1rem 0.45rem; border-radius: 4px;">
+          <%= current_user.name.presence || current_user.email %>
+        </strong>
+        (<%= current_user.admin? ? "Administrador 👑" : (current_user.company? ? "Empresa 🏬" : "Cliente 🧳") %>).
+        Sua conta real: <strong><%= true_user&.email %></strong>
+      </span>
+    </div>
+    <div>
+      <%= button_to app_stop_impersonating_path, method: :post, data: { turbo: false }, style: "background: white; color: #991b1b; font-weight: 800; font-size: 0.8rem; border: none; padding: 0.45rem 1rem; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 2px 6px rgba(0,0,0,0.15); text-decoration: none;" do %>
+        <span>🚪</span> Sair da Personificação
+      <% end %>
+    </div>
+  </div>
+<% end %>

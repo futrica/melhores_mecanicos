@@ -1,0 +1,260 @@
+<% content_for :title, "Criar Conta | Hospedagem Direta" %>
+
+<div class="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-2">
+    <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-600 font-bold text-2xl shadow-inner mx-auto mb-2">
+      👤
+    </div>
+    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+      Criar uma conta
+    </h2>
+    <p class="text-sm text-slate-600 font-medium">
+      Conecte-se direto a hotéis e pousadas sem pagar comissão
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-6 shadow-xl shadow-slate-200/70 border border-slate-200/80 rounded-2xl sm:px-10 space-y-6">
+      
+      <div class="space-y-4">
+        <%= button_to user_google_oauth2_omniauth_authorize_path, data: { turbo: false }, class: "w-full flex items-center justify-center bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl border border-slate-300 shadow-sm transition-all cursor-pointer" do %>
+          <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span>Cadastrar com o Google</span>
+        <% end %>
+
+        <div class="relative flex py-1 items-center">
+          <div class="flex-grow border-t border-slate-200"></div>
+          <span class="flex-shrink mx-4 text-slate-400 text-xs font-semibold uppercase tracking-wider">ou com e-mail</span>
+          <div class="flex-grow border-t border-slate-200"></div>
+        </div>
+      </div>
+
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-4" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <!-- Role selection -->
+        <div class="space-y-1.5" style="position: relative; z-index: 10;">
+          <%= f.label :role, "Eu quero me cadastrar como:", class: "block text-xs font-bold text-slate-700 uppercase tracking-wide" %>
+          <div class="city-multiselect-wrapper relative" id="role-select-wrapper">
+            <%= f.hidden_field :role, value: "client", id: "user_role_input" %>
+            
+            <button type="button" class="w-full text-left font-semibold text-sm px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 hover:bg-slate-100 focus:bg-white focus:border-emerald-500 outline-none flex items-center justify-between shadow-sm transition-all text-slate-800" id="role-select-trigger">
+              <span>🧳 Hóspede / Viajante (Quero encontrar acomodações)</span>
+              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            
+            <div class="city-dropdown-content-pane bg-white border border-slate-200 rounded-xl shadow-xl mt-1 overflow-hidden" id="role-dropdown-pane" style="z-index: 100;">
+              <div class="state-option role-option p-3 hover:bg-emerald-50 cursor-pointer text-sm font-semibold text-slate-800 transition-colors" data-value="client">
+                🧳 Hóspede / Viajante (Quero encontrar acomodações)
+              </div>
+              <div class="state-option role-option p-3 hover:bg-emerald-50 cursor-pointer text-sm font-semibold text-slate-800 border-t border-slate-100 transition-colors" data-value="company">
+                🏨 Hotel / Pousada (Quero cadastrar meu estabelecimento)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="space-y-1.5">
+          <%= f.label :email, "Endereço de E-mail", class: "block text-xs font-bold text-slate-700 uppercase tracking-wide" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full text-sm px-4 py-3 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all bg-slate-50/50", placeholder: "seu@email.com" %>
+        </div>
+
+        <!-- Phone (for guests) -->
+        <div class="space-y-1.5" id="phone-field-wrapper">
+          <div class="flex justify-between items-center">
+            <%= f.label :phone, "Telefone / WhatsApp", class: "block text-xs font-bold text-slate-700 uppercase tracking-wide" %>
+            <span class="text-[10px] text-slate-400 font-medium">(opcional - DDD + número)</span>
+          </div>
+          <%= f.telephone_field :phone, class: "w-full text-sm px-4 py-3 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all bg-slate-50/50", placeholder: "(11) 99999-8888", maxlength: 15, id: "user_phone_input" %>
+        </div>
+
+        <!-- Password -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center">
+            <%= f.label :password, "Senha", class: "block text-xs font-bold text-slate-700 uppercase tracking-wide" %>
+            <% if @minimum_password_length %>
+              <span class="text-[10px] text-slate-400 font-medium">(mínimo de <%= @minimum_password_length %> caracteres)</span>
+            <% end %>
+          </div>
+          <%= render "shared/password_input", form: f, field: :password, autocomplete: "new-password", placeholder: "••••••••" %>
+        </div>
+
+        <!-- Password confirmation -->
+        <div class="space-y-1.5">
+          <%= f.label :password_confirmation, "Confirme a Senha", class: "block text-xs font-bold text-slate-700 uppercase tracking-wide" %>
+          <%= render "shared/password_input", form: f, field: :password_confirmation, autocomplete: "new-password", placeholder: "••••••••" %>
+        </div>
+
+        <!-- Terms checkbox -->
+        <div class="flex items-start gap-2.5 py-1">
+          <%= f.check_box :terms_accepted, { required: true, class: "w-4 h-4 rounded text-emerald-500 focus:ring-emerald-500 accent-emerald-500 mt-0.5" }, "1", "0" %>
+          <%= f.label :terms_accepted, class: "text-xs text-slate-600 font-medium leading-normal" do %>
+            Li e concordo com os <button type="button" id="open-terms-modal" class="text-emerald-600 font-bold hover:underline bg-transparent border-none p-0 cursor-pointer">Termos de Uso e Política de Privacidade</button>.
+          <% end %>
+        </div>
+
+        <div class="pt-2">
+          <%= f.submit "Criar Conta", class: "w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm px-6 py-3.5 rounded-xl shadow-md shadow-emerald-500/20 transition-all cursor-pointer" %>
+        </div>
+      <% end %>
+
+      <div class="border-t border-slate-100 pt-5 text-center text-xs text-slate-600 font-medium">
+        Já tem uma conta? 
+        <%= link_to "Entrar na sua conta", new_session_path(resource_name), class: "text-emerald-600 font-bold hover:underline ml-1" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Termos -->
+<div id="terms-modal" class="modal-overlay" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Termos de Uso e Privacidade</h3>
+      <button type="button" id="close-terms-modal" class="modal-close-btn">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- Termos do Hóspede / Viajante -->
+      <div id="terms-content-client">
+        <h4>Termos de Uso - Hóspede / Viajante</h4>
+        <p>Ao utilizar o Hospedagem Direta para buscar hotéis, pousadas ou chalés, você concorda com as seguintes condições:</p>
+        <ol>
+          <li><strong>Uso Gratuito e Aproximação:</strong> O portal é um canal gratuito para busca e contato direto com hospedagens em todo o Brasil. Não cobramos taxas de serviço dos viajantes.</li>
+          <li><strong>Autonomia Comercial:</strong> Negociações de tarifas, formas de pagamento, horários de check-in/check-out e políticas de cancelamento são combinadas diretamente com o estabelecimento.</li>
+          <li><strong>Verificação Prévia:</strong> Recomendamos sempre confirmar os detalhes do quarto, valores e dados da propriedade antes de efetuar qualquer sinal ou transferência financeira.</li>
+          <li><strong>Proteção de Dados (LGPD):</strong> Seus dados de cadastro são armazenados com segurança e utilizados exclusivamente para gestão da sua conta no portal.</li>
+        </ol>
+      </div>
+
+      <!-- Termos do Hotel / Pousada -->
+      <div id="terms-content-company" style="display: none;">
+        <h4>Termos de Uso - Hotel / Pousada (Empresa)</h4>
+        <p>Ao cadastrar ou reivindicar seu estabelecimento no portal Hospedagem Direta, você concorda com as seguintes condições:</p>
+        <ol>
+          <li><strong>Exibição de Dados Comerciais:</strong> Você autoriza a exibição pública de informações cadastrais (nome fantasia, WhatsApp, telefone, e-mail, fotos e localização) para receber contatos diretos de hóspedes.</li>
+          <li><strong>Informações Verídicas:</strong> Você se compromete a fornecer dados precisos, atualizados e legítimos sobre suas acomodações e contatos.</li>
+          <li><strong>Isenção de Comissões:</strong> O Hospedagem Direta não cobra comissão sobre reservas fechadas diretamente com os clientes.</li>
+          <li><strong>Atendimento Ético:</strong> Você concorda em atender os contatos recebidos através do portal de forma cortês, ética e profissional.</li>
+          <li><strong>LGPD e Gestão:</strong> Seus dados comerciais podem ser atualizados ou gerenciados pelo seu painel administrativo ou via formulário de contato.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" id="accept-modal-btn" class="modal-accept-btn">Entendi e Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    function initRoleDropdown() {
+      const wrapper = document.getElementById('role-select-wrapper');
+      const trigger = document.getElementById('role-select-trigger');
+      const hiddenInput = document.getElementById('user_role_input');
+      const roleOptions = document.querySelectorAll('.role-option');
+      const openModalBtn = document.getElementById('open-terms-modal');
+      const closeModalBtn = document.getElementById('close-terms-modal');
+      const acceptModalBtn = document.getElementById('accept-modal-btn');
+      const termsModal = document.getElementById('terms-modal');
+      const contentClient = document.getElementById('terms-content-client');
+      const contentCompany = document.getElementById('terms-content-company');
+      const checkbox = document.querySelector('input[name="user[terms_accepted]"]');
+
+      if (!wrapper || !trigger || !hiddenInput) return;
+
+      trigger.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        wrapper.classList.toggle('active');
+      };
+
+      document.addEventListener('click', function(e) {
+        if (wrapper && !wrapper.contains(e.target)) {
+          wrapper.classList.remove('active');
+        }
+      });
+
+      roleOptions.forEach(function(option) {
+        option.onclick = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const val = option.getAttribute('data-value');
+          const text = option.textContent.trim();
+
+          hiddenInput.value = val;
+          trigger.textContent = text;
+          wrapper.classList.remove('active');
+
+          updateTermsContent(val);
+        };
+      });
+
+      function updateTermsContent(val) {
+        const selectedVal = val || hiddenInput.value;
+        const phoneWrapper = document.getElementById('phone-field-wrapper');
+        const phoneInput = document.getElementById('user_phone_input');
+
+        if (selectedVal === 'company') {
+          if (contentClient) contentClient.style.display = 'none';
+          if (contentCompany) contentCompany.style.display = 'block';
+          if (phoneWrapper) phoneWrapper.style.display = 'none';
+          if (phoneInput) phoneInput.value = '';
+        } else {
+          if (contentClient) contentClient.style.display = 'block';
+          if (contentCompany) contentCompany.style.display = 'none';
+          if (phoneWrapper) phoneWrapper.style.display = 'block';
+        }
+      }
+
+      updateTermsContent();
+
+      if (openModalBtn) {
+        openModalBtn.onclick = function() {
+          updateTermsContent();
+          if (termsModal) {
+            termsModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+          }
+        };
+      }
+
+      function closeModal() {
+        if (termsModal) {
+          termsModal.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      }
+
+      if (closeModalBtn) closeModalBtn.onclick = closeModal;
+      if (acceptModalBtn) {
+        acceptModalBtn.onclick = function() {
+          if (checkbox) checkbox.checked = true;
+          closeModal();
+        };
+      }
+
+      if (termsModal) {
+        termsModal.onclick = function(e) {
+          if (e.target === termsModal) closeModal();
+        };
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initRoleDropdown);
+    } else {
+      initRoleDropdown();
+    }
+    document.addEventListener('turbo:load', initRoleDropdown);
+  })();
+</script>

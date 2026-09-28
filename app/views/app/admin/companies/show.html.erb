@@ -1,0 +1,156 @@
+<% content_for :title, "#{@company.trade_name.presence || @company.legal_name} | Ficha Admin" %>
+
+<div class="app-dashboard">
+  <div style="margin-bottom: 1.5rem;">
+    <%= link_to app_admin_companies_path, style: "color: #2563eb; text-decoration: none; font-weight: 700; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 0.3rem;" do %>
+      ← Voltar para listagem de empresas
+    <% end %>
+  </div>
+
+  <div class="app-hero-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); margin-bottom: 2rem;">
+    <div class="app-hero-content">
+      <span class="app-role-badge">🏬 Ficha da Empresa</span>
+      <h1><%= @company.trade_name.presence || @company.legal_name %></h1>
+      <p>CNPJ: <%= @company.cnpj %> &bull; <%= @company.city.name %> - <%= @company.state.acronym %></p>
+    </div>
+    <div class="app-hero-stats">
+      <div class="app-stat-card">
+        <span class="app-stat-value" style="color: #3b82f6;">🔥 <%= @company.views_count %></span>
+        <span class="app-stat-label">Total de Acessos</span>
+      </div>
+      <div class="app-stat-card">
+        <span class="app-stat-value" style="color: <%= @company.approved? ? '#22c55e' : '#eab308' %>;">
+          <%= @company.approved? ? '✅ Reivindicada' : '⚪ Não Reivindicada' %>
+        </span>
+        <span class="app-stat-label">Status Reivindicação</span>
+      </div>
+    </div>
+  </div>
+
+  <%
+    clean_cnae = @company.cnae_principal.to_s.gsub(/\D/, "")
+    mapped_main_cnae = Company::CNAE_MAPPINGS[clean_cnae]
+    is_main_cnae_lodging = mapped_main_cnae.present?
+
+    cnae_sec_array = @company.cnae_secundarios.to_s.split(",").map { |c| c.gsub(/\D/, "").strip }.reject(&:blank?)
+    total_cnaes = 1 + cnae_sec_array.size
+    lodging_sec_cnaes = cnae_sec_array.select { |c| Company::CNAE_MAPPINGS.key?(c) }
+  %>
+
+  <!-- CNAE & Business Activity Analysis Card -->
+  <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+    <h3 style="font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+      <span>📊</span> Enquadramento de Atividade & CNAEs Cadastrados
+    </h3>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+      <!-- Main Activity Status -->
+      <div style="background: <%= is_main_cnae_lodging ? '#f0fdf4' : '#fefce8' %>; border: 1px solid <%= is_main_cnae_lodging ? '#bbf7d0' : '#fef08a' %>; border-radius: 12px; padding: 1.1rem;">
+        <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: #64748b; display: block; margin-bottom: 0.3rem;">Foco Principal do Negócio</span>
+        
+        <% if is_main_cnae_lodging %>
+          <strong style="display: flex; align-items: center; gap: 0.4rem; font-size: 1rem; color: #15803d; margin-bottom: 0.3rem;">
+            🏨 CNAE Principal em Hospedagem: SIM
+          </strong>
+          <span style="font-size: 0.83rem; color: #166534; display: block;">
+            CNAE Principal: <strong><%= @company.cnae_principal %></strong> (<%= mapped_main_cnae %>).
+          </span>
+        <% else %>
+          <strong style="display: flex; align-items: center; gap: 0.4rem; font-size: 1rem; color: #a16207; margin-bottom: 0.3rem;">
+            ⚠️ CNAE Principal NÃO é Hospedagem
+          </strong>
+          <span style="font-size: 0.85rem; color: #854d0e; display: block; font-weight: 700; background: rgba(255,255,255,0.7); padding: 0.4rem 0.6rem; border-radius: 6px; margin: 0.3rem 0;">
+            CNAE Principal: <%= @company.cnae_principal_display %>
+          </span>
+          <span style="font-size: 0.8rem; color: #a16207; font-weight: 700; display: block; margin-top: 0.4rem;">
+            📌 Esta empresa foi listada por possuir serviço de hospedagem cadastrado como <u>CNAE Secundário</u> na Receita Federal.
+          </span>
+        <% end %>
+      </div>
+
+      <!-- CNAEs Quantity & Summary -->
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.1rem;">
+        <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: #64748b; display: block; margin-bottom: 0.3rem;">Volume de CNAEs na Receita Federal</span>
+        <strong style="font-size: 1.1rem; color: #0f172a; display: block; margin-bottom: 0.3rem;">
+          📋 <%= total_cnaes %> <%= total_cnaes == 1 ? 'CNAE cadastrado' : 'CNAEs cadastrados' %>
+        </strong>
+        <span style="font-size: 0.83rem; color: #475569; display: block;">
+          1 CNAE Principal + <%= cnae_sec_array.size %> <%= cnae_sec_array.size == 1 ? 'CNAE Secundário' : 'CNAEs Secundários' %>.
+        </span>
+        <% if lodging_sec_cnaes.any? %>
+          <div style="font-size: 0.8rem; color: #2563eb; font-weight: 700; margin-top: 0.4rem;">
+            ✓ CNAE Secundário de Hospedagem: <%= lodging_sec_cnaes.map { |code| "#{code} (#{Company::CNAE_MAPPINGS[code]})" }.join(", ") %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Outreach Status & Control Box -->
+  <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+    <h3 style="font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+      <span>📧</span> Gerenciamento de Outreach
+    </h3>
+
+    <% email_clean = @company.email.to_s.strip.downcase %>
+    <% last_sent = @outreach_logs.where(status: 'sent').first rescue nil %>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
+      <div>
+        <% if email_clean.blank? %>
+          <span style="color: #64748b; font-weight: 700;">⚪ Nenhum e-mail cadastrado</span>
+        <% elsif @opt_out.present? %>
+          <span style="color: #dc2626; font-weight: 700;">🛑 E-mail Descadastrado (Opt-Out / Spam)</span>
+        <% elsif last_sent.present? %>
+          <span style="color: #166534; font-weight: 700;">🟢 E-mail enviado em <%= last_sent.sent_at.strftime("%d/%m/%Y às %H:%M") %></span>
+        <% else %>
+          <span style="color: #475569; font-weight: 700;">⚪ E-mail ainda não enviado (<%= @company.email %>)</span>
+        <% end %>
+      </div>
+
+      <div>
+        <% if @can_send_email %>
+          <%= button_to send_email_app_admin_company_path(@company), method: :post, data: { turbo: false, confirm: "Enviar e-mail de apresentação para #{@company.email}?" }, style: "background: #2563eb; color: white; border: none; padding: 0.6rem 1.1rem; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer;" do %>
+            📧 Disparar E-mail de Apresentação
+          <% end %>
+        <% else %>
+          <button disabled style="background: #e2e8f0; color: #94a3b8; border: 1px solid #cbd5e1; padding: 0.6rem 1.1rem; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: not-allowed;">
+            🚫 Disparo Desativado (<%= @send_disabled_reason %>)
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Company Info Grid -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+    <!-- Basic Info Card -->
+    <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem;">
+      <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin: 0 0 1rem 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;">
+        🏢 Dados da Empresa
+      </h4>
+      <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.88rem;">
+        <div><strong>Nome Fantasia:</strong> <%= @company.trade_name.presence || "—" %></div>
+        <div><strong>Razão Social:</strong> <%= @company.legal_name %></div>
+        <div><strong>CNPJ:</strong> <%= @company.cnpj %></div>
+        <div><strong>CNAE Principal:</strong> <%= @company.cnae_principal_display %></div>
+        <div><strong>Status Cadastral:</strong> <%= @company.status %></div>
+        <div><strong>Data de Abertura:</strong> <%= @company.opening_date ? @company.opening_date.strftime("%d/%m/%Y") : "—" %></div>
+      </div>
+    </div>
+
+    <!-- Contact Card -->
+    <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem;">
+      <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin: 0 0 1rem 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;">
+        📍 Contato & Localização
+      </h4>
+      <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.88rem;">
+        <div><strong>E-mail:</strong> <%= @company.email.presence || "Não informado" %></div>
+        <div><strong>Telefone 1:</strong> <%= @company.phone_1.presence || "—" %></div>
+        <div><strong>Telefone 2:</strong> <%= @company.phone_2.presence || "—" %></div>
+        <div><strong>Cidade / UF:</strong> <%= @company.city.name %> / <%= @company.state.acronym %></div>
+        <div><strong>Endereço:</strong> <%= [@company.street, @company.number].compact_blank.join(", ").presence || "—" %></div>
+      </div>
+    </div>
+  </div>
+</div>

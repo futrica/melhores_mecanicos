@@ -1,0 +1,55 @@
+<% content_for :title, "Mensagem de Contato ##{@contact.id} | Admin" %>
+
+<div class="app-dashboard">
+  <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <%= link_to "← Voltar para Lista de Mensagens", app_admin_contacts_path, style: "font-weight: 700; color: var(--orange); text-decoration: none; display: inline-block; margin-bottom: 0.5rem;" %>
+      <h1 style="font-family: var(--font-title); font-size: 1.8rem; font-weight: 800; color: var(--navy); margin: 0;">
+        Mensagem de Contato #<%= @contact.id %>
+      </h1>
+    </div>
+    <div>
+      <a href="mailto:<%= @contact.email %>?subject=Re: <%= ERB::Util.url_encode(@contact.subject) %>" class="app-btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+        ✉️ Responder por E-mail
+      </a>
+    </div>
+  </div>
+
+  <%# Remetente Meta Card %>
+  <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 1.75rem; box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+      <div>
+        <span style="font-size: 0.85rem; color: var(--text-dark); text-transform: uppercase; font-weight: 700;">Remetente</span>
+        <p style="font-size: 1.1rem; font-weight: 700; color: var(--navy); margin: 0.25rem 0 0 0;"><%= @contact.name %></p>
+      </div>
+
+      <div>
+        <span style="font-size: 0.85rem; color: var(--text-dark); text-transform: uppercase; font-weight: 700;">E-mail para Resposta</span>
+        <p style="font-size: 1.05rem; font-weight: 600; color: var(--navy); margin: 0.25rem 0 0 0;">
+          <a href="mailto:<%= @contact.email %>" style="color: var(--orange); text-decoration: none;"><%= @contact.email %></a>
+        </p>
+      </div>
+
+      <div>
+        <span style="font-size: 0.85rem; color: var(--text-dark); text-transform: uppercase; font-weight: 700;">Assunto</span>
+        <p style="font-size: 1.05rem; font-weight: 700; color: var(--navy); margin: 0.25rem 0 0 0;"><%= @contact.subject %></p>
+      </div>
+
+      <div>
+        <span style="font-size: 0.85rem; color: var(--text-dark); text-transform: uppercase; font-weight: 700;">Data do Envio</span>
+        <p style="font-size: 1rem; color: var(--navy); margin: 0.25rem 0 0 0;"><%= l(@contact.created_at, format: "%d de %B de %Y às %H:%M") %></p>
+      </div>
+    </div>
+  </div>
+
+  <%# Full Message Content Box %>
+  <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 1.75rem; box-shadow: var(--shadow-sm);">
+    <h3 style="font-family: var(--font-title); font-size: 1.2rem; font-weight: 800; color: var(--navy); margin: 0 0 1rem 0; border-bottom: 1px solid var(--card-border); padding-bottom: 0.5rem;">
+      💬 Conteúdo da Mensagem
+    </h3>
+
+    <div style="background: #f8fafc; border: 1px solid var(--card-border); border-radius: 8px; padding: 1.5rem; font-family: var(--font-body); font-size: 1rem; line-height: 1.6; color: var(--text-main); white-space: pre-wrap;">
+      <%= @contact.message %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+#!/bin/bash
+# bin/deploy_db
+# [DESATIVADO] Deploy de banco desativado temporariamente para Melhores Mecânicos
+
+echo "⚠️ O script bin/deploy_db está desativado até a configuração do novo servidor."
+exit 0
+
+# # Read server IP from config/deploy.yml
+# SERVER_IP=$(grep -A 2 "web:" config/deploy.yml | grep -E -o "([0-9]{1,3}\.){3}[0-9]{1,3}" | head -n 1)
+# SSH_USER="root" # Override by changing here or passing in env
+# 
+# if [ -z "$SERVER_IP" ] || [ "$SERVER_IP" == "192.168.0.1" ]; then
+#   echo "⚠️ IP padrão ou inválido no config/deploy.yml."
+#   echo "Por favor, digite o IP do servidor de produção:"
+#   read -r SERVER_IP
+# fi
+# 
+# echo "🚀 Iniciando deploy do banco de dados local para produção..."
+# echo "Servidor: $SERVER_IP (Usuário SSH: $SSH_USER)"
+# echo ""
+# 
+# # 1. Check local DB
+# if [ ! -f "storage/production.sqlite3" ]; then
+#   echo "❌ Erro: Arquivo 'storage/production.sqlite3' não encontrado localmente."
+#   echo "Por favor, execute a importação local antes de fazer o deploy."
+#   exit 1
+# fi
+# 
+# # 2. Compress local SQLite
+# echo "📦 Compactando storage/production.sqlite3 local..."
+# tar -czf storage/production_db.tar.gz -C storage production.sqlite3
+# 
+# # 3. Upload to server
+# echo "📤 Enviando banco de dados para o servidor..."
+# scp storage/production_db.tar.gz ${SSH_USER}@${SERVER_IP}:/tmp/production_db.tar.gz
+# 
+# if [ $? -ne 0 ]; then
+#   echo "❌ Erro: Falha ao enviar o arquivo via SCP. Verifique suas chaves SSH e o IP."
+#   rm -f storage/production_db.tar.gz
+#   exit 1
+# fi
+# 
+# # 4. Extract and restore in Docker volume
+# echo "🔧 Configurando banco de dados no servidor..."
+# ssh ${SSH_USER}@${SERVER_IP} << 'EOF'
+#   set -e
+#   # Unpack temp dir
+#   mkdir -p /tmp/db_unpack
+#   tar -xzf /tmp/production_db.tar.gz -C /tmp/db_unpack
+#   
+#   # Detect active web app container
+#   CONTAINER_ID=$(docker ps -q --filter "name=melhores_mecanicos-web" | head -n 1)
+#   
+#   if [ -z "$CONTAINER_ID" ]; then
+#     # First deploy scenario: place directly in Docker volume
+#     echo "⚠️ Container do app não está em execução. Copiando diretamente para o volume Docker..."
+#     VOLUME_PATH="/var/lib/docker/volumes/melhores_mecanicos_storage/_data"
+#     mkdir -p $VOLUME_PATH
+#     mv /tmp/db_unpack/production.sqlite3 $VOLUME_PATH/production.sqlite3
+#     chmod 664 $VOLUME_PATH/production.sqlite3
+#   else
+#     # App is already running: copy inside the container to avoid locking
+#     echo "✅ Container ativo detectado ($CONTAINER_ID). Copiando arquivo para o container..."
+#     docker cp /tmp/db_unpack/production.sqlite3 $CONTAINER_ID:/rails/storage/production.sqlite3
+#     # Adjust permissions inside the container for the rails user
+#     docker exec $CONTAINER_ID chown rails:rails /rails/storage/production.sqlite3
+#     docker exec $CONTAINER_ID chmod 664 /rails/storage/production.sqlite3
+#   fi
+#   
+#   # Clean up server temp files
+#   rm -rf /tmp/db_unpack /tmp/production_db.tar.gz
+#   echo "🎉 Banco de dados sincronizado e ativo com sucesso!"
+# EOF
+# 
+# # 5. Clean up local temp file
+# rm -f storage/production_db.tar.gz
+# echo "✅ Sincronização concluída!"

@@ -1,0 +1,1 @@
+NÃO fazer deploy automático (kamal deploy) após alterações. O deploy está desativado e deve ser feito SOMENTE quando o usuário solicitar explicitamente.

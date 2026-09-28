@@ -1,0 +1,27 @@
+<h2>🚨 Solicitação de Remoção de Empresa (LGPD)</h2>
+
+<p>Uma nova solicitação de remoção de perfil por conformidade LGPD foi recebida no portal <strong>Hospedagem Direta</strong>.</p>
+
+<hr>
+
+<p><strong>Empresa Solicitada:</strong> <%= @company.trade_name.presence || @company.legal_name %></p>
+<p><strong>CNPJ:</strong> <%= @company.cnpj %></p>
+<p><strong>Localização:</strong> <%= [@company.city&.name, @company.state&.acronym].compact.join(" - ") %></p>
+
+<hr>
+
+<h3>Dados do Solicitante:</h3>
+<p><strong>Nome:</strong> <%= @name %></p>
+<p><strong>E-mail:</strong> <%= @email %></p>
+<% if @reason.present? %>
+  <p><strong>Motivo / Observações:</strong></p>
+  <p><%= simple_format(@reason) %></p>
+<% end %>
+
+<hr>
+
+<p>
+  <a href="<%= app_admin_company_url(@company) %>" style="background: #ef4444; color: #ffffff; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+    Ver Empresa no Painel Admin &rarr;
+  </a>
+</p>

@@ -1,0 +1,582 @@
+<div class="company-dashboard-container">
+  <div class="company-dash-top-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
+    <h2 style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted, #64748b); margin: 0;">
+      <%= @company.present? ? "Painel da Empresa" : "Área da Empresa" %>
+    </h2>
+    <div class="company-dash-top-bar-actions" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+      <% if @company.present? %>
+        <%= link_to company_seo_path(@company), target: "_blank", style: "display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 700; color: white; background: var(--orange, #ff6b00); border-radius: 10px; padding: 0.5rem 1rem; text-decoration: none;" do %>
+          <span>👁️ Visualizar Empresa no Site</span>
+        <% end %>
+      <% end %>
+      <%= link_to edit_user_registration_path, style: "display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 700; color: var(--text-main, #1e293b); background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #cbd5e1); border-radius: 10px; padding: 0.5rem 1rem; text-decoration: none;" do %>
+        <span>🔒 Alterar Senha</span>
+      <% end %>
+    </div>
+  </div>
+
+  <% if @company.present? %>
+    <!-- Status Alerts -->
+    <% if @company.approved? %>
+      <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
+        <div style="font-size: 1.8rem;">✅</div>
+        <div>
+          <h3 style="font-size: 0.95rem; font-weight: 800; color: #065f46; margin: 0;">Perfil Verificado & Ativo</h3>
+          <p style="font-size: 0.85rem; color: #047857; margin: 0.25rem 0 0 0;">
+            Sua empresa está aprovada e visível no portal com selo de verificação em <strong><%= @company.city.name %>/<%= @company.state.acronym %></strong>.
+          </p>
+        </div>
+      </div>
+    <% elsif @company.document_submitted_at.present? || @company.document_proof_url.present? || @company.selfie_proof_url.present? %>
+      <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 2rem;">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.85rem;">
+          <div style="font-size: 1.8rem;">⏳</div>
+          <div>
+            <h3 style="font-size: 0.95rem; font-weight: 800; color: #1e40af; margin: 0;">Perfil em Análise Manual</h3>
+            <p style="font-size: 0.85rem; color: #1d4ed8; margin: 0.25rem 0 0 0;">
+              <% if @company.document_submitted_at.present? %>
+                Seus comprovantes foram enviados em <strong><%= @company.document_submitted_at.strftime("%d/%m/%Y às %H:%M") %></strong>. 
+              <% end %>
+              A verificação será concluída em até <strong>5 dias úteis</strong>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Comprovantes Enviados (Visualização no Painel da Empresa) -->
+        <div style="background: white; border: 1px solid #cbd5e1; border-radius: 12px; padding: 1rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;">
+          <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+            <strong style="font-size: 0.85rem; color: #1e293b;">Comprovantes Enviados:</strong>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+              <% if @company.document_proof_display_url.present? %>
+                <a href="<%= @company.document_proof_display_url %>" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; color: #2563eb; font-weight: 700; font-size: 0.82rem; background: #eff6ff; padding: 0.4rem 0.8rem; border-radius: 8px; text-decoration: none; border: 1px solid #bfdbfe;">
+                  📄 Visualizar Comprovante / Doc
+                </a>
+              <% end %>
+              <% if @company.selfie_proof_display_url.present? %>
+                <a href="<%= @company.selfie_proof_display_url %>" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; color: #2563eb; font-weight: 700; font-size: 0.82rem; background: #eff6ff; padding: 0.4rem 0.8rem; border-radius: 8px; text-decoration: none; border: 1px solid #bfdbfe;">
+                  📸 Visualizar Selfie / Documento
+                </a>
+              <% end %>
+              <% if @company.document_proof_display_url.blank? && @company.selfie_proof_display_url.blank? %>
+                <span style="color: #64748b; font-style: italic; font-size: 0.82rem;">Nenhum arquivo enviado</span>
+              <% end %>
+            </div>
+          </div>
+          <a href="<%= verify_app_company_path(@company) %>" style="background: #2563eb; color: white; font-weight: 700; font-size: 0.82rem; padding: 0.5rem 0.9rem; border-radius: 8px; text-decoration: none; white-space: nowrap;">
+            ✏️ Reenviar / Atualizar Documentos
+          </a>
+        </div>
+      </div>
+    <% else %>
+      <div style="background: #fffbebf5; border: 1px solid #fde68a; border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="font-size: 1.8rem;">⚠️</div>
+          <div>
+            <h3 style="font-size: 0.95rem; font-weight: 800; color: #92400e; margin: 0;">Envio de Documentos Exigido</h3>
+            <p style="font-size: 0.85rem; color: #b45309; margin: 0.25rem 0 0 0;">
+              Envie a foto do documento ou contrato social para obter o selo de verificação até <strong><%= (@company.claim_expiration_date || 5.days.from_now).strftime("%d/%m/%Y") %></strong>.
+            </p>
+          </div>
+        </div>
+        <a href="<%= verify_app_company_path(@company) %>" style="background: #d97706; color: white; font-weight: 700; padding: 0.6rem 1.25rem; border-radius: 10px; text-decoration: none; font-size: 0.85rem; white-space: nowrap;">
+          Enviar Documentos Agora
+        </a>
+      </div>
+    <% end %>
+
+    <!-- Header Banner -->
+    <div class="company-dash-header-banner" style="background: linear-gradient(135deg, var(--navy, #1e293b), #0f172a); color: white; border-radius: 20px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 14px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+      <% if @company.logo_display_url.present? %>
+        <img src="<%= @company.logo_display_url %>" alt="<%= @company.trade_name %>" style="width: 80px; height: 80px; border-radius: 16px; object-fit: cover; background: white; border: 2px solid white;">
+      <% else %>
+        <div style="width: 80px; height: 80px; border-radius: 16px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800;">
+          🏬
+        </div>
+      <% end %>
+      <div>
+        <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; background: <%= @company.approved? ? '#10b981' : 'rgba(255,255,255,0.15)' %>; color: white; padding: 0.3rem 0.8rem; border-radius: 9999px;">
+          <%= @company.approved? ? "✅ Empresa Verificada" : "Pendente de Verificação" %>
+        </span>
+        <h1 style="font-size: 2rem; font-weight: 800; margin: 0.5rem 0 0.25rem 0;"><%= @company.trade_name.presence || @company.legal_name %></h1>
+        <p style="color: rgba(255,255,255,0.8); font-size: 0.95rem; margin: 0;">
+          CNPJ: <%= @company.cnpj %> &bull; <%= @company.city.name %> - <%= @company.state.acronym %>
+        </p>
+      </div>
+    </div>
+
+
+
+    <!-- Subscription & Credit Card Management Section -->
+    <div style="background: white; border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+        <div>
+          <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--navy, #1e293b); margin: 0;">
+            💳 Assinatura &amp; Meio de Pagamento (Stripe)
+          </h3>
+          <p style="font-size: 0.83rem; color: #64748b; margin: 0.25rem 0 0 0;">
+            Gerencie seu plano ativo e cartão de crédito associado à empresa.
+          </p>
+        </div>
+        <% if @company.stripe_customer_id.present? %>
+          <span style="font-size: 0.75rem; font-weight: 700; color: #475569; background: #f1f5f9; padding: 0.3rem 0.75rem; border-radius: 8px; font-family: monospace;">
+            ID Stripe: <%= @company.stripe_customer_id %>
+          </span>
+        <% end %>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem;">
+        <!-- Active Subscription Info -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <strong style="font-size: 0.85rem; color: #475569; text-transform: uppercase; letter-spacing: 0.04em;">Plano Atual</strong>
+              <span style="font-size: 0.72rem; font-weight: 800; background: <%= @company.has_active_paid_subscription? ? '#dcfce7' : '#e0f2fe' %>; color: <%= @company.has_active_paid_subscription? ? '#15803d' : '#0369a1' %>; padding: 0.2rem 0.6rem; border-radius: 9999px;">
+                <%= @company.active_subscription&.stripe_price&.name || "Gratuito ad aeternum" %>
+              </span>
+            </div>
+            <h4 style="font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.35rem 0;">
+              <%= @company.active_subscription&.stripe_product&.name || "Plano Gratuito" %>
+            </h4>
+            <p style="font-size: 0.82rem; color: #64748b; margin: 0;">
+              Status: <strong style="color: #10b981; text-transform: capitalize;"><%= @company.active_subscription&.status || "Ativo" %></strong>
+            </p>
+          </div>
+
+          <div style="margin-top: 1rem; pt-1; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; align-items: center; pt: 0.75rem;">
+            <% if @company.active_subscription.present? && !@company.active_subscription.free? %>
+              <%= button_to cancel_subscription_app_company_path(@company), method: :post, data: { turbo_confirm: "Tem certeza que deseja cancelar seu plano ativo? O cancelamento considerará o valor proporcional do período utilizado." }, style: "background: #ef4444; color: white; font-weight: 700; font-size: 0.8rem; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;" do %>
+                🚫 Cancelar Plano (Cobrança Proporcional)
+              <% end %>
+            <% else %>
+              <span style="font-size: 0.8rem; color: #64748b; font-style: italic;">Sem renovação pendente</span>
+              <a href="<%= pricing_path %>" style="color: #2563eb; font-weight: 700; font-size: 0.82rem; text-decoration: none;">Ver Planos &rarr;</a>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Credit Card Info & Management -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <strong style="font-size: 0.85rem; color: #475569; text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 0.5rem;">Cartão de Crédito Cadastrado</strong>
+            
+            <% if @company.card_last4.present? %>
+              <div style="display: flex; align-items: center; gap: 0.75rem; background: white; border: 1px solid #cbd5e1; padding: 0.75rem 1rem; border-radius: 10px; margin-top: 0.5rem;">
+                <div style="font-size: 1.5rem;">💳</div>
+                <div>
+                  <div style="font-weight: 800; font-size: 0.9rem; color: #1e293b; text-transform: uppercase;">
+                    <%= @company.card_brand.presence || "Cartão" %> **** <%= @company.card_last4 %>
+                  </div>
+                  <div style="font-size: 0.78rem; color: #10b981; font-weight: 600;">Salvo com segurança via Stripe</div>
+                </div>
+              </div>
+            <% else %>
+              <div style="background: white; border: 1px dashed #cbd5e1; padding: 0.85rem 1rem; border-radius: 10px; color: #64748b; font-size: 0.83rem; margin-top: 0.5rem;">
+                Nenhum cartão cadastrado no momento.
+              </div>
+            <% end %>
+          </div>
+
+          <div style="margin-top: 1rem; pt-1; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; pt: 0.75rem;">
+            <!-- Form to Add/Update Card -->
+            <button type="button" onclick="window.openCardModal ? window.openCardModal() : (document.getElementById('card-modal').style.display='flex')" style="background: #2563eb; color: white; font-weight: 700; font-size: 0.8rem; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">
+              <%= @company.card_last4.present? ? "✏️ Atualizar Cartão" : "➕ Adicionar Cartão" %>
+            </button>
+
+            <% if @company.card_last4.present? %>
+              <% if @company.can_remove_card? %>
+                <%= button_to remove_card_app_company_path(@company), method: :delete, data: { turbo_confirm: "Tem certeza que deseja remover este cartão de crédito?" }, style: "background: #f1f5f9; color: #dc2626; border: 1px solid #fca5a5; font-weight: 700; font-size: 0.8rem; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;" do %>
+                  🗑️ Remover Cartão
+                <% end %>
+              <% else %>
+                <button type="button" disabled title="Não é possível remover o cartão enquanto houver plano pago ativo." style="background: #f1f5f9; color: #94a3b8; border: 1px solid #cbd5e1; font-weight: 700; font-size: 0.8rem; padding: 0.5rem 1rem; border-radius: 8px; cursor: not-allowed;">
+                  🔒 Remover (Plano Pago Ativo)
+                </button>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Adicionar / Atualizar Cartão (Stripe Elements - 100% Seguro PCI-DSS) -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <div id="card-modal" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(4px);">
+      <div style="background: white; border-radius: 20px; padding: 2rem; max-width: 460px; width: 100%; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0;">💳 Cadastrar Cartão de Crédito</h3>
+            <span style="font-size: 0.75rem; color: #10b981; font-weight: 600;">🔒 Processado diretamente via Stripe Elements</span>
+          </div>
+          <button type="button" onclick="document.getElementById('card-modal').style.display='none'" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b;">✕</button>
+        </div>
+
+        <%= form_with url: update_card_app_company_path(@company), method: :post, id: "stripe-card-form", local: true do |f| %>
+          <%= f.hidden_field :stripe_payment_method_id, id: "stripe_payment_method_id" %>
+          <%= f.hidden_field :card_brand, id: "card_brand" %>
+          <%= f.hidden_field :card_last4, id: "card_last4" %>
+
+          <div style="margin-bottom: 1.25rem;">
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #334155; margin-bottom: 0.5rem;">Dados do Cartão (Número, Validade e CVC)</label>
+            <!-- Stripe Elements container -->
+            <div id="stripe-card-element" style="padding: 0.85rem; border: 1px solid #cbd5e1; border-radius: 10px; background: white;"></div>
+            <div id="card-errors" role="alert" style="color: #dc2626; font-size: 0.82rem; margin-top: 0.5rem; font-weight: 600;"></div>
+          </div>
+
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.78rem; color: #64748b; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem;">
+            <span style="font-size: 1.2rem;">🛡️</span>
+            <div>
+              Seus dados de cartão nunca passam por nosso servidor. Apenas a bandeira e os últimos 4 dígitos são armazenados.
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+            <button type="button" onclick="document.getElementById('card-modal').style.display='none'" style="background: #f1f5f9; color: #475569; font-weight: 700; font-size: 0.85rem; border: none; padding: 0.65rem 1.25rem; border-radius: 10px; cursor: pointer;">
+              Cancelar
+            </button>
+            <%= f.submit "Salvar Cartão", id: "save-card-btn", style: "background: #2563eb; color: white; font-weight: 800; font-size: 0.85rem; border: none; padding: 0.65rem 1.25rem; border-radius: 10px; cursor: pointer;" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        var stripeKey = "<%= Rails.configuration.stripe[:publishable_key] %>";
+        var cardElementMounted = false;
+        var stripe, elements, cardElement;
+
+        function loadStripeScript(callback) {
+          if (window.Stripe) {
+            callback();
+            return;
+          }
+          var existingScript = document.querySelector('script[src="https://js.stripe.com/v3/"]');
+          if (existingScript) {
+            existingScript.addEventListener('load', callback);
+            return;
+          }
+          var script = document.createElement('script');
+          script.src = 'https://js.stripe.com/v3/';
+          script.onload = callback;
+          document.head.appendChild(script);
+        }
+
+        function initStripe() {
+          if (window.Stripe && stripeKey && !stripe) {
+            stripe = Stripe(stripeKey);
+            elements = stripe.elements();
+            cardElement = elements.create('card', {
+              hidePostalCode: true,
+              style: {
+                base: {
+                  fontSize: '15px',
+                  color: '#1e293b',
+                  fontFamily: 'system-ui, -apple-system, sans-serif',
+                  '::placeholder': { color: '#94a3b8' }
+                },
+                invalid: { color: '#dc2626' }
+              }
+            });
+          }
+        }
+
+        window.openCardModal = function() {
+          var modal = document.getElementById('card-modal');
+          if (modal) modal.style.display = 'flex';
+
+          loadStripeScript(function() {
+            initStripe();
+            var target = document.getElementById('stripe-card-element');
+            if (cardElement && target && (!cardElementMounted || target.children.length === 0)) {
+              target.innerHTML = '';
+              cardElement.mount('#stripe-card-element');
+              cardElementMounted = true;
+            }
+          });
+        };
+
+        function setupForm() {
+          var form = document.getElementById('stripe-card-form');
+          if (!form || form.dataset.stripeInitialized) return;
+          form.dataset.stripeInitialized = "true";
+
+          form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            var submitBtn = document.getElementById('save-card-btn');
+            var errorElement = document.getElementById('card-errors');
+            errorElement.textContent = '';
+
+            loadStripeScript(async function() {
+              initStripe();
+              if (!stripe || !cardElement) {
+                errorElement.textContent = 'Serviço do Stripe não inicializado. Tente novamente.';
+                return;
+              }
+
+              submitBtn.disabled = true;
+              submitBtn.textContent = 'Processando no Stripe...';
+
+              try {
+                const result = await stripe.createPaymentMethod({
+                  type: 'card',
+                  card: cardElement
+                });
+
+                if (result.error) {
+                  errorElement.textContent = result.error.message;
+                  submitBtn.disabled = false;
+                  submitBtn.textContent = 'Salvar Cartão';
+                } else {
+                  document.getElementById('stripe_payment_method_id').value = result.paymentMethod.id;
+                  document.getElementById('card_brand').value = result.paymentMethod.card.brand;
+                  document.getElementById('card_last4').value = result.paymentMethod.card.last4;
+                  form.submit();
+                }
+              } catch (err) {
+                errorElement.textContent = err.message || 'Erro ao processar cartão.';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Salvar Cartão';
+              }
+            });
+          });
+        }
+
+        document.addEventListener("DOMContentLoaded", setupForm);
+        document.addEventListener("turbo:load", setupForm);
+        setupForm();
+      })();
+    </script>
+
+    <% if @company.premium? %>
+      <!-- Premium Active Banner -->
+      <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #86efac; border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="font-size: 1.8rem; background: white; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(16,185,129,0.15); flex-shrink: 0;">
+            ⭐
+          </div>
+          <div>
+            <span style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #15803d; background: rgba(22,101,52,0.1); padding: 0.2rem 0.5rem; border-radius: 9999px;">
+              Plano Premium Ativo
+            </span>
+            <h3 style="font-size: 1rem; font-weight: 800; color: #14532d; margin: 0.3rem 0 0.15rem 0;">
+              Sua pousada está com destaque máximo e recursos ilimitados liberados!
+            </h3>
+            <p style="font-size: 0.83rem; color: #166534; margin: 0;">
+              ✓ Até 20 fotos &bull; Quartos ilimitados &bull; Topo das buscas &bull; Sem anúncios &bull; Perfil exclusivo sem concorrentes.
+            </p>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <!-- Free Plan & Premium Teaser Banner -->
+      <div style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #bfdbfe; border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="font-size: 1.8rem; background: white; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(37,99,235,0.12); flex-shrink: 0;">
+            ⭐
+          </div>
+          <div>
+            <span style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #1e40af; background: rgba(30,64,175,0.1); padding: 0.2rem 0.5rem; border-radius: 9999px;">
+              Plano Grátis Ativo
+            </span>
+            <h3 style="font-size: 1rem; font-weight: 800; color: #1e3a8a; margin: 0.3rem 0 0.15rem 0;">
+              Você possui limite de até 3 fotos do perfil e 3 quartos
+            </h3>
+            <p style="font-size: 0.83rem; color: #1d4ed8; margin: 0;">
+              Conheça o <strong>Plano Premium</strong> (Até 20 fotos, quartos ilimitados, WhatsApp destacado e topo das buscas).
+            </p>
+          </div>
+        </div>
+        <a href="<%= pricing_path %>" style="background: #2563eb; color: white; font-weight: 800; font-size: 0.85rem; padding: 0.65rem 1.25rem; border-radius: 10px; text-decoration: none; white-space: nowrap; box-shadow: 0 4px 12px rgba(37,99,235,0.25);">
+          Conhecer Planos & Preços &rarr;
+        </a>
+      </div>
+    <% end %>
+
+    <!-- Stats Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+      <% if false %>
+        <!-- Buscas na Cidade (Desativado temporariamente) -->
+        <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem; border-top: 4px solid var(--orange, #ff6b00);">
+          <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted, #64748b); display: block; margin-bottom: 0.5rem;">Buscas em <%= @company.city.name %></span>
+          <span style="font-size: 2rem; font-weight: 800; color: var(--text-main, #1e293b);"><%= @company.city.searches_count %></span>
+          <span style="font-size: 0.8rem; color: var(--text-muted, #64748b); display: block; margin-top: 0.5rem;">Pesquisas de compradores locais</span>
+        </div>
+      <% end %>
+
+      <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem;">
+        <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted, #64748b); display: block; margin-bottom: 0.5rem;">Nota Média</span>
+        <span style="font-size: 2rem; font-weight: 800; color: var(--text-main, #1e293b);"><%= @company.average_rating %> / 5.0</span>
+        <span style="font-size: 0.8rem; color: var(--text-muted, #64748b); display: block; margin-top: 0.5rem;">(<%= @company.reviews.count %> avaliações)</span>
+      </div>
+
+      <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem;">
+        <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted, #64748b); display: block; margin-bottom: 0.5rem;">Visualizações da Ficha</span>
+        <span style="font-size: 2rem; font-weight: 800; color: var(--text-main, #1e293b);"><%= @company.views_count %></span>
+        <span style="font-size: 0.8rem; color: var(--text-muted, #64748b); display: block; margin-top: 0.5rem;">Acessos de compradores</span>
+      </div>
+
+      <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem;">
+        <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted, #64748b); display: block; margin-bottom: 0.5rem;">Total de Favoritos</span>
+        <span style="font-size: 2rem; font-weight: 800; color: var(--text-main, #1e293b);"><%= @company.favorites.count %></span>
+        <span style="font-size: 0.8rem; color: var(--text-muted, #64748b); display: block; margin-top: 0.5rem;">Clientes que salvaram</span>
+      </div>
+
+      <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem;">
+        <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted, #64748b); display: block; margin-bottom: 0.5rem;">Status</span>
+        <% if @company.approved? %>
+          <span style="display: inline-block; background: #d1fae5; color: #065f46; font-weight: 800; padding: 0.3rem 0.8rem; border-radius: 9999px; font-size: 0.85rem; margin-top: 0.5rem;">Verificado</span>
+        <% elsif @company.document_submitted_at.present? %>
+          <span style="display: inline-block; background: #dbeafe; color: #1e40af; font-weight: 800; padding: 0.3rem 0.8rem; border-radius: 9999px; font-size: 0.85rem; margin-top: 0.5rem;">Em Análise</span>
+        <% else %>
+          <span style="display: inline-block; background: #fef3c7; color: #92400e; font-weight: 800; padding: 0.3rem 0.8rem; border-radius: 9999px; font-size: 0.85rem; margin-top: 0.5rem;">Pendente Doc</span>
+        <% end %>
+      </div>
+    </div>
+
+    <% if false %>
+      <!-- Commercial Insight & Sponsorship Opportunity Card (Desativado temporariamente) -->
+      <div style="background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 1px solid #fed7aa; border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 1.25rem;">
+          <div style="font-size: 2.2rem; background: white; width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(255,107,0,0.15); flex-shrink: 0;">
+            📈
+          </div>
+          <div>
+            <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #c2410c; background: rgba(194,65,12,0.1); padding: 0.25rem 0.65rem; border-radius: 9999px;">
+              Inteligência de Mercado Local
+            </span>
+            <h3 style="font-size: 1.1rem; font-weight: 800; color: #7c2d12; margin: 0.35rem 0 0.2rem 0;">
+              <%= @company.city.searches_count %> buscas por materiais de construção em <%= @company.city.name %> - <%= @company.state.acronym %>
+            </h3>
+            <p style="font-size: 0.88rem; color: #9a3412; margin: 0; line-height: 1.4;">
+              Compradores e mestres de obra da sua região pesquisam ativamente por fornecedores. Seu perfil verificado garante prioridade e destaque na cidade.
+            </p>
+          </div>
+        </div>
+        <div>
+          <a href="https://wa.me/5511999999999?text=<%= URI.encode_www_form_component("Olá! Sou da hospedagem #{@company.trade_name.presence || @company.legal_name} em #{@company.city.name} e gostaria de saber sobre planos de destaque/anúncio na cidade.") %>" 
+             target="_blank" 
+             style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--orange, #ff6b00); color: white; font-weight: 800; font-size: 0.9rem; padding: 0.75rem 1.25rem; border-radius: 10px; text-decoration: none; white-space: nowrap; box-shadow: 0 4px 12px rgba(255,107,0,0.3);">
+            <span>🚀 Anunciar em Destaque na Cidade</span>
+          </a>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Actions & Reviews -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+      <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--text-main, #1e293b); margin: 0 0 0.5rem 0;">Gerenciar Informações</h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted, #64748b); line-height: 1.5; margin: 0 0 1rem 0;">
+            Mantenha telefones, WhatsApp, e-mail público e logotipo da empresa sempre atualizados.
+          </p>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+          <% if @company.approved? %>
+            <a href="<%= edit_app_company_path(@company) %>" style="background: var(--navy, #1e293b); color: white; font-weight: 700; padding: 0.75rem 1.25rem; border-radius: 10px; text-decoration: none; font-size: 0.9rem;">
+              Editar Informações da Empresa
+            </a>
+          <% else %>
+            <span style="background: #f1f5f9; color: #94a3b8; font-weight: 700; padding: 0.75rem 1.25rem; border-radius: 10px; font-size: 0.9rem; cursor: not-allowed;" title="A edição de perfil só é liberada após a aprovação da verificação.">
+              🔒 Editar Informações (Aguardando Aprovação)
+            </span>
+          <% end %>
+          <% if !@company.approved? && @company.document_submitted_at.nil? %>
+            <a href="<%= verify_app_company_path(@company) %>" style="background: #d97706; color: white; font-weight: 700; padding: 0.75rem 1.25rem; border-radius: 10px; text-decoration: none; font-size: 0.9rem;">
+              Enviar Documentação
+            </a>
+          <% end %>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem;">
+        <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--text-main, #1e293b); margin: 0 0 1rem 0;">Últimas Avaliações</h3>
+        <% if @company.reviews.any? %>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <% @company.reviews.order(created_at: :desc).limit(3).each do |review| %>
+              <div style="border-bottom: 1px solid var(--border-color, #f1f5f9); padding-bottom: 0.75rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <strong style="font-size: 0.85rem; color: var(--text-main, #1e293b);"><%= review.reviewer_name %></strong>
+                  <span style="color: #f59e0b; font-size: 0.85rem;">★ <%= review.rating %></span>
+                </div>
+                <% if review.comment.present? %>
+                  <p style="font-size: 0.8rem; color: var(--text-muted, #64748b); margin: 0.25rem 0 0 0; font-style: italic;">"<%= review.comment %>"</p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p style="font-size: 0.85rem; color: var(--text-muted, #64748b); font-style: italic; margin: 0;">Nenhuma avaliação recebida ainda.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- LGPD Soft Delete Card with Confirmation Modal -->
+    <div style="background: var(--bg-card, #ffffff); border: 1px solid #fee2e2; border-radius: 16px; padding: 1.5rem; margin-top: 2rem;">
+      <h3 style="font-size: 1.05rem; font-weight: 800; color: #dc2626; margin: 0 0 0.5rem 0;">Excluir Conta & Perfil de Empresa (LGPD)</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted, #64748b); line-height: 1.5; margin: 0 0 1rem 0;">
+        Em conformidade com a Lei Geral de Proteção de Dados (LGPD), você pode solicitar a remoção definitiva da sua conta de usuário e do perfil da sua empresa a qualquer momento.
+      </p>
+      
+      <button type="button" onclick="document.getElementById('lgpd-delete-modal').style.display='flex'" style="background: #dc2626; color: white; font-weight: 700; padding: 0.75rem 1.25rem; border-radius: 10px; border: none; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;">
+        <span>🗑 Solicitar Exclusão Irreversível (LGPD)</span>
+      </button>
+    </div>
+
+    <!-- LGPD Modal Component -->
+    <div id="lgpd-delete-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1rem; box-sizing: border-box;">
+      <div style="background: white; border-radius: 20px; max-width: 520px; width: 100%; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); border: 1px solid #fee2e2; box-sizing: border-box;">
+        <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem;">
+          <div style="width: 48px; height: 48px; background: #fee2e2; color: #dc2626; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;">
+            ⚠️
+          </div>
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: #991b1b; margin: 0;">EXCLUSÃO IRREVERSÍVEL (LGPD)</h3>
+            <span style="font-size: 0.75rem; font-weight: 700; color: #dc2626; text-transform: uppercase;">Atenção: Ação Definitiva</span>
+          </div>
+        </div>
+
+        <p style="font-size: 0.9rem; color: #475569; line-height: 1.6; margin-bottom: 1.25rem;">
+          Ao confirmar, sua conta de usuário e o perfil da empresa <strong><%= @company.trade_name.presence || @company.legal_name %></strong> serão excluídos permanentemente.
+          <br><br>
+          <strong style="color: #991b1b;">Esta ação é 100% IRREVERSÍVEL</strong> e removerá a empresa do banco de dados, excluindo sua conta de acesso ao portal.
+        </p>
+
+        <%= form_with url: soft_delete_app_company_path(@company), method: :delete, local: true, style: "display: flex; flex-direction: column; gap: 1rem;" do |f| %>
+          <div>
+            <label style="font-size: 0.82rem; font-weight: 800; color: #1e293b; display: block; margin-bottom: 0.4rem;">
+              Para confirmar a exclusão permanente, digite <strong>EXCLUIR</strong> no campo abaixo:
+            </label>
+            <%= f.text_field :confirm_text, required: true, placeholder: "EXCLUIR", style: "width: 100%; padding: 0.75rem; border-radius: 8px; border: 2px solid #cbd5e1; font-size: 0.9rem; font-weight: 700; box-sizing: border-box; text-transform: uppercase;" %>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 0.5rem; flex-wrap: wrap;">
+            <button type="button" onclick="document.getElementById('lgpd-delete-modal').style.display='none'" style="background: #f1f5f9; color: #475569; font-weight: 700; padding: 0.75rem 1.25rem; border-radius: 8px; border: none; font-size: 0.88rem; cursor: pointer;">
+              Cancelar / Voltar
+            </button>
+            <%= f.submit "Sim, Excluir Definitivamente", style: "background: #dc2626; color: white; font-weight: 800; padding: 0.75rem 1.25rem; border-radius: 8px; border: none; font-size: 0.88rem; cursor: pointer;" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+  <% else %>
+    <!-- No company attached yet -->
+    <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 3rem 2rem; text-align: center; max-width: 650px; margin: 2rem auto;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🏗️</div>
+      <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main, #1e293b); margin: 0 0 0.5rem 0;">Seja bem-vindo à Área da Empresa!</h2>
+      <p style="color: var(--text-muted, #64748b); font-size: 0.95rem; line-height: 1.6; margin: 0 0 2rem 0;">
+        Sua conta está configurada como perfil comercial. Para começar a receber orçamentos e exibir seus contatos, reivindique uma empresa existente ou cadastre uma nova.
+      </p>
+
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="<%= new_claim_path %>" style="background: var(--orange, #ff6b00); color: white; font-weight: 700; padding: 0.85rem 1.5rem; border-radius: 10px; text-decoration: none; font-size: 0.95rem;">
+          Buscar e Reivindicar Empresa Existente
+        </a>
+        <a href="<%= new_app_company_path %>" style="background: var(--navy, #1e293b); color: white; font-weight: 700; padding: 0.85rem 1.5rem; border-radius: 10px; text-decoration: none; font-size: 0.95rem;">
+          Cadastrar Nova Empresa do Zero
+        </a>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,22 @@
+<h2 style="color: #dc2626;">❌ Falha na Sincronização Mensal</h2>
+
+<p>Ocorreu um erro durante a execução da rotina de sincronização com a Receita Federal no sistema <strong><%= @app_name %></strong>.</p>
+
+<hr>
+
+<h3>⏱️ Tempo decorrido até a falha:</h3>
+<p><%= @duration_minutes %> minutos (Início: <%= @start_time.strftime("%d/%m/%Y às %H:%M:%S") %>)</p>
+
+<hr>
+
+<h3>⚠️ Detalhes do Erro:</h3>
+<pre style="background: #fee2e2; color: #991b1b; padding: 12px; border-radius: 6px; font-family: monospace;">
+<%= @error_message %>
+</pre>
+
+<% if @backtrace.present? %>
+  <h4>Stacktrace:</h4>
+  <pre style="background: #f3f4f6; color: #374151; padding: 12px; border-radius: 6px; font-size: 12px; font-family: monospace;">
+<%= @backtrace %>
+  </pre>
+<% end %>

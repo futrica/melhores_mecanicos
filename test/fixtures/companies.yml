@@ -1,0 +1,40 @@
+# test/fixtures/companies.yml
+ze:
+  state: sp
+  city: guara
+  neighborhood: centro_guara
+  cnpj: "12345678000101"
+  legal_name: "Pousada do Zé Ltda"
+  trade_name: "Pousada do Zé"
+  slug: "pousada-do-ze-12345678000101"
+  cnae_principal: "5510-8/01"
+  status: "Ativa"
+  street: "Rua Major Manoel de Assis"
+  number: "150"
+  complement: ""
+  zip_code: "12501-020"
+  phone_1: "(12) 3122-4455"
+  email: "contato@pousadadoze.com.br"
+  latitude: 1.5
+  longitude: 1.5
+  categories: hoteis_e_pousadas
+
+pedregulho:
+  state: sp
+  city: guara
+  neighborhood: centro_guara
+  cnpj: "98765432000199"
+  legal_name: "Hotel do Vale Eireli"
+  trade_name: "Hotel do Vale"
+  slug: "hotel-do-vale-98765432000199"
+  cnae_principal: "5510-8/01"
+  status: "Ativa"
+  street: "Avenida João Pessoa"
+  number: "512"
+  complement: ""
+  zip_code: "12515-010"
+  phone_1: "(12) 3133-1020"
+  email: "vendas@hoteldovale.com.br"
+  latitude: 1.5
+  longitude: 1.5
+  categories: hoteis_e_pousadas

@@ -1,0 +1,125 @@
+<div style="max-width: 750px; margin: 2rem auto; padding: 0 1.5rem;">
+  <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--text-main, #1e293b); margin-bottom: 0.5rem;">Cadastrar Nova Empresa</h1>
+  <p style="color: var(--text-muted, #64748b); font-size: 0.95rem; margin-bottom: 2rem;">Preencha as informações da sua pousada, hotel ou hospedagem para criar o perfil público.</p>
+
+  <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+    <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; border-radius: 12px; padding: 1rem 1.25rem; font-size: 0.85rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.75rem;">
+      <span style="font-size: 1.2rem;">💡</span>
+      <div>
+        <strong>Conversão de Perfil:</strong> Ao cadastrar seu estabelecimento, seu perfil será convertido para <strong>Perfil de Empresa</strong>. Quaisquer avaliações ou favoritos antigos de hóspede serão limpos automaticamente para manter sua conta exclusiva da empresa.
+      </div>
+    </div>
+    <%= form_with model: [:app, @company], local: true, style: "display: flex; flex-direction: column; gap: 1.25rem;" do |f| %>
+      <% if @company.errors.any? %>
+        <div style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 10px; padding: 1rem; font-size: 0.85rem;">
+          <ul style="margin: 0; padding-left: 1.25rem;">
+            <% @company.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div>
+        <%= f.label :trade_name, "Nome Fantasia *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+        <%= f.text_field :trade_name, required: true, placeholder: "Ex: Pousada Sol e Mar", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+      </div>
+
+      <div>
+        <%= f.label :legal_name, "Razão Social *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+        <%= f.text_field :legal_name, required: true, placeholder: "Ex: Pousada Sol e Mar LTDA", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <%= f.label :cnpj, "CNPJ *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+          <%= f.text_field :cnpj, required: true, placeholder: "00.000.000/0001-00", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+        </div>
+
+        <div>
+          <%= f.label :cnae_principal, "CNAE Principal *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+          <%= f.text_field :cnae_principal, required: true, placeholder: "Ex: 5510801", value: (@company.cnae_principal.presence || "5510801"), style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <%= f.label :phone_1, "Telefone Principal (WhatsApp) *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+          <%= f.text_field :phone_1, required: true, placeholder: "(11) 99999-8888", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+          <label style="font-size: 0.8rem; color: var(--text-muted, #64748b); display: flex; align-items: center; gap: 0.4rem; margin-top: 0.3rem;">
+            <%= f.check_box :phone_1_whatsapp, checked: true %> É WhatsApp
+          </label>
+        </div>
+
+        <div>
+          <%= f.label :phone_2, "Telefone Secundário", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+          <%= f.text_field :phone_2, placeholder: "(11) 3333-4444", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+          <label style="font-size: 0.8rem; color: var(--text-muted, #64748b); display: flex; align-items: center; gap: 0.4rem; margin-top: 0.3rem;">
+            <%= f.check_box :phone_2_whatsapp %> É WhatsApp
+          </label>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <%= f.label :state_id, "Estado *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+          <%= f.collection_select :state_id, @states, :id, :name, { prompt: "Selecione o estado" }, { required: true, id: "company_state_select", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" } %>
+        </div>
+
+        <div>
+          <%= f.label :city_id, "Cidade *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+          <%= f.collection_select :city_id, [], :id, :name, { prompt: "Selecione primeiro o estado" }, { required: true, id: "company_city_select", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" } %>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+        <div>
+          <%= f.label :street, "Logradouro (Rua/Avenida) *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+          <%= f.text_field :street, required: true, placeholder: "Ex: Av. Brasil", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+        </div>
+        <div>
+          <%= f.label :number, "Número *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+          <%= f.text_field :number, required: true, placeholder: "1000", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <%= f.label :complement, "Complemento", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+          <%= f.text_field :complement, placeholder: "Galpão 2", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+        </div>
+        <div>
+          <%= f.label :zip_code, "CEP *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+          <%= f.text_field :zip_code, required: true, placeholder: "00000-000", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+        </div>
+      </div>
+
+      <div style="margin-top: 1rem;">
+        <%= f.submit "Salvar & Ir para Verificação", style: "width: 100%; background: var(--orange, #ff6b00); color: white; font-weight: 700; padding: 0.85rem 1.5rem; border-radius: 10px; border: none; font-size: 1rem; cursor: pointer;" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const stateSelect = document.getElementById("company_state_select");
+    const citySelect = document.getElementById("company_city_select");
+    if (!stateSelect || !citySelect) return;
+
+    stateSelect.addEventListener("change", function() {
+      const stateId = this.value;
+      citySelect.innerHTML = '<option value="">Carregando cidades...</option>';
+      if (!stateId) return;
+
+      fetch(`/app/companies/cities?state_id=${stateId}`)
+        .then(r => r.json())
+        .then(cities => {
+          citySelect.innerHTML = '<option value="">Selecione a cidade</option>';
+          cities.forEach(c => {
+            citySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+          });
+        });
+    });
+  });
+</script>

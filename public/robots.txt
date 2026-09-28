@@ -1,0 +1,17 @@
+# public/robots.txt
+User-agent: *
+Allow: /
+Disallow: /app/
+Disallow: /users/
+Disallow: /favorites/
+
+# Bloquear apenas bots de alta carga sem enviar tráfego útil
+User-agent: Bytespider
+User-agent: CCBot
+User-agent: Diffbot
+User-agent: SleepBot
+User-agent: DotBot
+User-agent: PetalBot
+Disallow: /
+
+Sitemap: https://hospedagemdireta.com.br/sitemap_index.xml

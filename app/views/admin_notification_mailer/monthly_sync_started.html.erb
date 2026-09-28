@@ -1,0 +1,20 @@
+<h2>🚀 Sincronização Mensal Iniciada</h2>
+
+<p>O processo de sincronização mensal com a Receita Federal foi iniciado no sistema <strong><%= @app_name %></strong>.</p>
+
+<hr>
+
+<h3>📅 Detalhes do Início:</h3>
+<ul>
+  <li><strong>Data / Hora de Início:</strong> <%= @start_time.strftime("%d/%m/%Y às %H:%M:%S") %></li>
+  <li><strong>Ambiente:</strong> <%= Rails.env %></li>
+</ul>
+
+<h3>📊 Status Atual da Base de Dados:</h3>
+<ul>
+  <li><strong>Total de Empresas na Base:</strong> <%= number_with_delimiter(@initial_stats[:total_companies]) %></li>
+  <li><strong>Empresas Ativas:</strong> <%= number_with_delimiter(@initial_stats[:active_companies]) %></li>
+  <li><strong>Empresas Reivindicadas:</strong> <%= number_with_delimiter(@initial_stats[:claimed_companies]) %></li>
+</ul>
+
+<p><em>Você receberá um novo e-mail assim que o processamento for concluído ou se ocorrer alguma falha.</em></p>

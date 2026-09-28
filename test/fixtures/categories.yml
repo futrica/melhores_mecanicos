@@ -1,0 +1,8 @@
+# test/fixtures/categories.yml
+hoteis_e_pousadas:
+  name: "Hotéis e Pousadas"
+  slug: "hoteis-e-pousadas"
+
+apart_hoteis:
+  name: "Apart-hotéis"
+  slug: "apart-hoteis"

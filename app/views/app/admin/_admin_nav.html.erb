@@ -1,0 +1,25 @@
+<div class="admin-tab-nav" style="display: flex; gap: 0.75rem; border-bottom: 2px solid var(--card-border); padding-bottom: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap;">
+  <%= link_to app_admin_dashboard_path, class: "admin-tab-item #{'active' if current_page?(app_admin_dashboard_path)}" do %>
+    <span>📊</span> Visão Geral
+  <% end %>
+
+  <%= link_to app_admin_companies_path, class: "admin-tab-item #{'active' if controller_name == 'companies'}" do %>
+    <span>🏬</span> Reivindicações & Empresas (<%= Company.where(claim_status: :pending).or(Company.where(removal_requested: true)).count %> pendentes)
+  <% end %>
+
+  <%= link_to app_admin_top_companies_path, class: "admin-tab-item #{'active' if controller_name == 'top_companies'}" do %>
+    <span>🔥</span> Mais Acessadas & Outreach
+  <% end %>
+
+  <%= link_to app_admin_users_path, class: "admin-tab-item #{'active' if controller_name == 'users'}" do %>
+    <span>👥</span> Usuários Cadastrados (<%= User.count %>)
+  <% end %>
+
+  <%= link_to app_admin_contacts_path, class: "admin-tab-item #{'active' if controller_name == 'contacts'}" do %>
+    <span>📬</span> Formulário de Contato (<%= Contact.count %>)
+  <% end %>
+
+  <%= link_to app_admin_outreach_logs_path, class: "admin-tab-item #{'active' if controller_name == 'outreach_logs'}" do %>
+    <span>📧</span> E-mails Enviados (<%= CompanyOutreachLog.count %>)
+  <% end %>
+</div>

@@ -1,0 +1,66 @@
+# config/deploy.yml
+# [DESATIVADO / COMENTADO] - Configurações de deploy do Kamal desativadas para o projeto Melhores Mecânicos.
+# Configure com o novo servidor e domínio antes de reativar.
+
+# service: melhores_mecanicos
+# 
+# image: futrica/melhores_mecanicos
+# 
+# deploy_timeout: 120
+# retain_containers: 1
+# 
+# servers:
+#   web:
+#     - 0.0.0.0 # Definir IP do servidor do Melhores Mecânicos
+# 
+# proxy:
+#   ssl: true
+#   healthcheck:
+#     path: /up
+#     interval: 5
+#     timeout: 10
+#   hosts:
+#     - melhoresmecanicos.com.br
+#     - www.melhoresmecanicos.com.br
+# 
+# registry:
+#   server: ghcr.io
+#   username: futrica
+#   password:
+#     - KAMAL_REGISTRY_PASSWORD
+# 
+# env:
+#   clear:
+#     SOLID_QUEUE_IN_PUMA: true
+#     WEB_CONCURRENCY: 2
+#     RAILS_MAX_THREADS: 5
+#     AWS_REGION: us-east-1
+#     AWS_BUCKET: melhores-mecanicos-storage
+#     # GOOGLE_ANALYTICS_ID: ""
+#   secret:
+#     - RAILS_MASTER_KEY
+#     - AWS_ACCESS_KEY_ID
+#     - AWS_SECRET_ACCESS_KEY
+#     - SMTP_USERNAME
+#     - SMTP_PASSWORD
+#     - GOOGLE_CLIENT_ID
+#     - GOOGLE_CLIENT_SECRET
+# 
+# aliases:
+#   console: app exec --interactive --reuse "bin/rails console"
+#   shell: app exec --interactive --reuse "bash"
+#   logs: app logs -f
+#   dbc: app exec --interactive --reuse "bin/rails dbconsole --include-password"
+# 
+# volumes:
+#   - "melhores_mecanicos_storage:/rails/storage"
+#   - "melhores_mecanicos_sitemaps:/rails/public/sitemaps"
+#   - "/var/run/docker.sock:/var/run/docker.sock"
+# 
+# asset_path: /rails/public/assets
+# 
+# builder:
+#   arch: amd64
+# 
+# ssh:
+#   user: root

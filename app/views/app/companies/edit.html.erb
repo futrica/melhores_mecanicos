@@ -1,0 +1,119 @@
+<div style="max-width: 750px; margin: 2rem auto; padding: 0 1.5rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--text-main, #1e293b); margin: 0;">Editar Perfil da Empresa</h1>
+    <a href="<%= app_root_path %>" style="color: var(--text-muted, #64748b); font-size: 0.85rem; font-weight: 700; text-decoration: none;">&larr; Voltar ao Painel</a>
+  </div>
+
+  <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+    <%= form_with model: [:app, @company], multipart: true, local: true, style: "display: flex; flex-direction: column; gap: 1.25rem;" do |f| %>
+      <% if @company.errors.any? %>
+        <div style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 10px; padding: 1rem; font-size: 0.85rem;">
+          <ul style="margin: 0; padding-left: 1.25rem;">
+            <% @company.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <!-- Nome Fantasia (Editável) -->
+      <div>
+        <%= f.label :trade_name, "Nome Fantasia (Como sua loja é conhecida) *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+        <%= f.text_field :trade_name, required: true, style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+      </div>
+
+      <!-- Razão Social (Inalterável / Readonly) -->
+      <div>
+        <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-muted, #64748b);">Razão Social (Registro Oficial CNPJ - Não editável)</label>
+        <input type="text" value="<%= @company.legal_name %>" disabled style="width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.95rem; background: #f1f5f9; color: #64748b; cursor: not-allowed; box-sizing: border-box;">
+        <span style="font-size: 0.75rem; color: var(--text-muted, #64748b);">A Razão Social é vinculada ao CNPJ oficial da Receita Federal e não pode ser alterada.</span>
+      </div>
+
+      <!-- Sobre a Empresa / Bio -->
+      <div>
+        <%= f.label :description, "Sobre a Empresa (Apresentação / Bio)", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+        <%= f.text_area :description, rows: 4, placeholder: "Conte a história da sua pousada ou hotel, diferenciais, localização, comodidades, etc...", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.9rem; box-sizing: border-box; line-height: 1.5;" %>
+      </div>
+
+      <!-- Horário de Funcionamento -->
+      <div>
+        <%= f.label :business_hours, "Horário de Funcionamento", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+        <%= f.text_field :business_hours, placeholder: "Seg a Sex: 08:00 às 18:00 | Sáb: 08:00 às 13:00 | Dom: Fechado", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+      </div>
+
+      <!-- E-mail Oficial de Contato (Editável) -->
+      <div>
+        <%= f.label :email, "E-mail Oficial de Contato da Empresa *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+        <%= f.email_field :email, required: true, placeholder: "contato@suaempresa.com.br", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+        <span style="font-size: 0.78rem; color: var(--text-muted, #64748b);">Você pode alterar o e-mail público da empresa se o e-mail cadastral inicial era o do contador.</span>
+      </div>
+
+      <!-- Website Oficial -->
+      <div>
+        <%= f.label :website, "🌐 Website Oficial / Link de Reservas", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+        <%= f.url_field :website, placeholder: "https://www.pousadasucesso.com.br", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+        <span style="font-size: 0.78rem; color: var(--text-muted, #64748b);">Endereço do seu site ou motor de reservas próprio.</span>
+      </div>
+
+      <!-- Galeria de Fotos da Propriedade (Limite Free: 3 Fotos) -->
+      <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <%= f.label :photos, "📸 Fotos da Propriedade (Fachada, Piscina, Área Comum)", style: "font-size: 0.9rem; font-weight: 800; color: var(--text-main, #1e293b); margin: 0;" %>
+          <span style="background: <%= @company.premium? ? '#dbeafe' : '#e2e8f0' %>; color: <%= @company.premium? ? '#1e40af' : '#475569' %>; font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 9999px;">
+            <%= @company.premium? ? "Plano Premium: Até 20 fotos (#{@company.photos.count}/20)" : "Plano Free: Até 3 fotos (#{@company.photos.count}/3)" %>
+          </span>
+        </div>
+
+        <% if @company.photos.attached? && @company.photos.any? %>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <% @company.photos.each do |photo| %>
+              <div style="position: relative; width: 110px; height: 85px; border-radius: 10px; overflow: hidden; border: 1px solid #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+                <img src="<%= rails_blob_path(photo, only_path: true) %>" style="width: 100%; height: 100%; object-fit: cover;">
+                <%= link_to "✕", purge_photo_app_company_path(@company, photo_id: photo.id), data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja remover esta foto?" }, style: "position: absolute; top: 4px; right: 4px; background: rgba(225, 29, 72, 0.9); color: white; text-decoration: none; border-radius: 6px; width: 22px; height: 22px; font-size: 0.75rem; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10;", title: "Remover foto" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <%= f.file_field :photos, multiple: true, accept: "image/*", style: "width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.85rem; background: white; box-sizing: border-box;" %>
+        <span style="font-size: 0.78rem; color: var(--text-muted, #64748b); display: block; margin-top: 0.4rem;">
+          <%= @company.premium? ? "Selecione até 20 fotos em alta resolução da sua propriedade para o perfil Premium." : "Selecione até 3 fotos da sua propriedade para o perfil gratuito." %>
+        </span>
+
+      </div>
+
+      <!-- Telefones & WhatsApp -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <%= f.label :phone_1, "Telefone Principal *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+          <%= f.text_field :phone_1, required: true, style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+          <label style="font-size: 0.8rem; color: var(--text-muted, #64748b); display: flex; align-items: center; gap: 0.4rem; margin-top: 0.3rem;">
+            <%= f.check_box :phone_1_whatsapp %> É WhatsApp
+          </label>
+        </div>
+
+        <div>
+          <%= f.label :phone_2, "Telefone Secundário", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+          <%= f.text_field :phone_2, style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+          <label style="font-size: 0.8rem; color: var(--text-muted, #64748b); display: flex; align-items: center; gap: 0.4rem; margin-top: 0.3rem;">
+            <%= f.check_box :phone_2_whatsapp %> É WhatsApp
+          </label>
+        </div>
+      </div>
+
+
+      <!-- Endereço Cadastral (Inalterável / Readonly) -->
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem;">
+        <span style="font-size: 0.85rem; font-weight: 800; color: var(--text-muted, #64748b); display: block; margin-bottom: 0.5rem; text-transform: uppercase;">📍 Endereço Oficial (Baseado no CNPJ - Não editável)</span>
+        <p style="font-size: 0.9rem; color: var(--text-main, #1e293b); margin: 0; font-weight: 600;">
+          <%= @company.street %>, <%= @company.number %> <%= @company.complement %><br>
+          <%= @company.neighborhood&.name %>, <%= @company.city.name %> - <%= @company.state.acronym %> (CEP: <%= @company.zip_code %>)
+        </p>
+      </div>
+
+      <div style="margin-top: 1rem;">
+        <%= f.submit "Salvar Alterações do Perfil", style: "width: 100%; background: var(--navy, #1e293b); color: white; font-weight: 700; padding: 0.85rem 1.5rem; border-radius: 10px; border: none; font-size: 1rem; cursor: pointer;" %>
+      </div>
+    <% end %>
+  </div>
+</div>

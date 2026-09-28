@@ -1,0 +1,106 @@
+<% content_for :title, "Usuários Cadastrados | Admin" %>
+
+<div class="app-dashboard">
+  <div style="margin-bottom: 1.5rem;">
+    <span class="app-role-badge">👥 Gestão de Usuários</span>
+    <h1 style="font-family: var(--font-title); font-size: 1.8rem; font-weight: 800; color: var(--navy); margin-top: 0.25rem;">
+      Usuários Cadastrados no Site
+    </h1>
+  </div>
+
+  <%# Shared Admin Tabs %>
+  <%= render "app/admin/admin_nav" %>
+
+  <%# Search & Filter Bar %>
+  <div class="admin-filter-card" style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-sm);">
+    <%= form_with url: app_admin_users_path, method: :get, local: true, style: "display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;" do |f| %>
+      <div style="flex: 1; min-width: 240px;">
+        <%= f.text_field :q, value: params[:q], placeholder: "Buscar por nome, e-mail ou telefone...", class: "auth-input", style: "width: 100%;" %>
+      </div>
+
+      <div style="min-width: 180px;">
+        <%= f.select :role, [["Todas as Funções", ""], ["Cliente", "client"], ["Empresa", "company"], ["Administrador", "admin"]], { selected: params[:role] }, class: "auth-select", style: "width: 100%;" %>
+      </div>
+
+      <div>
+        <%= f.submit "🔍 Filtrar", class: "app-btn-primary", style: "padding: 0.75rem 1.25rem;" %>
+        <% if params[:q].present? || params[:role].present? %>
+          <%= link_to "Limpar", app_admin_users_path, class: "app-btn-secondary", style: "padding: 0.75rem 1rem; text-decoration: none;" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Users Table %>
+  <% if @users.any? %>
+    <div class="admin-table-wrapper">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuário</th>
+            <th>E-mail</th>
+            <th>Telefone</th>
+            <th>Função (Role)</th>
+            <th>E-mail Confirmado</th>
+            <th>Data de Cadastro</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <tr>
+              <td><strong>#<%= user.id %></strong></td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <div class="app-user-avatar" style="width: 34px; height: 34px; font-size: 0.85rem; flex-shrink: 0;">
+                    <%= (user.name || user.email).first(2).upcase %>
+                  </div>
+                  <div>
+                    <strong><%= user.name.presence || "Sem nome" %></strong>
+                  </div>
+                </div>
+              </td>
+              <td><%= user.email %></td>
+              <td><%= user.phone.presence || "-" %></td>
+              <td>
+                <span class="admin-badge badge-<%= user.role %>">
+                  <%= user.role == "admin" ? "Administrador 👑" : (user.role == "company" ? "Empresa 🏬" : "Cliente 👷") %>
+                </span>
+              </td>
+              <td>
+                <% if user.confirmed? %>
+                  <span class="admin-badge badge-success">✅ Confirmado</span>
+                <% else %>
+                  <span class="admin-badge badge-warning">⏳ Pendente</span>
+                <% end %>
+              </td>
+              <td><%= l(user.created_at, format: "%d/%m/%Y às %H:%M") %></td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+                  <%= link_to "Detalhes", app_admin_user_path(user), class: "admin-btn-action" %>
+                  <% if user.role != "admin" %>
+                    <%= button_to impersonate_app_admin_user_path(user), method: :post, data: { turbo: false, turbo_confirm: "Deseja personificar o usuário #{user.name.presence || user.email}?" }, style: "background: #f59e0b; color: white; border: none; font-weight: 800; font-size: 0.75rem; padding: 0.4rem 0.7rem; border-radius: 6px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;" do %>
+                      <span>🎭</span> Personificar
+                    <% end %>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <%# Pagination Links %>
+    <% if @pagy.pages > 1 %>
+      <div style="display: flex; justify-content: center; margin-top: 1.5rem;">
+        <%== pagy_nav(@pagy) rescue nil %>
+      </div>
+    <% end %>
+  <% else %>
+    <div style="background: var(--card-bg); border: 1px dashed var(--card-border); border-radius: 12px; padding: 3rem; text-align: center;">
+      <p style="font-size: 1.1rem; color: var(--text-dark); margin: 0;">Nenhum usuário encontrado com os filtros aplicados.</p>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,46 @@
+<div style="max-width: 700px; margin: 1.5rem auto; padding: 0 1rem; box-sizing: border-box;">
+  <div style="text-align: center; margin-bottom: 1.5rem;">
+    <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--orange, #ff6b00); background: rgba(255,107,0,0.1); padding: 0.35rem 0.85rem; border-radius: 9999px; display: inline-block; margin-bottom: 0.5rem;">
+      Autenticação de Perfil
+    </span>
+    <h1 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main, #1e293b); margin: 0 0 0.5rem 0; line-height: 1.25; word-break: break-word;">Verificação de Perfil de Empresa</h1>
+    <p style="color: var(--text-muted, #64748b); font-size: 0.9rem; margin: 0; line-height: 1.5;">
+      Escolha o método ideal para comprovar a propriedade ou vínculo com a empresa <strong><%= @company.trade_name.presence || @company.legal_name %></strong>.
+    </p>
+  </div>
+
+  <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.25rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03); box-sizing: border-box; overflow: hidden;">
+    <!-- Dica de Aprovação Automática por E-mail -->
+    <div style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem; font-size: 0.88rem; line-height: 1.5;">
+      ⚡ <strong>Aprovação Automática por E-mail Corporativo:</strong><br>
+      Se o seu e-mail de cadastro tiver o mesmo domínio do e-mail da empresa (ex: <code>seunome@<%= @company.email.to_s.split('@').last.presence || 'empresa.com.br' %></code>), o perfil é aprovado automaticamente assim que você confirmar seu e-mail ou fizer login via Google, sem necessidade de envio de documentos.
+    </div>
+
+    <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem; font-size: 0.88rem; line-height: 1.5;">
+      📌 <strong>Opções de Envio para Análise Manual:</strong><br><br>
+      <strong>• Opção A (Sócio / Proprietário):</strong><br>
+      1. CNH, RG ou Cartão CNPJ do titular.<br>
+      2. Selfie segurando o documento próximo ao rosto.<br><br>
+      <strong>• Opção B (Funcionário / Gerente / Procurador de Grandes Empresas):</strong><br>
+      1. Comprovante de Vínculo (Crachá da empresa, Carta/Procuração autorizando a gestão do perfil, Cartão de Visitas ou Holerite com CNPJ).<br>
+      2. Documento oficial com foto do solicitante (CNH/RG).<br><br>
+      ⏱️ <em>A conferência e verificação dos documentos é concluída em até <strong>5 dias úteis</strong>.</em>
+    </div>
+
+    <%= form_with url: submit_verification_app_company_path(@company), method: :post, multipart: true, local: true, style: "display: flex; flex-direction: column; gap: 1.25rem;" do |f| %>
+      <div>
+        <%= f.label :document_proof, "1. Comprovante da Empresa ou Vínculo (Cartão CNPJ, Contrato Social, Crachá ou Procuração) *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+        <%= f.file_field :document_proof, required: true, accept: "image/*,.pdf", style: "width: 100%; padding: 0.75rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.85rem; box-sizing: border-box;" %>
+      </div>
+
+      <div>
+        <%= f.label :selfie_proof, "2. Documento com Foto do Responsável ou Selfie com o Documento *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+        <%= f.file_field :selfie_proof, required: true, accept: "image/*,.pdf", style: "width: 100%; padding: 0.75rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.85rem; box-sizing: border-box;" %>
+      </div>
+
+      <div style="margin-top: 0.5rem;">
+        <%= f.submit "Enviar Documentos para Análise", style: "width: 100%; background: #10b981; color: white; font-weight: 700; padding: 0.85rem 1.5rem; border-radius: 10px; border: none; font-size: 0.95rem; cursor: pointer;" %>
+      </div>
+    <% end %>
+  </div>
+</div>

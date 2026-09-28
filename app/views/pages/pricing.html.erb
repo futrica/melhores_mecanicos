@@ -1,0 +1,278 @@
+<% content_for :title, "Planos e Preços - Hospedagem Direta" %>
+<% content_for :meta_description, "Conheça os planos do Hospedagem Direta. Divulgue sua pousada ou hotel sem comissão sobre reservas!" %>
+
+<div class="pricing-page-wrapper" style="max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem;">
+  <!-- Header section -->
+  <div style="text-align: center; max-width: 750px; margin: 0 auto 3.5rem auto;">
+    <span style="background: rgba(37, 99, 235, 0.1); color: #2563eb; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.4rem 1rem; border-radius: 9999px; display: inline-block; margin-bottom: 1rem;">
+      Transparência & Zero Comissão
+    </span>
+    <h1 style="font-size: 2.5rem; font-weight: 900; color: #0f172a; margin-bottom: 1rem; line-height: 1.2;">
+      Escolha o plano ideal para alavancar suas reservas diretas
+    </h1>
+    <p style="font-size: 1.1rem; color: #475569; line-height: 1.6;">
+      No Hospedagem Direta, você nunca paga comissão sobre hóspedes. Conectamos o viajante direto ao seu WhatsApp, telefone ou motor de reservas.
+    </p>
+  </div>
+
+  <!-- Plans Cards Grid -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
+    <!-- Plan Free -->
+    <div style="background: white; border: 2px solid #e2e8f0; border-radius: 24px; padding: 2.5rem 2rem; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0;">Grátis (Free)</h3>
+          <span style="background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.75rem; border-radius: 9999px;">Ativo</span>
+        </div>
+        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 1.5rem; min-height: 40px;">
+          Ideal para começar e garantir a presença digital da sua propriedade na sua cidade.
+        </p>
+
+        <div style="margin-bottom: 2rem;">
+          <span style="font-size: 2.5rem; font-weight: 900; color: #0f172a;">R$ 0</span>
+          <span style="font-size: 0.9rem; color: #64748b;">/ para sempre</span>
+        </div>
+
+        <ul style="list-style: none; padding: 0; margin: 0 0 2rem 0; display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.92rem; color: #334155;">
+          <li style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="color: #10b981; font-weight: 900;">✓</span> Até 3 fotos da propriedade
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="color: #10b981; font-weight: 900;">✓</span> Até 3 quartos (1 foto por quarto)
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="color: #10b981; font-weight: 900;">✓</span> Formulário de contato e telefone
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="color: #10b981; font-weight: 900;">✓</span> Cadastro de amenidades e localização
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="color: #10b981; font-weight: 900;">✓</span> Selo de perfil verificado
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.6rem; color: #94a3b8; text-decoration: line-through;">
+            <span>✕</span> Botão de WhatsApp direto destacado
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.6rem; color: #94a3b8; text-decoration: line-through;">
+            <span>✕</span> Destaque no topo das buscas da cidade
+          </li>
+        </ul>
+      </div>
+
+      <% if user_signed_in? && current_user.company.present? %>
+        <%= link_to "Acessar Meu Painel", app_root_path, style: "display: block; text-align: center; background: #f1f5f9; color: #0f172a; font-weight: 800; padding: 0.9rem; border-radius: 14px; text-decoration: none; border: 1px solid #cbd5e1;" %>
+      <% else %>
+        <%= link_to "Cadastrar Minha Hospedagem", new_claim_path, style: "display: block; text-align: center; background: #f1f5f9; color: #0f172a; font-weight: 800; padding: 0.9rem; border-radius: 14px; text-decoration: none; border: 1px solid #cbd5e1;" %>
+      <% end %>
+    </div>
+
+    <!-- Plan Premium (Most Popular) -->
+    <div style="background: white; border: 2px solid #2563eb; border-radius: 24px; padding: 2.5rem 2rem; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 12px 30px rgba(37, 99, 235, 0.12);">
+      <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; font-size: 0.75rem; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.35rem 1.25rem; border-radius: 9999px; box-shadow: 0 4px 10px rgba(37,99,235,0.3);">
+        Mais Recomendado
+      </div>
+
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0;">Premium</h3>
+          <% if @company&.plan == "premium" %>
+            <span style="background: #dcfce7; color: #15803d; font-size: 0.75rem; font-weight: 800; padding: 0.3rem 0.75rem; border-radius: 9999px;">✓ Plano Ativo</span>
+          <% else %>
+            <span style="background: #dbeafe; color: #1e40af; font-size: 0.75rem; font-weight: 800; padding: 0.3rem 0.75rem; border-radius: 9999px;">⚡ Disponível</span>
+          <% end %>
+        </div>
+        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 1.5rem; min-height: 40px;">
+          Maximização total de reservas com botão direto no WhatsApp, galeria completa e prioridade na busca.
+        </p>
+
+        <div style="margin-bottom: 2rem;">
+          <span style="font-size: 2.5rem; font-weight: 900; color: #2563eb;">R$ 39,90</span>
+          <span style="font-size: 0.9rem; color: #64748b;">/ mês (cancele quando quiser)</span>
+        </div>
+
+        <ul style="list-style: none; padding: 0; margin: 0 0 2rem 0; display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.92rem; color: #334155;">
+          <li style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="color: #2563eb; font-weight: 900;">✓</span> <strong>Até 20 fotos</strong> em alta resolução + Vídeo
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="color: #2563eb; font-weight: 900;">✓</span> <strong>Quartos ilimitados</strong> com galeria dedicada por quarto
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="color: #2563eb; font-weight: 900;">✓</span> <strong>Botão de WhatsApp destacado</strong> + Link motor de reservas
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="color: #2563eb; font-weight: 900;">✓</span> <strong>Topo das buscas</strong> na sua cidade e estado
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="color: #2563eb; font-weight: 900;">✓</span> <strong>Sem anúncios publicitários</strong> no seu perfil
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="color: #2563eb; font-weight: 900;">✓</span> Perfil 100% exclusivo <strong>sem hotéis concorrentes</strong>
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="color: #2563eb; font-weight: 900;">✓</span> Selo <strong>Hospedagem em Destaque</strong>
+          </li>
+        </ul>
+      </div>
+
+      <% if user_signed_in? && @company.present? %>
+        <% if @company.plan == "premium" %>
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 0.9rem; border-radius: 14px; text-align: center; color: #166534; font-size: 0.88rem; font-weight: 800;">
+            ✓ Este é o seu plano atual ativo
+          </div>
+        <% elsif @company.card_last4.present? %>
+          <button type="button" onclick="document.getElementById('confirm-premium-modal').style.display='flex'" style="width: 100%; text-align: center; background: #2563eb; color: white; font-weight: 800; padding: 0.9rem; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(37,99,235,0.3);">
+            Assinar Plano Premium por R$ 39,90/mês &rarr;
+          </button>
+        <% else %>
+          <%= button_to subscribe_app_company_path(@company, plan_slug: "premium"), method: :post, style: "width: 100%; text-align: center; background: #2563eb; color: white; font-weight: 800; padding: 0.9rem; border-radius: 14px; border: none; cursor: pointer; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(37,99,235,0.3);" do %>
+            Assinar Plano Premium por R$ 39,90/mês &rarr;
+          <% end %>
+        <% end %>
+      <% else %>
+        <%= link_to "Cadastrar e Assinar Premium", new_claim_path, style: "display: block; text-align: center; background: #2563eb; color: white; font-weight: 800; padding: 0.9rem; border-radius: 14px; text-decoration: none; box-shadow: 0 4px 14px rgba(37,99,235,0.3);" %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Comparison Table Section -->
+  <div style="background: white; border: 1px solid #e2e8f0; border-radius: 24px; padding: 2.5rem 2rem; box-shadow: 0 4px 14px rgba(0,0,0,0.04);">
+    <h2 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 1.5rem; text-align: center;">
+      Comparativo Detalhado de Recursos
+    </h2>
+
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.92rem;">
+        <thead>
+          <tr style="border-bottom: 2px solid #e2e8f0;">
+            <th style="padding: 1rem; color: #475569; font-weight: 800;">Recurso</th>
+            <th style="padding: 1rem; color: #475569; font-weight: 800; text-align: center;">Plano Free</th>
+            <th style="padding: 1rem; color: #2563eb; font-weight: 800; text-align: center;">Plano Premium</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 1rem; font-weight: 700; color: #1e293b;">Fotos da Propriedade</td>
+            <td style="padding: 1rem; text-align: center; color: #64748b;">Até 3 fotos</td>
+            <td style="padding: 1rem; text-align: center; color: #2563eb; font-weight: 700;">Até 20 fotos + Vídeo</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 1rem; font-weight: 700; color: #1e293b;">Cadastro de Quartos</td>
+            <td style="padding: 1rem; text-align: center; color: #64748b;">Até 3 quartos (1 foto/cada)</td>
+            <td style="padding: 1rem; text-align: center; color: #2563eb; font-weight: 700;">Ilimitados com fotos dedicadas</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 1rem; font-weight: 700; color: #1e293b;">Contato Direto</td>
+            <td style="padding: 1rem; text-align: center; color: #64748b;">Formulário + Telefone</td>
+            <td style="padding: 1rem; text-align: center; color: #2563eb; font-weight: 700;">Botão WhatsApp Destacado + Site/Instagram</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 1rem; font-weight: 700; color: #1e293b;">Posição na Busca</td>
+            <td style="padding: 1rem; text-align: center; color: #64748b;">Posição normal</td>
+            <td style="padding: 1rem; text-align: center; color: #2563eb; font-weight: 700;">Destaque no topo da cidade/estado</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 1rem; font-weight: 700; color: #1e293b;">Anúncios Publicitários no Perfil</td>
+            <td style="padding: 1rem; text-align: center; color: #64748b;">Exibidos</td>
+            <td style="padding: 1rem; text-align: center; color: #10b981; font-weight: 700;">✓ Removidos (Sem Anúncios)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 1rem; font-weight: 700; color: #1e293b;">Hotéis Concorrentes no Perfil</td>
+            <td style="padding: 1rem; text-align: center; color: #64748b;">Exibidos no rodapé</td>
+            <td style="padding: 1rem; text-align: center; color: #10b981; font-weight: 700;">✓ Removidos (Perfil Exclusivo)</td>
+          </tr>
+        </tbody>
+
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 1rem; font-weight: 700; color: #1e293b;">Contato Direto</td>
+            <td style="padding: 1rem; text-align: center; color: #64748b;">Formulário + Telefone</td>
+            <td style="padding: 1rem; text-align: center; color: #2563eb; font-weight: 700;">Botão WhatsApp Destacado + Site/Instagram</td>
+            <td style="padding: 1rem; text-align: center; color: #d97706; font-weight: 700;">Botão WhatsApp + Canal direto próprio</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 1rem; font-weight: 700; color: #1e293b;">Posição na Busca</td>
+            <td style="padding: 1rem; text-align: center; color: #64748b;">Posição normal</td>
+            <td style="padding: 1rem; text-align: center; color: #2563eb; font-weight: 700;">Destaque no topo da cidade/estado</td>
+            <td style="padding: 1rem; text-align: center; color: #d97706; font-weight: 700;">Prioridade máxima no topo</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 1rem; font-weight: 700; color: #1e293b;">Anúncios Publicitários no Perfil</td>
+            <td style="padding: 1rem; text-align: center; color: #64748b;">Exibidos</td>
+            <td style="padding: 1rem; text-align: center; color: #10b981; font-weight: 700;">✓ Removidos (Sem Anúncios)</td>
+            <td style="padding: 1rem; text-align: center; color: #10b981; font-weight: 700;">✓ Removidos (Sem Anúncios)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 1rem; font-weight: 700; color: #1e293b;">Hotéis Concorrentes no Perfil</td>
+            <td style="padding: 1rem; text-align: center; color: #64748b;">Exibidos no rodapé</td>
+            <td style="padding: 1rem; text-align: center; color: #10b981; font-weight: 700;">✓ Removidos (Perfil Exclusivo)</td>
+            <td style="padding: 1rem; text-align: center; color: #10b981; font-weight: 700;">✓ Removidos (Perfil Exclusivo)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 1rem; font-weight: 700; color: #1e293b;">Website Próprio Exclusivo</td>
+            <td style="padding: 1rem; text-align: center; color: #94a3b8;">✕</td>
+            <td style="padding: 1rem; text-align: center; color: #94a3b8;">✕</td>
+            <td style="padding: 1rem; text-align: center; color: #10b981; font-weight: 900;">✓ Incluso (Criação + Hospedagem)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<% if user_signed_in? && @company.present? && @company.card_last4.present? %>
+  <!-- Modal Confirmação Premium -->
+  <div id="confirm-premium-modal" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(4px);">
+    <div style="background: white; border-radius: 24px; padding: 2rem; max-width: 500px; width: 100%; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="font-size: 1.2rem; font-weight: 800; color: #0f172a; margin: 0;">⭐ Confirmar Assinatura - Plano Premium</h3>
+        <button type="button" onclick="document.getElementById('confirm-premium-modal').style.display='none'" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b;">✕</button>
+      </div>
+
+      <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 1rem; border-radius: 14px; margin-bottom: 1.25rem;">
+        <div style="font-size: 1.25rem; font-weight: 900; color: #1e40af;">R$ 39,90 / mês</div>
+        <div style="font-size: 0.82rem; color: #1d4ed8; margin-top: 0.25rem;">
+          Cobrança recorrente mensal. Você pode cancelar quando quiser diretamente no seu painel.
+        </div>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.85rem 1rem; border-radius: 12px; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+        <div style="font-size: 1.5rem;">💳</div>
+        <div>
+          <strong style="font-size: 0.88rem; color: #1e293b; text-transform: uppercase;">
+            Cartão <%= @company.card_brand.presence || "Crédito" %> **** <%= @company.card_last4 %>
+          </strong>
+          <div style="font-size: 0.78rem; color: #64748b;">Cobrança realizada com segurança via Stripe</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <strong style="font-size: 0.85rem; color: #334155; display: block; margin-bottom: 0.5rem;">Recursos incluídos no seu perfil:</strong>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.83rem; color: #475569;">
+          <li>✓ <strong>Até 20 fotos</strong> em alta resolução + Vídeo</li>
+          <li>✓ <strong>Quartos ilimitados</strong> com galeria dedicada por quarto</li>
+          <li>✓ <strong>Botão de WhatsApp destacado</strong> + Link motor de reservas</li>
+          <li>✓ <strong>Topo das buscas</strong> na sua cidade e estado</li>
+          <li>✓ <strong>Sem anúncios publicitários</strong> no seu perfil</li>
+          <li>✓ Perfil 100% exclusivo <strong>sem hotéis concorrentes</strong></li>
+          <li>✓ Selo <strong>Hospedagem em Destaque</strong></li>
+        </ul>
+      </div>
+
+      <label style="display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.78rem; color: #475569; margin-bottom: 1.25rem;">
+        <input type="checkbox" required checked style="margin-top: 0.15rem;">
+        <span>Declaro que li e concordo com os <a href="<%= terms_path %>" target="_blank" style="color: #2563eb; text-decoration: underline;">Termos de Assinatura Recorrente</a> e autorizo o débito recorrente até o cancelamento.</span>
+      </label>
+
+      <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+        <button type="button" onclick="document.getElementById('confirm-premium-modal').style.display='none'" style="background: #f1f5f9; color: #475569; font-weight: 700; font-size: 0.85rem; border: none; padding: 0.75rem 1.25rem; border-radius: 12px; cursor: pointer;">
+          Cancelar
+        </button>
+        <%= button_to subscribe_app_company_path(@company, plan_slug: "premium"), method: :post, style: "background: #2563eb; color: white; font-weight: 800; font-size: 0.88rem; border: none; padding: 0.75rem 1.25rem; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.3);" do %>
+          Confirmar e Ativar por R$ 39,90/mês
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+<% end %>
+
+

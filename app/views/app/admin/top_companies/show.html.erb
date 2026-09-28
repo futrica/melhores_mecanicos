@@ -1,0 +1,279 @@
+<% content_for :title, "#{@company.trade_name.presence || @company.legal_name} | Detalhes & Outreach Admin" %>
+
+<div class="app-dashboard">
+  <div style="margin-bottom: 1.5rem;">
+    <%= link_to app_admin_top_companies_path, style: "color: #2563eb; text-decoration: none; font-weight: 700; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 0.3rem;" do %>
+      ← Voltar para empresas mais acessadas
+    <% end %>
+  </div>
+
+  <div class="app-hero-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); margin-bottom: 2rem;">
+    <div class="app-hero-content">
+      <span class="app-role-badge">📍 <%= @company.city.name %> / <%= @company.state.acronym %></span>
+      <h1><%= @company.trade_name.presence || @company.legal_name %></h1>
+      <p>CNPJ: <%= @company.cnpj %> &bull; Razão Social: <%= @company.legal_name %></p>
+    </div>
+    <div class="app-hero-stats">
+      <div class="app-stat-card">
+        <span class="app-stat-value" style="color: #3b82f6;">🔥 <%= @company.views_count %></span>
+        <span class="app-stat-label">Total de Acessos</span>
+      </div>
+      <div class="app-stat-card">
+        <span class="app-stat-value" style="color: <%= @company.approved? ? '#22c55e' : '#eab308' %>;">
+          <%= @company.approved? ? '✅ Reivindicada' : '⚪ Não Reivindicada' %>
+        </span>
+        <span class="app-stat-label">Status Reivindicação</span>
+      </div>
+    </div>
+  </div>
+
+  <%
+    clean_cnae = @company.cnae_principal.to_s.gsub(/\D/, "")
+    mapped_main_cnae = Company::CNAE_MAPPINGS[clean_cnae]
+    is_main_cnae_lodging = mapped_main_cnae.present?
+
+    cnae_sec_array = @company.cnae_secundarios.to_s.split(",").map { |c| c.gsub(/\D/, "").strip }.reject(&:blank?)
+    total_cnaes = 1 + cnae_sec_array.size
+    lodging_sec_cnaes = cnae_sec_array.select { |c| Company::CNAE_MAPPINGS.key?(c) }
+  %>
+
+  <!-- CNAE & Business Activity Analysis Card -->
+  <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+    <h3 style="font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+      <span>📊</span> Enquadramento de Atividade & CNAEs Cadastrados
+    </h3>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+      <!-- Main Activity Status -->
+      <div style="background: <%= is_main_cnae_lodging ? '#f0fdf4' : '#fefce8' %>; border: 1px solid <%= is_main_cnae_lodging ? '#bbf7d0' : '#fef08a' %>; border-radius: 12px; padding: 1.1rem;">
+        <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: #64748b; display: block; margin-bottom: 0.3rem;">Foco Principal do Negócio</span>
+        
+        <% if is_main_cnae_lodging %>
+          <strong style="display: flex; align-items: center; gap: 0.4rem; font-size: 1rem; color: #15803d; margin-bottom: 0.3rem;">
+            🏨 CNAE Principal em Hospedagem: SIM
+          </strong>
+          <span style="font-size: 0.83rem; color: #166534; display: block;">
+            CNAE Principal: <strong><%= @company.cnae_principal %></strong> (<%= mapped_main_cnae %>).
+          </span>
+        <% else %>
+          <strong style="display: flex; align-items: center; gap: 0.4rem; font-size: 1rem; color: #a16207; margin-bottom: 0.3rem;">
+            ⚠️ CNAE Principal NÃO é Hospedagem
+          </strong>
+          <span style="font-size: 0.85rem; color: #854d0e; display: block; font-weight: 700; background: rgba(255,255,255,0.7); padding: 0.4rem 0.6rem; border-radius: 6px; margin: 0.3rem 0;">
+            CNAE Principal: <%= @company.cnae_principal_display %>
+          </span>
+          <span style="font-size: 0.8rem; color: #a16207; font-weight: 700; display: block; margin-top: 0.4rem;">
+            📌 Esta empresa foi listada por possuir serviço de hospedagem cadastrado como <u>CNAE Secundário</u> na Receita Federal.
+          </span>
+        <% end %>
+      </div>
+
+      <!-- CNAEs Quantity & Summary -->
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.1rem;">
+        <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: #64748b; display: block; margin-bottom: 0.3rem;">Volume de CNAEs na Receita Federal</span>
+        <strong style="font-size: 1.1rem; color: #0f172a; display: block; margin-bottom: 0.3rem;">
+          📋 <%= total_cnaes %> <%= total_cnaes == 1 ? 'CNAE cadastrado' : 'CNAEs cadastrados' %>
+        </strong>
+        <span style="font-size: 0.83rem; color: #475569; display: block;">
+          1 CNAE Principal + <%= cnae_sec_array.size %> <%= cnae_sec_array.size == 1 ? 'CNAE Secundário' : 'CNAEs Secundários' %>.
+        </span>
+        <% if lodging_sec_cnaes.any? %>
+          <div style="font-size: 0.8rem; color: #2563eb; font-weight: 700; margin-top: 0.4rem;">
+            ✓ CNAE Secundário de Hospedagem: <%= lodging_sec_cnaes.map { |code| "#{code} (#{Company::CNAE_MAPPINGS[code]})" }.join(", ") %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email Validation & Outreach Control Card -->
+  <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+    <h3 style="font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+      <span>🛡️</span> Diagnóstico do E-mail & Disparo de Outreach
+    </h3>
+
+    <% email_clean = @company.email.to_s.strip.downcase %>
+    <% last_sent = @outreach_logs.where(status: 'sent').first %>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; align-items: start;">
+      <div>
+        <div style="font-size: 0.82rem; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 0.5rem;">Validação e Status Cadastral</div>
+        
+        <% if email_clean.blank? %>
+          <div style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 10px; padding: 1rem; color: #475569;">
+            <strong style="display: block; font-size: 0.95rem; color: #334155;">⚪ Nenhum E-mail Cadastrado</strong>
+            <span style="font-size: 0.82rem;">Esta empresa não possui e-mail cadastrado na ficha do CNPJ.</span>
+          </div>
+        <% elsif @opt_out.present? %>
+          <div style="background: #fee2e2; border: 1px solid #fca5a5; border-radius: 10px; padding: 1rem; color: #991b1b;">
+            <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.3rem;">🛑 Recusado pelo Destinatário (Opt-Out / Spam)</strong>
+            <span style="font-size: 0.82rem; display: block;">O destinatário ou proprietário solicitou o cancelamento em <%= (@opt_out.unsubscribed_at || @opt_out.created_at).strftime("%d/%m/%Y às %H:%M") %>.</span>
+            <div style="font-size: 0.82rem; margin-top: 0.4rem; font-weight: 700;">
+              Motivo: <%= CompanyEmailOptOut::REASONS[@opt_out.reason] || @opt_out.reason || "Cancelamento Solicitado" %>
+            </div>
+            <% if @opt_out.feedback.present? %>
+              <div style="font-size: 0.8rem; font-style: italic; margin-top: 0.3rem; background: rgba(255,255,255,0.6); padding: 0.4rem 0.6rem; border-radius: 6px;">
+                "<%= @opt_out.feedback %>"
+              </div>
+            <% end %>
+          </div>
+        <% elsif @email_status == :invalid_format %>
+          <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 10px; padding: 1rem; color: #92400e;">
+            <strong style="display: block; font-size: 0.95rem;">⚠️ E-mail Invalido (Sintaxe Incorreta)</strong>
+            <span style="font-size: 0.82rem;">O e-mail <strong><%= @company.email %></strong> possui um formato de sintaxe incorreto.</span>
+          </div>
+        <% elsif @email_status == :invalid_mx %>
+          <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 10px; padding: 1rem; color: #92400e;">
+            <strong style="display: block; font-size: 0.95rem;">⚠️ Domínio de E-mail Sem Registro MX</strong>
+            <span style="font-size: 0.82rem;">O domínio de <strong><%= @company.email %></strong> não possui servidores de e-mail MX válidos no DNS (risco de bounce e impacto na reputação).</span>
+          </div>
+        <% elsif last_sent.present? %>
+          <div style="background: #dcfce7; border: 1px solid #86efac; border-radius: 10px; padding: 1rem; color: #166534;">
+            <strong style="display: block; font-size: 0.95rem;">🟢 E-mail Válido & Já Enviado</strong>
+            <span style="font-size: 0.85rem;">Enviado com sucesso em: <strong><%= last_sent.sent_at.strftime("%d/%m/%Y às %H:%M") %></strong> (há <%= distance_of_time_in_words(last_sent.sent_at, Time.current) %>).</span>
+            <span style="display: block; font-size: 0.78rem; margin-top: 0.25rem;">Servidores MX ativos e validados. Destinatário: <%= last_sent.email %></span>
+          </div>
+        <% else %>
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 1rem; color: #166534;">
+            <strong style="display: block; font-size: 0.95rem; color: #15803d;">🟢 E-mail Válido & Pronto para Envio</strong>
+            <span style="font-size: 0.82rem;">O e-mail <strong><%= @company.email %></strong> possui sintaxe correta e registros MX verificados. Nenhum disparo realizado ainda.</span>
+          </div>
+        <% end %>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div style="font-size: 0.82rem; font-weight: 800; text-transform: uppercase; color: #64748b;">Ações de Envio</div>
+        
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <% if @can_send_email %>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              <%= button_to send_email_app_admin_top_company_path(@company), method: :post, data: { turbo: false, confirm: (last_sent ? "Esta empresa já recebeu e-mail em #{last_sent.sent_at.strftime('%d/%m/%Y')}. Deseja enviar novamente?" : "Confirmar envio de e-mail de apresentação para #{@company.email}?") }, style: "background: #2563eb; color: white; border: none; padding: 0.75rem 1.25rem; border-radius: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;" do %>
+                📧 <%= last_sent ? 'Reenviar E-mail de Apresentação' : 'Disparar E-mail de Apresentação' %>
+              <% end %>
+
+              <% if last_sent.present? %>
+                <%= button_to send_email_app_admin_top_company_path(@company, force: true), method: :post, data: { turbo: false, confirm: "Atenção: isto vai ignorar o cooldown de 30 dias. Confirmar reenvio forçado?" }, style: "background: #475569; color: white; border: none; padding: 0.75rem 1rem; border-radius: 10px; font-weight: 700; font-size: 0.82rem; cursor: pointer;" do %>
+                  ⚡ Forçar Reenvio Sem Cooldown
+                <% end %>
+              <% end %>
+            </div>
+          <% else %>
+            <!-- Disabled Button showing explicit reason -->
+            <button disabled style="background: #e2e8f0; color: #94a3b8; border: 1px solid #cbd5e1; padding: 0.75rem 1.25rem; border-radius: 10px; font-weight: 700; font-size: 0.88rem; cursor: not-allowed; display: inline-flex; align-items: center; gap: 0.4rem;">
+              🚫 Disparo de E-mail Desativado
+            </button>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 0.8rem; color: #475569; font-weight: 600;">
+              📌 <strong>Motivo da Desativação:</strong> <%= @send_disabled_reason %>
+            </div>
+          <% end %>
+
+          <% if @company.has_whatsapp? %>
+            <div style="margin-top: 0.5rem;">
+              <a href="<%= @company.whatsapp_url %>" target="_blank" style="background: #25d366; color: white; text-decoration: none; padding: 0.75rem 1.25rem; border-radius: 10px; font-weight: 700; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 0.4rem;">
+                💬 Contato via WhatsApp (<%= @company.whatsapp_number %>)
+              </a>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Outreach Logs History Table -->
+  <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; overflow: hidden; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+    <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color, #e2e8f0); display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0;">
+        📋 Histórico de E-mails Enviados para esta Empresa (<%= @outreach_logs.count %>)
+      </h3>
+    </div>
+
+    <% if @outreach_logs.any? %>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
+          <thead>
+            <tr style="background: rgba(30, 41, 59, 0.03); border-bottom: 1px solid var(--border-color, #e2e8f0); color: var(--text-muted, #64748b); font-weight: 800; text-transform: uppercase; font-size: 0.75rem;">
+              <th style="padding: 0.85rem 1.25rem;">Data / Hora</th>
+              <th style="padding: 0.85rem 1.25rem;">E-mail Destino</th>
+              <th style="padding: 0.85rem 1.25rem;">Campanha</th>
+              <th style="padding: 0.85rem 1.25rem;">Status do Disparo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @outreach_logs.each do |log| %>
+              <tr style="border-bottom: 1px solid var(--border-color, #f1f5f9);">
+                <td style="padding: 0.85rem 1.25rem; font-weight: 700; color: #0f172a;">
+                  <%= log.sent_at.strftime("%d/%m/%Y às %H:%M:%S") %>
+                </td>
+                <td style="padding: 0.85rem 1.25rem; font-family: monospace; color: #334155;">
+                  <%= log.email %>
+                </td>
+                <td style="padding: 0.85rem 1.25rem; color: #64748b;">
+                  <%= log.campaign_name %>
+                </td>
+                <td style="padding: 0.85rem 1.25rem;">
+                  <% case log.status %>
+                  <% when 'sent' %>
+                    <span style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 9999px; font-weight: 700; font-size: 0.78rem;">Enviado com Sucesso</span>
+                  <% when 'failed' %>
+                    <span style="background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 9999px; font-weight: 700; font-size: 0.78rem;">Falha SMTP</span>
+                  <% when 'invalid_mx' %>
+                    <span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 9999px; font-weight: 700; font-size: 0.78rem;">MX / Domínio Inválido</span>
+                  <% else %>
+                    <span style="background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 9999px; font-weight: 700; font-size: 0.78rem;"><%= log.status %></span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div style="padding: 2.5rem; text-align: center; color: #64748b;">
+        Nenhum e-mail de apresentação enviado anteriormente para esta empresa.
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Detailed Company Info Grid -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+    <!-- Basic Info Card -->
+    <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem;">
+      <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin: 0 0 1rem 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;">
+        🏢 Dados da Empresa
+      </h4>
+      <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.88rem;">
+        <div><strong>Nome Fantasia:</strong> <%= @company.trade_name.presence || "—" %></div>
+        <div><strong>Razão Social:</strong> <%= @company.legal_name %></div>
+        <div><strong>CNPJ:</strong> <%= @company.cnpj %></div>
+        <div><strong>CNAE Principal:</strong> <%= @company.cnae_principal_display %></div>
+        <div><strong>Status Cadastral:</strong> <%= @company.status %></div>
+        <div><strong>Data de Abertura:</strong> <%= @company.opening_date ? @company.opening_date.strftime("%d/%m/%Y") : "—" %></div>
+        <div><strong>Porte:</strong> <%= @company.company_size.presence || "—" %></div>
+      </div>
+    </div>
+
+    <!-- Contact & Location Card -->
+    <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem;">
+      <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin: 0 0 1rem 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;">
+        📍 Contato & Localização
+      </h4>
+      <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.88rem;">
+        <div><strong>E-mail:</strong> <%= @company.email.presence || "Não informado" %></div>
+        <div><strong>Telefone 1:</strong> <%= @company.phone_1.presence || "—" %> <%= " (WhatsApp)" if @company.phone_1_is_whatsapp? %></div>
+        <div><strong>Telefone 2:</strong> <%= @company.phone_2.presence || "—" %> <%= " (WhatsApp)" if @company.phone_2_is_whatsapp? %></div>
+        <div>
+          <strong>Website:</strong>
+          <% if safe_url = safe_external_url(@company.website) %>
+            <%= link_to @company.website, safe_url, target: "_blank", rel: "noopener", style: "color: #2563eb;" %>
+          <% else %>
+            —
+          <% end %>
+        </div>
+        <div><strong>Cidade / UF:</strong> <%= @company.city.name %> / <%= @company.state.acronym %></div>
+        <div><strong>Bairro:</strong> <%= @company.neighborhood&.name.presence || "—" %></div>
+        <div><strong>Endereço:</strong> <%= [@company.street, @company.number, @company.complement].compact_blank.join(", ").presence || "—" %></div>
+        <div><strong>CEP:</strong> <%= @company.zip_code.presence || "—" %></div>
+      </div>
+    </div>
+  </div>
+</div>

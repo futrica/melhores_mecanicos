@@ -1,0 +1,52 @@
+<div id="contact-disclaimer-modal" class="hidden fixed inset-0 z-[100] overflow-y-auto bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-200">
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 sm:p-7 text-slate-800 border border-slate-200/80 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+    
+    <!-- Close Icon -->
+    <button type="button" id="btn-close-disclaimer" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Fechar">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Header & Icon -->
+    <div class="flex items-start gap-3.5">
+      <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-black text-xl shrink-0 shadow-inner">
+        ⚠️
+      </div>
+      <div>
+        <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 leading-snug">
+          Alerta de Segurança e Reserva Direta
+        </h3>
+        <p class="text-xs text-slate-500 font-medium">Leia com atenção antes de entrar em contato</p>
+      </div>
+    </div>
+
+    <!-- Body text -->
+    <div class="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+      <p>
+        O <strong>Hospedagem Direta</strong> é um portal de consulta que agrega dados abertos públicos da Receita Federal (RFB). <strong>Não intermediamos pagamentos nem cobramos taxas de reserva.</strong>
+      </p>
+      
+      <div class="p-3 bg-amber-50 rounded-lg border border-amber-200/90 text-amber-950 font-medium text-xs space-y-1">
+        <span class="font-bold text-amber-900 block flex items-center gap-1">
+          <span>🔒</span> Dica de Segurança Importante:
+        </span>
+        <p class="text-amber-900/90 leading-normal">
+          Nunca faça transferências bancárias ou PIX antecipados para contas em nome de <strong>Pessoas Físicas</strong> sem antes confirmar a identidade do estabelecimento por chamada telefônica ou videochamada.
+        </p>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+      <button type="button" id="btn-accept-disclaimer" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm py-3 px-5 rounded-xl shadow-md shadow-emerald-600/20 transition-all text-center flex items-center justify-center gap-2">
+        <span>✅</span>
+        <span>Estou ciente e quero ver o contato</span>
+      </button>
+      <button type="button" id="btn-cancel-disclaimer" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm py-3 px-4 rounded-xl transition-colors text-center">
+        Cancelar
+      </button>
+    </div>
+
+  </div>
+</div>

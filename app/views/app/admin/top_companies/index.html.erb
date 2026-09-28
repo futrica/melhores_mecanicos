@@ -1,0 +1,205 @@
+<% content_for :title, "Empresas Mais Acessadas & Outreach | Painel Admin" %>
+
+<div class="app-dashboard">
+  <div class="app-hero-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);">
+    <div class="app-hero-content">
+      <span class="app-role-badge">🔥 Ranking & Prospecção</span>
+      <h1>Empresas Mais Acessadas & Disparo de E-mails</h1>
+      <p>Acompanhe o volume de acessos por empresa e cidade, verifique se a empresa já recebeu e-mail de apresentação e faça novos envios diretamente por aqui.</p>
+    </div>
+  </div>
+
+  <%= render "app/admin/admin_nav" %>
+
+  <!-- Top Cities Summary Bar -->
+  <% if @top_cities.any? %>
+    <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="font-size: 0.95rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted, #475569); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+          <span>📍</span> Cidades com Mais Buscas & Acessos
+        </h3>
+        <span style="font-size: 0.8rem; color: #64748b;">Top Cidades em Destaque</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.75rem;">
+        <% @top_cities.each do |c| %>
+          <a href="<%= app_admin_top_companies_path(city_id: c.id) %>" style="text-decoration: none; display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: #f8fafc; border: 1px solid <%= params[:city_id].to_i == c.id ? '#3b82f6' : '#e2e8f0' %>; border-radius: 12px; transition: all 0.2s ease;">
+            <div>
+              <strong style="display: block; font-size: 0.9rem; color: #0f172a;"><%= c.name %> / <%= c.state_acronym %></strong>
+              <span style="font-size: 0.78rem; color: #64748b;"><%= c.companies_count %> <%= c.companies_count == 1 ? 'empresa' : 'empresas' %></span>
+            </div>
+            <div style="text-align: right;">
+              <span style="display: inline-block; background: #dbeafe; color: #1e40af; font-weight: 800; font-size: 0.82rem; padding: 0.25rem 0.6rem; border-radius: 9999px;">
+                🔥 <%= c.total_views.to_i %>
+              </span>
+            </div>
+          </a>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Search & Filters -->
+  <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 2rem;">
+    <%= form_with url: app_admin_top_companies_path, method: :get, local: true, style: "display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end;" do |f| %>
+      <div>
+        <label style="display: block; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 0.4rem;">🔍 Buscar Empresa / CNPJ / Cidade</label>
+        <%= f.text_field :q, value: params[:q], placeholder: "Digite um nome, CNPJ ou cidade...", style: "width: 100%; padding: 0.6rem 0.85rem; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;" %>
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 0.4rem;">📍 Filtrar por Cidade</label>
+        <%= f.select :city_id, options_from_collection_for_select(City.joins(:state).order("cities.name ASC"), :id, ->(c) { "#{c.name} / #{c.state.acronym}" }, params[:city_id]), { include_blank: "Todas as Cidades" }, { style: "width: 100%; padding: 0.6rem 0.85rem; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem; background: white;" } %>
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 0.4rem;">📧 Status do E-mail</label>
+        <%= f.select :email_status, options_for_select([
+          ["Todos os Status", ""],
+          ["⚪ E-mail Não Enviado", "not_sent"],
+          ["🟢 E-mail Já Enviado", "sent"],
+          ["🛑 Opt-Out (Descadastrado)", "opt_out"]
+        ], params[:email_status]), {}, { style: "width: 100%; padding: 0.6rem 0.85rem; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem; background: white;" } %>
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 0.4rem;">📊 Mínimo de Acessos</label>
+        <%= f.select :min_views, options_for_select([
+          ["Qualquer Quantidade", ""],
+          ["Mínimo 10 Acessos", "10"],
+          ["Mínimo 50 Acessos", "50"],
+          ["Mínimo 100 Acessos", "100"]
+        ], params[:min_views]), {}, { style: "width: 100%; padding: 0.6rem 0.85rem; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem; background: white;" } %>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem;">
+        <%= f.submit "Filtrar", style: "flex: 1; background: #1e293b; color: white; border: none; padding: 0.65rem 1rem; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer;" %>
+        <% if params[:q].present? || params[:city_id].present? || params[:email_status].present? || params[:min_views].present? %>
+          <%= link_to "Limpar", app_admin_top_companies_path, style: "background: #e2e8f0; color: #475569; text-decoration: none; padding: 0.65rem 1rem; border-radius: 8px; font-weight: 700; font-size: 0.85rem; text-align: center;" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Companies Table -->
+  <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+    <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color, #e2e8f0); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+      <h3 style="font-size: 1rem; font-weight: 800; color: var(--text-main, #1e293b); margin: 0;">
+        🏆 Listagem por Ordem de Acessos / Buscas
+      </h3>
+      <span style="font-size: 0.85rem; color: var(--text-muted, #64748b); font-weight: 600;"><%= @pagy.count if @pagy %> empresas encontradas</span>
+    </div>
+
+    <% if @companies.any? %>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
+          <thead>
+            <tr style="background: rgba(30, 41, 59, 0.03); border-bottom: 1px solid var(--border-color, #e2e8f0); color: var(--text-muted, #64748b); font-weight: 800; text-transform: uppercase; font-size: 0.75rem;">
+              <th style="padding: 1rem 1.25rem;">Cidade / UF</th>
+              <th style="padding: 1rem 1.25rem;">Empresa / CNPJ</th>
+              <th style="padding: 1rem 1.25rem;">Acessos / Buscas</th>
+              <th style="padding: 1rem 1.25rem;">Status do E-mail</th>
+              <th style="padding: 1rem 1.25rem;">Canais de Contato</th>
+              <th style="padding: 1rem 1.25rem; text-align: right;">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @companies.each do |comp| %>
+              <% 
+                email_clean = comp.email.to_s.strip.downcase
+                is_opt_out = email_clean.present? && CompanyEmailOptOut.opted_out?(email_clean)
+                last_sent_log = comp.outreach_logs.where(status: 'sent').order(sent_at: :desc).first
+                last_invalid_log = comp.outreach_logs.where(status: 'invalid_mx').order(sent_at: :desc).first
+              %>
+              <tr style="border-bottom: 1px solid var(--border-color, #f1f5f9);">
+                <td style="padding: 1rem 1.25rem; vertical-align: middle;">
+                  <span style="font-weight: 800; color: #1e293b; display: inline-block; background: #f1f5f9; padding: 0.35rem 0.75rem; border-radius: 8px; font-size: 0.85rem;">
+                    📍 <%= comp.city.name %> / <%= comp.state.acronym %>
+                  </span>
+                </td>
+
+                <td style="padding: 1rem 1.25rem; vertical-align: middle;">
+                  <%= link_to app_admin_top_company_path(comp), style: "text-decoration: none; color: inherit;" do %>
+                    <strong style="display: block; color: var(--text-main, #1e293b); font-size: 0.95rem; text-decoration: underline;"><%= comp.trade_name.presence || comp.legal_name %></strong>
+                  <% end %>
+                  <span style="font-size: 0.78rem; color: var(--text-muted, #64748b);">CNPJ: <%= comp.cnpj %></span>
+                  <% if comp.approved? %>
+                    <span style="font-size: 0.7rem; background: #d1fae5; color: #065f46; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 4px;">Reivindicada</span>
+                  <% end %>
+                </td>
+
+                <td style="padding: 1rem 1.25rem; vertical-align: middle;">
+                  <div style="display: flex; align-items: center; gap: 0.35rem;">
+                    <span style="font-weight: 900; font-size: 1.05rem; color: <%= comp.views_count >= 50 ? '#dc2626' : (comp.views_count >= 10 ? '#2563eb' : '#475569') %>;">
+                      <%= comp.views_count %>
+                    </span>
+                    <span style="font-size: 0.78rem; color: #64748b;">acessos</span>
+                  </div>
+                </td>
+
+                <td style="padding: 1rem 1.25rem; vertical-align: middle;">
+                  <% if email_clean.blank? %>
+                    <span style="background: #f1f5f9; color: #64748b; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.75rem;">⚪ Sem E-mail</span>
+                  <% elsif is_opt_out %>
+                    <span style="background: #fee2e2; color: #991b1b; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.75rem;" title="Esta empresa optou por não receber e-mails">🛑 Opt-Out</span>
+                  <% elsif last_sent_log.present? %>
+                    <div>
+                      <span style="background: #dcfce7; color: #166534; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.75rem;">
+                        🟢 Enviado em <%= last_sent_log.sent_at.strftime("%d/%m/%Y") %>
+                      </span>
+                      <span style="display: block; font-size: 0.72rem; color: #64748b; margin-top: 2px;">
+                        há <%= distance_of_time_in_words(last_sent_log.sent_at, Time.current) %>
+                      </span>
+                    </div>
+                  <% elsif last_invalid_log.present? %>
+                    <span style="background: #fef3c7; color: #92400e; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.75rem;">⚠️ MX / Inválido</span>
+                  <% else %>
+                    <span style="background: #f1f5f9; color: #475569; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.75rem;">⚪ E-mail Não Enviado</span>
+                  <% end %>
+                </td>
+
+                <td style="padding: 1rem 1.25rem; vertical-align: middle;">
+                  <div style="font-size: 0.8rem;">
+                    <% if comp.email.present? %>
+                      <div style="font-family: monospace; color: #334155; font-weight: 600;"><%= comp.email %></div>
+                    <% else %>
+                      <div style="color: #94a3b8; font-style: italic;">Sem e-mail</div>
+                    <% end %>
+
+                    <% if comp.has_whatsapp? %>
+                      <a href="<%= comp.whatsapp_url %>" target="_blank" style="display: inline-flex; align-items: center; gap: 0.25rem; margin-top: 0.25rem; background: #25d366; color: white; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none;">
+                        💬 WhatsApp (<%= comp.whatsapp_number %>)
+                      </a>
+                    <% elsif comp.phone_1.present? || comp.phone_2.present? %>
+                      <div style="color: #64748b; font-size: 0.75rem; margin-top: 2px;">
+                        📞 <%= [comp.phone_1, comp.phone_2].compact_blank.join(" / ") %>
+                      </div>
+                    <% end %>
+                  </div>
+                </td>
+
+                <td style="padding: 1rem 1.25rem; text-align: right; vertical-align: middle;">
+                  <div style="display: flex; justify-content: flex-end; align-items: center;">
+                    <%= link_to app_admin_top_company_path(comp), style: "background: #2563eb; color: white; font-weight: 700; padding: 0.5rem 0.9rem; border-radius: 8px; text-decoration: none; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.3rem;" do %>
+                      🔍 Ver Detalhes & Outreach
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <% if @pagy.present? && @pagy.pages > 1 %>
+        <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--border-color, #e2e8f0); display: flex; justify-content: center;">
+          <%== pagy_nav(@pagy) rescue nil %>
+        </div>
+      <% end %>
+    <% else %>
+      <div style="padding: 3rem; text-align: center; color: var(--text-muted, #64748b); font-size: 0.95rem;">
+        Nenhuma empresa encontrada com os filtros selecionados.
+      </div>
+    <% end %>
+  </div>
+</div>

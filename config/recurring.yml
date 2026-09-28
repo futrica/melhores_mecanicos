@@ -1,0 +1,29 @@
+production:
+  clear_solid_queue_finished_jobs:
+    command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
+    schedule: every hour at minute 12
+  release_expired_claims:
+    command: "Company.release_expired_claims!"
+    schedule: every 30 minutes
+  database_backup:
+    class: "DatabaseBackupJob"
+    schedule: "at 4am every day"
+  server_health_report:
+    class: "ServerHealthReportJob"
+    schedule: "at 6am every day"
+  company_outreach_morning:
+    class: "CompanyOutreachJob"
+    args: [{ limit: 20 }]
+    schedule: "0 7 * * *"
+  company_outreach_noon:
+    class: "CompanyOutreachJob"
+    args: [{ limit: 20 }]
+    schedule: "0 12 * * *"
+  company_outreach_evening:
+    class: "CompanyOutreachJob"
+    args: [{ limit: 20 }]
+    schedule: "0 18 * * *"
+  monthly_receita_sync:
+    class: "MonthlySyncJob"
+    schedule: "30 5 7 * *"
+

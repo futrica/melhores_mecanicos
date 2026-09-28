@@ -1,0 +1,12 @@
+# test/fixtures/cities.yml
+guara:
+  state: sp
+  name: Guaratinguetá
+  slug: guaratingueta
+  ibge_code: "3518404"
+
+campinas:
+  state: sp
+  name: Campinas
+  slug: campinas
+  ibge_code: "3509502"

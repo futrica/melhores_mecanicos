@@ -1,0 +1,32 @@
+<h2>🏬 Nova <%= @verification_type.titleize %> de Empresa</h2>
+
+<p>Uma nova solicitação de <%= @verification_type %> foi registrada no portal <strong>Hospedagem Direta</strong>.</p>
+
+<hr>
+
+<p><strong>Empresa:</strong> <%= @company.trade_name.presence || @company.legal_name %></p>
+<p><strong>Razão Social:</strong> <%= @company.legal_name %></p>
+<p><strong>CNPJ:</strong> <%= @company.cnpj %></p>
+<p><strong>Localização:</strong> <%= [@company.city&.name, @company.state&.acronym].compact.join(" - ") %></p>
+
+<hr>
+
+<h3>Dados do Usuário / Solicitante:</h3>
+<p><strong>Nome:</strong> <%= @user&.name || "Não informado" %></p>
+<p><strong>E-mail:</strong> <%= @user&.email || "Não informado" %></p>
+<p><strong>Telefone:</strong> <%= @user&.phone || "Não informado" %></p>
+
+<% if @company.document_proof_display_url.present? || @company.selfie_proof_display_url.present? %>
+  <hr>
+  <h3>Comprovantes Enviados:</h3>
+  <p><strong>Documento:</strong> <a href="<%= @company.document_proof_display_url %>" target="_blank">Visualizar Documento</a></p>
+  <p><strong>Selfie com Documento:</strong> <a href="<%= @company.selfie_proof_display_url %>" target="_blank">Visualizar Selfie</a></p>
+<% end %>
+
+<hr>
+
+<p>
+  <a href="<%= app_admin_company_url(@company) %>" style="background: #1e293b; color: #ffffff; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+    Analisar / Aprovar no Painel Admin &rarr;
+  </a>
+</p>

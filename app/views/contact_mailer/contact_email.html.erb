@@ -1,0 +1,10 @@
+<h2>Nova Mensagem de Contato - Hospedagem Direta</h2>
+
+<p><strong>Nome:</strong> <%= @contact.name %></p>
+<p><strong>E-mail:</strong> <%= @contact.email %></p>
+<p><strong>Assunto:</strong> <%= @contact.subject %></p>
+
+<hr>
+
+<p><strong>Mensagem:</strong></p>
+<p><%= simple_format(@contact.message) %></p>

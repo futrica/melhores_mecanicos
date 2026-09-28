@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seu perfil no Hospedagem Direta</title>
+  </head>
+  <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #334155; margin: 0; padding: 20px 0; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; max-width: 600px; margin: 0 auto; text-align: left; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+            <!-- Header -->
+            <tr>
+              <td style="background-color: #0f172a; padding: 24px 32px; text-align: center;">
+                <h1 style="color: #ffffff; font-size: 20px; font-weight: 700; margin: 0; tracking: -0.02em;">
+                  Hospedagem Direta
+                </h1>
+              </td>
+            </tr>
+
+            <!-- Body Content -->
+            <tr>
+              <td style="padding: 32px;">
+                <h2 style="color: #0f172a; font-size: 18px; font-weight: 600; margin-top: 0; margin-bottom: 16px;">
+                  Olá, equipe da <%= @company_name %>!
+                </h2>
+
+                <p style="font-size: 15px; line-height: 1.6; color: #475569; margin-bottom: 16px;">
+                  O perfil da sua empresa no portal <strong>Hospedagem Direta</strong> foi disponibilizado a partir de <strong>dados públicos abertos da Receita Federal (CNPJ)</strong> para ajudar viajantes e hóspedes a encontrarem hospedagens diretamente na sua região.
+                </p>
+
+                <p style="font-size: 15px; line-height: 1.6; color: #475569; margin-bottom: 20px;">
+                  Informamos que a sua empresa cadastrada em <strong><%= @company.city.name %> - <%= @company.state.acronym %></strong> já acumula 
+                  <strong style="color: #2563eb; font-size: 17px;"><%= @views_count %> visualizações</strong> no portal. Viajantes e hóspedes estão pesquisando por acomodações e acessando as informações da sua empresa!
+                </p>
+
+                <!-- Highlight Box -->
+                <div style="background-color: #eff6ff; border-left: 4px solid #2563eb; border-radius: 6px; padding: 16px 20px; margin-bottom: 28px;">
+                  <p style="font-size: 14px; line-height: 1.5; color: #1e40af; margin: 0; font-weight: 500;">
+                    💡 <strong>Assuma o controle gratuito da sua página:</strong> Você pode <strong>reivindicar o perfil da sua empresa gratuitamente</strong> para atualizar telefones, WhatsApp, horários de atendimento, fotos e receber contatos diretos de clientes. Caso prefira não manter sua empresa listada, você também pode solicitar a remoção gratuita dos dados a qualquer momento.
+                  </p>
+                </div>
+
+                <!-- Call to Action Button -->
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 28px;">
+                  <tr>
+                    <td align="center">
+                      <a href="<%= @tracking_url %>" style="display: inline-block; background-color: #2563eb; color: #ffffff; font-size: 15px; font-weight: 600; text-decoration: none; padding: 14px 28px; border-radius: 8px; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);">
+                        Ver e Reivindicar Perfil Grátis
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="font-size: 14px; line-height: 1.5; color: #64748b; margin-bottom: 0;">
+                  Se tiver dúvidas ou precisar de suporte, acesse nossa <a href="<%= contact_url %>" style="color: #2563eb; text-decoration: underline;">página de contato</a>.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background-color: #f1f5f9; padding: 20px 32px; text-align: center; border-top: 1px solid #e2e8f0;">
+                <p style="font-size: 12px; line-height: 1.5; color: #64748b; margin: 0 0 8px 0;">
+                  Este e-mail foi enviado para <%= @company.email %> sobre o cadastro da empresa <%= @company_name %>.
+                </p>
+                <p style="font-size: 12px; line-height: 1.5; color: #64748b; margin: 0;">
+                  Se você não deseja mais receber avisos ou novidades sobre esta empresa, 
+                  <a href="<%= @unsubscribe_url %>" style="color: #2563eb; text-decoration: underline;">clique aqui para se descadastrar</a>.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

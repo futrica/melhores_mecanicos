@@ -1,0 +1,118 @@
+<%# app/views/shared/_company_card.html.erb %>
+<div class="company-card-olx">
+  <!-- Left avatar side -->
+  <div class="company-card-image-box">
+    <% 
+      categories = company.categories.to_a
+      main_category = categories.first&.name || "Materiais de Construção"
+      style = category_style_for(main_category)
+    %>
+    <div style="position: relative;">
+      <% if company.logo_display_url.present? %>
+        <img src="<%= company.logo_display_url %>" alt="<%= company.trade_name %>" style="width: 96px; height: 96px; border-radius: 14px; object-fit: cover; border: 1px solid var(--border-color, #e2e8f0); box-shadow: 0 4px 12px rgba(0,0,0,0.1); background: white;">
+      <% else %>
+        <div class="category-placeholder-avatar" style="background: <%= style[:gradient] %>">
+          <span class="avatar-icon"><%= style[:icon] %></span>
+        </div>
+      <% end %>
+      
+      <% if categories.size > 1 %>
+        <div class="extra-category-icons" style="position: absolute; bottom: -6px; right: -6px; display: flex; gap: 0.15rem; z-index: 10;">
+          <% categories.drop(1).first(2).each do |extra_cat| %>
+            <% extra_style = category_style_for(extra_cat.name) %>
+            <div class="extra-icon-badge" title="<%= extra_cat.name %>" style="background: <%= extra_style[:gradient] %>; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+              <span><%= extra_style[:icon] %></span>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Right details side -->
+  <div class="company-card-details">
+    <div class="details-top" style="margin-bottom: 0.4rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <% avg = company.average_rating %>
+        <% reviews_cnt = company.reviews.size %>
+        <% if avg > 0 %>
+          <span style="color: #d97706; font-weight: 800; font-size: 0.8rem; background: #fef3c7; padding: 0.15rem 0.5rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.25rem;" title="Média: <%= avg %> de 5 (<%= reviews_cnt %> avaliações)">
+            <span>★</span>
+            <span><%= avg %></span>
+            <span style="color: #92400e; font-size: 0.72rem; font-weight: 600;">(<%= reviews_cnt %>)</span>
+          </span>
+        <% end %>
+
+        <% fav_cnt = company.favorites.size %>
+        <% if fav_cnt > 0 %>
+          <span style="color: #dc2626; font-weight: 700; font-size: 0.8rem; background: #fee2e2; padding: 0.15rem 0.5rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.25rem;" title="<%= fav_cnt %> cliente(s) salvaram nos favoritos">
+            <span>❤️</span>
+            <span><%= fav_cnt %> <%= fav_cnt == 1 ? "favorito" : "favoritos" %></span>
+          </span>
+        <% end %>
+      </div>
+
+      <div class="card-fav-action">
+        <% if user_signed_in? && current_user.client? %>
+          <%= button_to toggle_favorite_path(company_id: company.id), method: :post, data: { turbo: false },
+              class: "fav-btn-card #{ current_user.favorited?(company) ? 'fav-btn-card--active' : '' }",
+              title: current_user.favorited?(company) ? "Remover dos favoritos" : "Adicionar aos favoritos" do %>
+            <span class="fav-heart"><%= current_user.favorited?(company) ? "❤️" : "🤍" %></span>
+            <span class="fav-label"><%= current_user.favorited?(company) ? "Favorito" : "Favoritar" %></span>
+          <% end %>
+        <% elsif !user_signed_in? %>
+          <a href="<%= new_user_session_path %>" class="fav-btn-card" title="Faça login para favoritar">
+            <span class="fav-heart">🤍</span>
+            <span class="fav-label">Favoritar</span>
+          </a>
+        <% end %>
+      </div>
+    </div>
+
+    <h3 class="company-title-link" style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+      <a href="<%= company_seo_path(company) %>" class="main-card-link"><%= company.trade_name.presence || company.legal_name %></a>
+      <% if company.approved? %>
+        <span style="background: #10b981; color: white; font-size: 0.7rem; font-weight: 800; padding: 0.15rem 0.5rem; border-radius: 9999px; display: inline-flex; align-items: center; gap: 0.2rem;" title="Empresa Verificada">
+          ✓ Verificada
+        </span>
+      <% end %>
+    </h3>
+    
+    <p class="company-legal-subtitle"><%= company.legal_name %></p>
+
+    <div class="info-row">
+      <span class="info-icon">📍</span>
+      <span class="info-text">
+        <%= company.street %>, <%= company.number %>
+        <% if company.neighborhood.present? %>
+          &bull; <%= company.neighborhood.name %>
+        <% end %>
+        &bull; <strong><%= company.city.name %> - <%= company.state.acronym %></strong>
+      </span>
+    </div>
+
+
+
+    <div class="details-footer" style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem;">
+      <div class="categories-list">
+        <% if company.categories.any? %>
+          <% company.categories.first(3).each do |category| %>
+            <% badge_style = category_style_for(category.name) %>
+            <span class="category-pill-badge" style="background: <%= badge_style[:gradient] %>; color: white; border: none; font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+              <span><%= badge_style[:icon] %></span>
+              <span><%= category.name %></span>
+            </span>
+          <% end %>
+        <% else %>
+          <% default_style = category_style_for("Materiais de Construção") %>
+          <span class="category-pill-badge" style="background: <%= default_style[:gradient] %>; color: white; border: none; font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <span><%= default_style[:icon] %></span>
+            <span>Materiais de Construção</span>
+          </span>
+        <% end %>
+      </div>
+
+
+    </div>
+  </div>
+</div>

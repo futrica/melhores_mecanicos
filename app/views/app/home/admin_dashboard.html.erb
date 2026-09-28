@@ -1,0 +1,113 @@
+<div style="max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem;">
+  <!-- Header Banner -->
+  <div style="background: linear-gradient(135deg, #0f172a, #1e293b); color: white; border-radius: 20px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 14px rgba(0,0,0,0.1);">
+    <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 0.3rem 0.8rem; border-radius: 9999px;">
+      Painel Administrativo
+    </span>
+    <h1 style="font-size: 2rem; font-weight: 800; margin: 0.75rem 0 0.25rem 0;">Gerenciamento de Empresas & Reivindicações</h1>
+    <p style="color: rgba(255,255,255,0.8); font-size: 0.95rem; margin: 0;">
+      Aprove ou rejeite solicitações de reivindicação de perfil, comprovantes e pedidos de remoção LGPD.
+    </p>
+  </div>
+
+  <!-- Filters Row -->
+  <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;">
+    <h3 style="font-size: 0.85rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted, #64748b); margin: 0 0 1rem 0;">Filtrar por Status:</h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+      <% [["pending", "Pendentes de Análise"], ["approved", "Aprovadas & Verificadas"], ["unclaimed", "Não Reivindicadas"], ["deleted", "Excluídas (LGPD)"], ["all", "Todas as Empresas"]].each do |status_code, label| %>
+        <a href="<%= app_root_path(claim_status: status_code) %>" 
+           style="padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.8rem; font-weight: 700; text-decoration: none; border: 1px solid <%= @status_filter == status_code ? 'var(--navy, #1e293b)' : 'var(--border-color, #cbd5e1)' %>; background: <%= @status_filter == status_code ? 'var(--navy, #1e293b)' : 'var(--bg-card, #ffffff)' %>; color: <%= @status_filter == status_code ? 'white' : 'var(--text-main, #1e293b)' %>;">
+          <%= label %>
+        </a>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Companies Table -->
+  <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+    <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color, #e2e8f0); display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="font-size: 1rem; font-weight: 800; color: var(--text-main, #1e293b); margin: 0;">Solicitações & Empresas</h3>
+      <span style="font-size: 0.8rem; color: var(--text-muted, #64748b);"><%= @companies.count %> registros encontrados</span>
+    </div>
+
+    <% if @companies.any? %>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
+          <thead>
+            <tr style="background: rgba(30, 41, 59, 0.03); border-bottom: 1px solid var(--border-color, #e2e8f0); color: var(--text-muted, #64748b); font-weight: 800; text-transform: uppercase; font-size: 0.75rem;">
+              <th style="padding: 1rem 1.25rem;">Empresa / CNPJ</th>
+              <th style="padding: 1rem 1.25rem;">Localidade</th>
+              <th style="padding: 1rem 1.25rem;">Status</th>
+              <th style="padding: 1rem 1.25rem;">Usuário Associado</th>
+              <th style="padding: 1rem 1.25rem;">Comprovantes</th>
+              <th style="padding: 1rem 1.25rem; text-align: right;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @companies.each do |comp| %>
+              <tr style="border-bottom: 1px solid var(--border-color, #f1f5f9);">
+                <td style="padding: 1rem 1.25rem;">
+                  <strong style="display: block; color: var(--text-main, #1e293b);"><%= comp.trade_name.presence || comp.legal_name %></strong>
+                  <span style="font-size: 0.75rem; color: var(--text-muted, #64748b);">CNPJ: <%= comp.cnpj %></span>
+                </td>
+                <td style="padding: 1rem 1.25rem;">
+                  <span style="display: block; color: var(--text-main, #1e293b);"><%= comp.city.name %> - <%= comp.state.acronym %></span>
+                </td>
+                <td style="padding: 1rem 1.25rem;">
+                  <% if comp.deleted_at.present? %>
+                    <span style="background: #e2e8f0; color: #475569; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem;">Excluída (LGPD)</span>
+                  <% elsif comp.approved? %>
+                    <span style="background: #d1fae5; color: #065f46; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem;">Aprovada</span>
+                  <% elsif comp.removal_requested? %>
+                    <span style="background: #ffe4e6; color: #9f1239; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem;">Remoção Solicitada (LGPD)</span>
+                  <% elsif comp.pending? && comp.document_submitted_at.present? %>
+                    <span style="background: #dbeafe; color: #1e40af; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem;">Em Análise</span>
+                  <% elsif comp.pending? %>
+                    <span style="background: #fef3c7; color: #92400e; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem;">Pendente Doc</span>
+                  <% else %>
+                    <span style="background: #f1f5f9; color: #64748b; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem;">Não Reivindicada</span>
+                  <% end %>
+                </td>
+                <td style="padding: 1rem 1.25rem;">
+                  <% if comp.removal_requested? %>
+                    <span style="display: block; font-weight: 700; color: var(--text-main, #1e293b);"><%= comp.removal_request_name %></span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted, #64748b);"><%= comp.removal_request_email %></span>
+                  <% elsif comp.user.present? %>
+                    <span style="display: block; font-weight: 700; color: var(--text-main, #1e293b);"><%= comp.user.email %></span>
+                  <% else %>
+                    <span style="color: var(--text-muted, #64748b); font-style: italic;">Nenhum</span>
+                  <% end %>
+                </td>
+                <td style="padding: 1rem 1.25rem;">
+                  <% if comp.document_proof_display_url.present? %>
+                    <a href="<%= comp.document_proof_display_url %>" target="_blank" style="color: #2563eb; font-weight: 700; font-size: 0.78rem; text-decoration: underline; display: block;">📄 Documento</a>
+                  <% end %>
+                  <% if comp.selfie_proof_display_url.present? %>
+                    <a href="<%= comp.selfie_proof_display_url %>" target="_blank" style="color: #2563eb; font-weight: 700; font-size: 0.78rem; text-decoration: underline; display: block;">📸 Selfie</a>
+                  <% end %>
+                  <% if comp.document_proof_display_url.blank? && comp.selfie_proof_display_url.blank? %>
+                    <span style="color: var(--text-muted, #64748b); font-style: italic; font-size: 0.78rem;">Sem arquivos</span>
+                  <% end %>
+                </td>
+                <td style="padding: 1rem 1.25rem; text-align: right;">
+                  <% if comp.deleted_at.blank? && comp.pending? && comp.document_submitted_at.present? %>
+                    <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                      <%= button_to "Aprovar", app_approve_company_path(id: comp.id), method: :post, data: { turbo: false }, style: "background: #10b981; color: white; font-weight: 700; padding: 0.4rem 0.8rem; border-radius: 6px; border: none; font-size: 0.75rem; cursor: pointer;" %>
+                      <%= button_to "Rejeitar", app_reject_company_path(id: comp.id), method: :post, data: { turbo: false, confirm: "Deseja rejeitar esta solicitação?" }, style: "background: #dc2626; color: white; font-weight: 700; padding: 0.4rem 0.8rem; border-radius: 6px; border: none; font-size: 0.75rem; cursor: pointer;" %>
+                    </div>
+                  <% else %>
+                    <span style="color: var(--text-muted, #64748b);">-</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div style="padding: 3rem; text-align: center; color: var(--text-muted, #64748b);">
+        Nenhum registro encontrado com o status selecionado.
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Hook pós-deploy do Kamal: Limpa automaticamente imagens e containers inativos no servidor
+# [DESATIVADO]
+
+# for host in $KAMAL_HOSTS; do
+#   echo "🧹 Limpando containers e imagens Docker não utilizadas no servidor $host..."
+#   ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 root@"$host" "docker container prune -f && docker image prune -f" || true
+# done

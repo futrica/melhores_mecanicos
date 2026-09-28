@@ -1,0 +1,156 @@
+<% content_for :title, "Painel do Administrador | Hospedagem Direta" %>
+
+<div class="app-dashboard">
+  <%# Hero Section %>
+  <div class="app-hero-card">
+    <div class="app-hero-content">
+      <span class="app-role-badge">👑 Painel de Administração</span>
+      <h1>Olá, <%= current_user.name&.split&.first || "Administrador" %>!</h1>
+      <p>Gerencie os usuários cadastrados, orçamentos e mensagens recebidas no site.</p>
+    </div>
+    <div class="app-hero-stats">
+      <div class="app-stat-card">
+        <span class="app-stat-value">👥 <%= @total_users %></span>
+        <span class="app-stat-label">Usuários</span>
+      </div>
+      <div class="app-stat-card">
+        <span class="app-stat-value">📬 <%= @total_contacts %></span>
+        <span class="app-stat-label">Contatos</span>
+      </div>
+    </div>
+  </div>
+
+  <%# Admin Tab Navigation %>
+  <%= render "app/admin/admin_nav" %>
+
+  <%# Quick Metric Cards Grid %>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;">
+    <div class="app-quick-card" style="border-top: 4px solid var(--orange);">
+      <div class="app-quick-icon">👥</div>
+      <h3>Usuários do Site</h3>
+      <p style="font-size: 0.9rem; color: var(--text-dark); margin-bottom: 1rem;">
+        <strong><%= @client_users_count %></strong> Clientes &bull; <strong><%= @company_users_count %></strong> Empresas &bull; <strong><%= @admin_users_count %></strong> Admins
+      </p>
+      <%= link_to app_admin_users_path, class: "app-btn-primary" do %>
+        Ver Todos os Usuários &rarr;
+      <% end %>
+    </div>
+
+    <div class="app-quick-card" style="border-top: 4px solid #3b82f6;">
+      <div class="app-quick-icon">🏬</div>
+      <h3>Empresas & Reivindicações</h3>
+      <p style="font-size: 0.9rem; color: var(--text-dark); margin-bottom: 1rem;">
+        <strong><%= @pending_companies_count %></strong> Pendentes &bull; <strong><%= @removal_requested_companies_count %></strong> Pedidos LGPD
+      </p>
+      <%= link_to app_admin_companies_path, class: "app-btn-secondary" do %>
+        Ver Reivindicações &rarr;
+      <% end %>
+    </div>
+
+    <div class="app-quick-card" style="border-top: 4px solid #10b981;">
+      <div class="app-quick-icon">📬</div>
+      <h3>Formulário de Contato</h3>
+      <p style="font-size: 0.9rem; color: var(--text-dark); margin-bottom: 1rem;">
+        <strong><%= @total_contacts %></strong> Mensagens enviadas pelos visitantes do site.
+      </p>
+      <%= link_to app_admin_contacts_path, class: "app-btn-secondary" do %>
+        Ver Todas as Mensagens &rarr;
+      <% end %>
+    </div>
+  </div>
+
+  <%# Section: Recent Users %>
+  <section class="app-section" style="margin-bottom: 2.5rem;">
+    <div class="app-section-header">
+      <h2>👥 Útimos Usuários Cadastrados</h2>
+      <%= link_to "Ver Lista Completa →", app_admin_users_path, class: "app-section-link", style: "font-weight: 700; color: var(--orange);" %>
+    </div>
+
+    <% if @recent_users.any? %>
+      <div class="admin-table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Função</th>
+              <th>Confirmação</th>
+              <th>Data Cadastro</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @recent_users.each do |user| %>
+              <tr>
+                <td><strong>#<%= user.id %></strong></td>
+                <td><strong><%= user.name || "-" %></strong></td>
+                <td><%= user.email %></td>
+                <td>
+                  <span class="admin-badge badge-<%= user.role %>">
+                    <%= user.role.titleize %>
+                  </span>
+                </td>
+                <td>
+                  <% if user.confirmed? %>
+                    <span class="admin-badge badge-success">✅ Confirmado</span>
+                  <% else %>
+                    <span class="admin-badge badge-warning">⏳ Pendente</span>
+                  <% end %>
+                </td>
+                <td><%= user.created_at.strftime("%d/%m/%Y às %H:%M") %></td>
+                <td>
+                  <%= link_to "Detalhes", app_admin_user_path(user), class: "admin-btn-action" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p style="color: var(--text-dark); font-style: italic;">Nenhum usuário encontrado.</p>
+    <% end %>
+  </section>
+
+  <%# Section: Recent Contacts %>
+  <section class="app-section">
+    <div class="app-section-header">
+      <h2>📬 Últimas Mensagens do Formulário de Contato</h2>
+      <%= link_to "Ver Lista Completa →", app_admin_contacts_path, class: "app-section-link", style: "font-weight: 700; color: var(--orange);" %>
+    </div>
+
+    <% if @recent_contacts.any? %>
+      <div class="admin-table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Assunto</th>
+              <th>Data</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @recent_contacts.each do |contact| %>
+              <tr>
+                <td><strong>#<%= contact.id %></strong></td>
+                <td><strong><%= contact.name %></strong></td>
+                <td><%= contact.email %></td>
+                <td><%= contact.subject %></td>
+                <td><%= contact.created_at.strftime("%d/%m/%Y às %H:%M") %></td>
+                <td>
+                  <%= link_to "Ler Mensagem", app_admin_contact_path(contact), class: "admin-btn-action" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p style="color: var(--text-dark); font-style: italic;">Nenhuma mensagem de contato recebida até o momento.</p>
+    <% end %>
+  </section>
+
+</div>

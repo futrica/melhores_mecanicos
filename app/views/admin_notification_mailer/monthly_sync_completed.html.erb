@@ -1,0 +1,25 @@
+<h2>🎉 Sincronização Mensal Concluída com Sucesso!</h2>
+
+<p>A rotina de sincronização de dados com a Receita Federal foi finalizada no sistema <strong><%= @app_name %></strong>.</p>
+
+<hr>
+
+<h3>⏱️ Resumo da Execução:</h3>
+<ul>
+  <li><strong>Início:</strong> <%= @start_time.strftime("%d/%m/%Y às %H:%M:%S") %></li>
+  <li><strong>Término:</strong> <%= @end_time.strftime("%d/%m/%Y às %H:%M:%S") %></li>
+  <li><strong>Duração Total:</strong> <%= @duration_minutes %> minutos</li>
+</ul>
+
+<hr>
+
+<h3>📊 Estatísticas da Importação:</h3>
+<ul>
+  <li><strong>Novas Empresas Adicionadas:</strong> +<%= number_with_delimiter(@stats[:new_companies_added]) %></li>
+  <li><strong>Total de Empresas no Banco:</strong> <%= number_with_delimiter(@stats[:companies_after]) %> (antes: <%= number_with_delimiter(@stats[:companies_before]) %>)</li>
+  <li><strong>Novos Sócios Adicionados:</strong> +<%= number_with_delimiter(@stats[:new_partners_added]) %></li>
+  <li><strong>Total de Empresas Ativas:</strong> <%= number_with_delimiter(@stats[:total_active_companies]) %></li>
+  <li><strong>Empresas Reivindicadas Preservadas:</strong> <%= number_with_delimiter(@stats[:total_claimed_companies]) %></li>
+</ul>
+
+<p style="color: #166534; font-weight: bold;">✅ O processo rodou suavemente sem causar indisponibilidade no servidor.</p>

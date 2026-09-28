@@ -1,0 +1,31 @@
+<% content_for :title, "Recuperar Senha | Hospedagem Direta" %>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon-wrapper">
+        🔑
+      </div>
+      <h2 class="auth-title">Esqueceu a senha?</h2>
+      <p class="auth-subtitle">
+        Informe seu e-mail cadastrado para receber as instruções de redefinição
+      </p>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "auth-form" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div class="auth-field">
+        <%= f.label :email, "Endereço de E-mail", class: "auth-label" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "auth-input", placeholder: "seu@email.com" %>
+      </div>
+
+      <%= f.submit "Enviar Instruções de Recuperação", class: "auth-submit-btn" %>
+    <% end %>
+
+    <div class="auth-footer">
+      Lembrou a senha? 
+      <%= link_to "Voltar para o login", new_session_path(resource_name) %>
+    </div>
+  </div>
+</div>

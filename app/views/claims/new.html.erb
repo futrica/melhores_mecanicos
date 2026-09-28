@@ -1,0 +1,267 @@
+<% content_for :title, "Reivindicar Perfil de Empresa | Hospedagem Direta" %>
+<% content_for :meta_description, "Reivindique o perfil da sua pousada, hotel ou chalé gratuitamente. Adicione WhatsApp e receba reservas diretas sem comissão." %>
+
+<style>
+  .claim-page-container {
+    max-width: 800px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+  .claim-header-box {
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+  .claim-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--orange, #ff6b00);
+    background: rgba(255,107,0,0.1);
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    display: inline-block;
+    margin-bottom: 0.6rem;
+  }
+  .claim-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main, #1e293b);
+    margin: 0;
+    line-height: 1.25;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .claim-subtitle {
+    color: var(--text-muted, #64748b);
+    margin-top: 0.5rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .claim-card {
+    background: var(--bg-card, #ffffff);
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .claim-selected-company {
+    background: rgba(30, 41, 59, 0.03);
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .claim-company-name {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-main, #1e293b);
+    margin: 0;
+    line-height: 1.3;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .claim-actions-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    flex-direction: column;
+  }
+  .claim-btn-primary {
+    width: 100%;
+    text-align: center;
+    background: #10b981;
+    color: white;
+    font-weight: 700;
+    padding: 0.85rem 1.25rem;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    box-sizing: border-box;
+  }
+  .claim-btn-orange {
+    width: 100%;
+    text-align: center;
+    background: var(--orange, #ff6b00);
+    color: white;
+    font-weight: 700;
+    padding: 0.85rem 1.25rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    display: block;
+    box-sizing: border-box;
+  }
+  .claim-btn-outline {
+    width: 100%;
+    text-align: center;
+    border: 1px solid var(--border-color, #cbd5e1);
+    color: var(--text-main, #1e293b);
+    font-weight: 700;
+    padding: 0.85rem 1.25rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    display: block;
+    box-sizing: border-box;
+  }
+  .claim-search-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .claim-result-item {
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: var(--bg-card, #ffffff);
+  }
+
+  @media (min-width: 600px) {
+    .claim-page-container {
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+    }
+    .claim-title {
+      font-size: 2rem;
+    }
+    .claim-subtitle {
+      font-size: 0.95rem;
+    }
+    .claim-card {
+      padding: 2rem;
+    }
+    .claim-actions-row {
+      flex-direction: row;
+    }
+    .claim-search-row {
+      flex-direction: row;
+    }
+    .claim-result-item {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+</style>
+
+<div class="claim-page-container">
+  <div class="claim-header-box">
+    <span class="claim-badge">
+      Área do Proprietário & Gestor
+    </span>
+    <h1 class="claim-title">
+      Reivindicar Perfil de Empresa
+    </h1>
+    <p class="claim-subtitle">
+      Dados públicos da Receita Federal foram importados para o portal para facilitar a conexão direta de viajantes com a sua hospedagem.
+    </p>
+  </div>
+
+  <div class="claim-card">
+    <% if @company.present? %>
+      <!-- Scenario A: Target Company Selected -->
+      <div class="claim-selected-company">
+        <span style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted, #64748b); display: block; margin-bottom: 0.25rem;">Perfil Selecionado:</span>
+        <h4 class="claim-company-name"><%= @company.trade_name.presence || @company.legal_name %></h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted, #64748b); margin-top: 0.35rem; font-weight: 600; line-height: 1.4; word-break: break-word;">
+          CNPJ: <%= @company.cnpj %> &bull; <%= @company.city.name %> - <%= @company.state.acronym %>
+        </p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-main, #1e293b); margin: 0;">Como reivindicar esta empresa:</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted, #64748b); line-height: 1.5; margin: 0;">
+          Para reivindicar este perfil e atualizar seus dados de contato e catálogo de materiais, conecte-se com uma conta de empresa no portal.
+        </p>
+        
+        <% if user_signed_in? %>
+          <% if current_user.company.nil? %>
+            <%= button_to "Reivindicar este Perfil Agora", 
+                  claim_app_company_path(@company), 
+                  method: :post,
+                  data: { turbo: false },
+                  class: "claim-btn-primary" %>
+          <% else %>
+            <div style="background: #fffbebf5; border: 1px solid #fef3c7; color: #92400e; border-radius: 10px; padding: 1rem; font-size: 0.85rem; line-height: 1.4; word-break: break-word;">
+              Você já possui a empresa <strong><%= current_user.company.trade_name.presence || current_user.company.legal_name %></strong> associada à sua conta.
+            </div>
+            <a href="<%= app_root_path %>" style="background: var(--navy, #1e293b);" class="claim-btn-primary">
+              Ir para o Meu Painel
+            </a>
+          <% end %>
+        <% else %>
+          <div class="claim-actions-row">
+            <a href="<%= new_user_registration_path %>" class="claim-btn-orange">
+              Criar Conta Grátis
+            </a>
+            <a href="<%= new_user_session_path %>" class="claim-btn-outline">
+              Fazer Login
+            </a>
+          </div>
+        <% end %>
+      </div>
+
+    <% else %>
+      <!-- Scenario B: No Profile Selected, show Search -->
+      <div style="background: #eff6ff; border: 1px solid #dbeafe; color: #1e40af; border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem; font-size: 0.88rem; line-height: 1.5;">
+        <h4 style="font-weight: 800; margin: 0 0 0.4rem 0; font-size: 0.95rem;">💡 Importação de Cadastros Públicos</h4>
+        <p style="margin: 0 0 0.4rem 0;">Se seu hotel, pousada ou chalé está ativo na Receita Federal, ele provavelmente já possui uma ficha cadastrada no portal.</p>
+        <p style="margin: 0;">Busque pelo nome fantasia ou razão social do estabelecimento abaixo para reivindicar a ficha e incluir seu WhatsApp e dados de contato.</p>
+      </div>
+
+      <!-- Search Box -->
+      <%= form_with url: new_claim_path, method: :get, local: true, style: "display: flex; flex-direction: column; gap: 0.5rem;" do |f| %>
+        <%= f.label :q, "Buscar Empresa por Nome Fantasia ou Razão Social", style: "font-size: 0.85rem; font-weight: 700; color: var(--text-main, #1e293b);" %>
+        <div class="claim-search-row">
+          <%= f.text_field :q, value: params[:q], placeholder: "Ex: Pousada Recanto do Sol", required: true, style: "flex: 1; font-size: 0.95rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); padding: 0.75rem 1rem; outline: none; width: 100%; box-sizing: border-box;" %>
+          <%= f.submit "Buscar", style: "background: var(--navy, #1e293b); color: white; font-weight: 700; border: none; border-radius: 10px; padding: 0.75rem 1.5rem; font-size: 0.95rem; cursor: pointer; min-width: 100px;" %>
+        </div>
+      <% end %>
+
+      <!-- Search Results -->
+      <% if params[:q].present? %>
+        <div style="margin-top: 1.25rem; pt: 1.25rem; border-top: 1px solid var(--border-color, #e2e8f0);">
+          <h4 style="font-size: 0.85rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted, #64748b); margin-bottom: 0.75rem;">Resultados Encontrados:</h4>
+          
+          <% if @companies.present? && @companies.any? %>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <% @companies.each do |company| %>
+                <div class="claim-result-item">
+                  <div style="word-break: break-word; overflow-wrap: anywhere;">
+                    <strong style="display: block; color: var(--text-main, #1e293b); font-size: 0.95rem;"><%= company.trade_name.presence || company.legal_name %></strong>
+                    <span style="font-size: 0.8rem; color: var(--text-muted, #64748b);">CNPJ: <%= company.cnpj %> &bull; <%= company.city.name %>/<%= company.state.acronym %></span>
+                  </div>
+                  <a href="<%= new_claim_path(company_id: company.id) %>" style="background: #10b981; color: white; font-weight: 700; padding: 0.6rem 1rem; border-radius: 8px; text-decoration: none; font-size: 0.85rem; text-align: center; display: block; white-space: nowrap;">
+                    Reivindicar
+                  </a>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p style="font-size: 0.88rem; color: var(--text-muted, #64748b); font-style: italic;">Nenhuma empresa livre encontrada com o termo digitado.</p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- Custom creation link fallback -->
+      <div style="margin-top: 1.75rem; pt: 1.25rem; border-top: 1px solid var(--border-color, #e2e8f0); text-align: center; font-size: 0.88rem; color: var(--text-muted, #64748b);">
+        <p style="margin-bottom: 0.5rem;">Não encontrou sua empresa na busca?</p>
+        <a href="<%= user_signed_in? ? new_app_company_path : new_user_registration_path %>" style="font-weight: 800; color: var(--orange, #ff6b00); text-decoration: underline;">
+          Cadastrar Nova Empresa do Zero &rarr;
+        </a>
+      </div>
+    <% end %>
+  </div>
+</div>

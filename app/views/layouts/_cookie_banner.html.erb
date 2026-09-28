@@ -1,0 +1,62 @@
+<%# app/views/layouts/_cookie_banner.html.erb %>
+<div id="cookie-consent-banner" style="display: none; position: fixed; bottom: 1.25rem; left: 1.25rem; right: 1.25rem; max-width: 620px; margin: 0 auto; background: #001F54; color: #ffffff; padding: 1.1rem 1.4rem; border-radius: 16px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 99999; border: 1px solid rgba(255, 255, 255, 0.15); animation: cookieSlideUp 0.3s ease-out;">
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 240px;">
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
+        <span style="font-size: 1.2rem;">🍪</span>
+        <strong style="font-size: 0.95rem; color: #ffffff;">Uso de Cookies e Privacidade</strong>
+      </div>
+      <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.45; margin: 0;">
+        Utilizamos cookies essenciais e tecnologias semelhantes (como o Google AdSense) para personalizar conteúdos, anúncios e melhorar sua experiência ao buscar acomodações sem comissão. Ao navegar, você concorda com nossa 
+        <a href="<%= privacy_path %>" style="color: #34d399; font-weight: 700; text-decoration: underline;" target="_blank">Política de Privacidade</a> e <a href="<%= terms_path %>" style="color: #34d399; font-weight: 700; text-decoration: underline;" target="_blank">Termos de Uso</a>.
+      </p>
+    </div>
+    <div style="display: flex; align-items: center; gap: 0.5rem; align-self: center;">
+      <button type="button" id="accept-cookies-btn" style="background: #10b981; color: #022c22; border: none; padding: 0.65rem 1.25rem; border-radius: 10px; font-weight: 800; font-size: 0.85rem; cursor: pointer; transition: background 0.2s ease; shadow: 0 4px 12px rgba(16,185,129,0.3);">
+        Aceitar e Continuar
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes cookieSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  #accept-cookies-btn:hover {
+    background: #34d399 !important;
+  }
+</style>
+
+<script>
+  (function() {
+    function initCookieBanner() {
+      const banner = document.getElementById('cookie-consent-banner');
+      const acceptBtn = document.getElementById('accept-cookies-btn');
+
+      if (!banner || !acceptBtn) return;
+
+      if (!localStorage.getItem('cookie_consent_accepted')) {
+        banner.style.display = 'block';
+      }
+
+      acceptBtn.addEventListener('click', function() {
+        localStorage.setItem('cookie_consent_accepted', 'true');
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(20px)';
+        banner.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+        setTimeout(function() {
+          banner.style.display = 'none';
+        }, 200);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCookieBanner);
+    } else {
+      initCookieBanner();
+    }
+    document.addEventListener('turbo:load', initCookieBanner);
+  })();
+</script>

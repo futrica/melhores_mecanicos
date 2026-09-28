@@ -1,0 +1,37 @@
+<% content_for :title, "Solicitar Remoção de Perfil (LGPD) | Hospedagem Direta" %>
+<% content_for :description, "Formulário oficial para solicitar a exclusão ou ocultação de cadastro empresarial no portal Hospedagem Direta em conformidade com a LGPD." %>
+<% content_for :robots, "noindex, follow" %>
+
+<div style="background-color: var(--bg-main, #f8fafc); min-height: 80vh; padding: 2.5rem 1rem;">
+  <div style="max-width: 640px; margin: 0 auto; background: var(--bg-card, #ffffff); border-radius: 16px; border: 1px solid var(--border-color, #e2e8f0); padding: 2rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);">
+    
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;">🔒</span>
+      <h1 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main, #0f172a); margin: 0 0 0.5rem 0;">Solicitar Remoção de Cadastro (LGPD)</h1>
+      <p style="color: var(--text-muted, #64748b); font-size: 0.95rem; line-height: 1.5; margin: 0;">
+        Respeitamos a sua privacidade. Se você é o responsável legal por uma empresa cadastrada no <strong>Hospedagem Direta</strong> e deseja solicitar a exclusão ou ocultação do perfil, preencha o formulário abaixo.
+      </p>
+    </div>
+
+    <%= form_with url: removals_path, method: :post, local: true do |f| %>
+      <div style="margin-bottom: 1.25rem;">
+        <%= f.label :cnpj, "CNPJ da Empresa *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+        <%= f.text_field :cnpj, required: true, placeholder: "00.000.000/0000-00", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <%= f.label :company_name, "Razão Social ou Nome Fantasia *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+        <%= f.text_field :company_name, required: true, placeholder: "Nome da empresa conforme cartão CNPJ", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <%= f.label :email, "E-mail de Contato do Solicitante *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
+        <%= f.email_field :email, required: true, placeholder: "Ex: contato@pousadasol.com.br", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+      </div>
+
+      <div style="margin-top: 0.5rem;">
+        <%= f.submit "Enviar Solicitação de Remoção", style: "width: 100%; background: #dc2626; color: white; font-weight: 700; padding: 0.85rem 1.5rem; border-radius: 10px; border: none; font-size: 0.95rem; cursor: pointer;", data: { confirm: "Tem certeza de que deseja solicitar a remoção deste perfil?" } %>
+      </div>
+    <% end %>
+  </div>
+</div>

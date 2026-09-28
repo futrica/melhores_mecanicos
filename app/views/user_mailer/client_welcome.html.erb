@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bem-vindo ao Hospedagem Direta</title>
+  </head>
+  <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #334155; margin: 0; padding: 20px 0; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; max-width: 600px; margin: 0 auto; text-align: left; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+            <!-- Header -->
+            <tr>
+              <td style="background-color: #0f172a; padding: 24px 32px; text-align: center;">
+                <h1 style="color: #ffffff; font-size: 20px; font-weight: 700; margin: 0; tracking: -0.02em;">
+                  Hospedagem Direta
+                </h1>
+              </td>
+            </tr>
+
+            <!-- Body Content -->
+            <tr>
+              <td style="padding: 32px;">
+                <h2 style="color: #0f172a; font-size: 18px; font-weight: 600; margin-top: 0; margin-bottom: 16px;">
+                  Olá, <%= @first_name %>! Seja muito bem-vindo(a)! 🧳
+                </h2>
+
+                <p style="font-size: 15px; line-height: 1.6; color: #475569; margin-bottom: 20px;">
+                  Sua conta no portal <strong>Hospedagem Direta</strong> foi criada com sucesso. Agora você pode encontrar e contatar hotéis, pousadas e chalés em todo o Brasil <strong>diretamente com os proprietários, sem intermediários e sem taxas de comissão</strong>.
+                </p>
+
+                <!-- Feature Box -->
+                <div style="background-color: #f0fdf4; border-left: 4px solid #10b981; border-radius: 6px; padding: 18px 20px; margin-bottom: 28px;">
+                  <h3 style="color: #065f46; font-size: 15px; font-weight: 700; margin: 0 0 12px 0;">
+                    🌟 O que você pode fazer no portal:
+                  </h3>
+                  <ul style="margin: 0; padding-left: 20px; color: #047857; font-size: 14px; line-height: 1.8;">
+                    <li><strong>Busca geográfica:</strong> Encontre acomodações por cidade, estado ou bairro.</li>
+                    <li><strong>Contato direto:</strong> Fale com os proprietários via WhatsApp ou telefone.</li>
+                    <li><strong>Favoritos:</strong> Salve suas pousadas e hotéis preferidos para planejar viagens.</li>
+                    <li><strong>Avaliações:</strong> Compartilhe sua experiência e ajude outros viajantes.</li>
+                  </ul>
+                </div>
+
+                <!-- Call to Action Button -->
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 28px;">
+                  <tr>
+                    <td align="center">
+                      <a href="<%= root_url %>" style="display: inline-block; background-color: #10b981; color: #ffffff; font-size: 15px; font-weight: 700; text-decoration: none; padding: 14px 28px; border-radius: 8px; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);">
+                        Explorar Acomodações Agora
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="font-size: 14px; line-height: 1.5; color: #64748b; margin-bottom: 0;">
+                  Se tiver qualquer dúvida ou precisar de suporte, acesse nossa <a href="<%= contact_url %>" style="color: #2563eb; text-decoration: underline;">página de contato</a>.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background-color: #f1f5f9; padding: 20px 32px; text-align: center; border-top: 1px solid #e2e8f0;">
+                <p style="font-size: 12px; line-height: 1.5; color: #64748b; margin: 0;">
+                  Este e-mail foi enviado para <%= @user.email %> referente ao seu cadastro no Hospedagem Direta.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

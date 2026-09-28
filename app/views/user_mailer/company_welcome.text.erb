@@ -1,0 +1,18 @@
+Olá, <%= @first_name %>! Seja muito bem-vindo(a)!
+
+Sua conta de empresa no Hospedagem Direta foi criada com sucesso. Nosso objetivo é conectar o seu estabelecimento diretamente a viajantes e hóspedes de todo o Brasil, sem intermediários e sem cobrar comissão pelas suas reservas.
+
+O que você pode gerenciar no seu painel:
+- Informações Comerciais: Atualize telefones, WhatsApp, endereço e horário de atendimento.
+- Quartos e Fotos: Adicione imagens atraentes, cadastre seus tipos de acomodação e diárias.
+- Comodidades: Destaque os diferenciais do seu estabelecimento (Wi-Fi, piscina, café da manhã, etc.).
+- Contatos Diretos: Receba mensagens e chamadas de hóspedes interessados diretamente no seu WhatsApp.
+
+Acesse seu painel para gerenciar seu perfil:
+<%= app_admin_dashboard_url %>
+
+Se precisar de auxílio para configurar seu perfil ou cadastrar fotos, nossa equipe está à disposição na página de contato:
+<%= contact_url %>
+
+--
+Este e-mail foi enviado para <%= @user.email %> referente à gestão de empresas no Hospedagem Direta.

@@ -1,0 +1,10 @@
+# test/fixtures/states.yml
+sp:
+  acronym: SP
+  name: São Paulo
+  slug: sp
+
+rj:
+  acronym: RJ
+  name: Rio de Janeiro
+  slug: rj

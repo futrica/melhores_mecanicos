@@ -1,0 +1,65 @@
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #1e293b;">
+  <div style="text-align: center; margin-bottom: 24px;">
+    <h1 style="color: #2563eb; font-size: 24px; margin: 0;">🎉 Assinatura Confirmada!</h1>
+    <p style="color: #64748b; font-size: 14px; margin-top: 6px;">Hospedagem Direta - Sem Comissões sobre Reservas</p>
+  </div>
+
+  <p>Olá, <strong><%= @company.trade_name.presence || @company.legal_name %></strong>!</p>
+
+  <p>Sua assinatura do <strong><%= @product.name %></strong> foi ativada com sucesso! Todos os recursos exclusivos já estão liberados na sua conta.</p>
+
+  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 20px 0;">
+    <h3 style="margin-top: 0; font-size: 16px; color: #0f172a; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px;">
+      📄 Resumo da Contratação
+    </h3>
+    <table style="width: 100%; font-size: 14px; color: #334155;">
+      <tr>
+        <td style="padding: 6px 0; color: #64748b;">Empresa:</td>
+        <td style="padding: 6px 0; text-align: right; font-weight: bold;"><%= @company.trade_name.presence || @company.legal_name %> (CNPJ: <%= @company.cnpj %>)</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 0; color: #64748b;">Plano Contratado:</td>
+        <td style="padding: 6px 0; text-align: right; font-weight: bold;"><%= @product.name %></td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 0; color: #64748b;">Valor Mensal Recorrente:</td>
+        <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #2563eb;"><%= @price.formatted_price %> / mês</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 0; color: #64748b;">Cartão Utilizado:</td>
+        <td style="padding: 6px 0; text-align: right; font-weight: bold;"><%= @company.card_brand.to_s.upcase %> final **** <%= @company.card_last4 %></td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 0; color: #64748b;">Data da Ativação:</td>
+        <td style="padding: 6px 0; text-align: right;"><%= @subscription.created_at.strftime("%d/%m/%Y às %H:%M") %></td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 0; color: #64748b;">Forma de Cancelamento:</td>
+        <td style="padding: 6px 0; text-align: right;">A qualquer momento pelo seu painel de controle</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+    <strong style="color: #1e40af; font-size: 14px;">✨ Benefícios Ativados no seu Perfil:</strong>
+    <ul style="margin: 10px 0 0 0; padding-left: 20px; font-size: 13px; color: #1e3a8a;">
+      <li>Até 20 fotos em alta resolução + Vídeo</li>
+      <li>Quartos ilimitados com galeria dedicada por quarto</li>
+      <li>Botão de WhatsApp destacado + Link para motor de reservas</li>
+      <li>Prioridade no topo das buscas da cidade e estado</li>
+      <li>Remoção de anúncios de terceiros e de hotéis concorrentes no seu perfil</li>
+      <li>Selo exclusivo "Hospedagem em Destaque"</li>
+    </ul>
+  </div>
+
+  <p style="font-size: 13px; color: #64748b;">
+    Você pode gerenciar seu plano ou atualizar suas informações de pagamento acessando seu painel em <a href="https://hospedagemdireta.com.br/app" style="color: #2563eb;">hospedagemdireta.com.br/app</a>.
+  </p>
+
+  <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
+
+  <p style="font-size: 12px; color: #94a3b8; text-align: center;">
+    Hospedagem Direta &bull; Conectando viajantes e anfitriões sem comissão.<br />
+    Em caso de dúvidas, responda a este e-mail ou entre em contato com nosso suporte.
+  </p>
+</div>

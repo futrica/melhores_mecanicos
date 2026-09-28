@@ -1,0 +1,78 @@
+<% content_for :title, "Mensagens de Contato | Admin" %>
+
+<div class="app-dashboard">
+  <div style="margin-bottom: 1.5rem;">
+    <span class="app-role-badge">📬 Formulário de Contato</span>
+    <h1 style="font-family: var(--font-title); font-size: 1.8rem; font-weight: 800; color: var(--navy); margin-top: 0.25rem;">
+      Mensagens Recebidas
+    </h1>
+  </div>
+
+  <%# Shared Admin Tabs %>
+  <%= render "app/admin/admin_nav" %>
+
+  <%# Search Bar %>
+  <div class="admin-filter-card" style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-sm);">
+    <%= form_with url: app_admin_contacts_path, method: :get, local: true, style: "display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;" do |f| %>
+      <div style="flex: 1; min-width: 240px;">
+        <%= f.text_field :q, value: params[:q], placeholder: "Buscar por nome, e-mail, assunto ou conteúdo...", class: "auth-input", style: "width: 100%;" %>
+      </div>
+
+      <div>
+        <%= f.submit "🔍 Buscar", class: "app-btn-primary", style: "padding: 0.75rem 1.25rem;" %>
+        <% if params[:q].present? %>
+          <%= link_to "Limpar", app_admin_contacts_path, class: "app-btn-secondary", style: "padding: 0.75rem 1rem; text-decoration: none;" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Contacts Table %>
+  <% if @contacts.any? %>
+    <div class="admin-table-wrapper">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Assunto</th>
+            <th>Preview da Mensagem</th>
+            <th>Data</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @contacts.each do |contact| %>
+            <tr>
+              <td><strong>#<%= contact.id %></strong></td>
+              <td><strong><%= contact.name %></strong></td>
+              <td><%= contact.email %></td>
+              <td><span style="font-weight: 700; color: var(--navy);"><%= contact.subject %></span></td>
+              <td>
+                <span style="font-size: 0.88rem; color: var(--text-dark);">
+                  <%= truncate(contact.message, length: 65) %>
+                </span>
+              </td>
+              <td><%= contact.created_at.strftime("%d/%m/%Y às %H:%M") %></td>
+              <td>
+                <%= link_to "Ler Mensagem", app_admin_contact_path(contact), class: "admin-btn-action" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <%# Pagination Links %>
+    <% if @pagy.pages > 1 %>
+      <div style="display: flex; justify-content: center; margin-top: 1.5rem;">
+        <%== pagy_nav(@pagy) rescue nil %>
+      </div>
+    <% end %>
+  <% else %>
+    <div style="background: var(--card-bg); border: 1px dashed var(--card-border); border-radius: 12px; padding: 3rem; text-align: center;">
+      <p style="font-size: 1.1rem; color: var(--text-dark); margin: 0;">Nenhuma mensagem de contato recebida.</p>
+    </div>
+  <% end %>
+</div>

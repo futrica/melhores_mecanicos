@@ -1,0 +1,17 @@
+Olá, equipe da <%= @company_name %>!
+
+O perfil da sua empresa no portal Hospedagem Direta foi disponibilizado a partir de dados públicos abertos da Receita Federal (CNPJ) para ajudar viajantes e hóspedes a encontrarem hospedagens na sua região.
+
+A sua empresa cadastrada em <%= @company.city.name %> - <%= @company.state.acronym %> já acumula <%= @views_count %> visualizações no portal. Viajantes e hóspedes estão pesquisando por acomodações e acessando o perfil da sua empresa!
+
+Você pode reivindicar o perfil da sua empresa gratuitamente para atualizar telefones, WhatsApp, horários de atendimento, fotos e receber contatos diretos de clientes. Caso prefira não manter sua empresa listada, você também pode solicitar a remoção gratuita dos dados a qualquer momento.
+
+Acesse e reivindique seu perfil no link abaixo:
+<%= @tracking_url %>
+
+Se tiver qualquer dúvida ou precisar de auxílio, acesse nossa página de contato:
+<%= contact_url %>
+
+--
+Se não deseja mais receber avisos sobre esta empresa, acesse:
+<%= @unsubscribe_url %>

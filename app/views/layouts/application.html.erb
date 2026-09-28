@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-slate-50 antialiased">
+  <head>
+    <title><%= content_for(:title) || "Hospedagem Direta | Hotéis, Pousadas e Chalés Sem Taxas" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="<%= content_for(:meta_description) || "Reserve direto com hotéis, pousadas e chalés em todo o Brasil. Sem comissões de agências, fale direto com a hospedagem e garanta o menor preço." %>">
+    <meta name="robots" content="<%= content_for(:meta_robots) || "index, follow" %>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Hospedagem Direta">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="turbo-cache-control" content="<%= user_signed_in? ? 'no-cache' : 'no-preview' %>">
+    <%= csrf_meta_tags %>
+    <link rel="canonical" href="<%= content_for(:canonical_url) || request.original_url.split('?').first %>">
+
+    <!-- OpenGraph Tags -->
+    <meta property="og:title" content="<%= content_for(:title) || "Hospedagem Direta | Reserve Direto & Economize" %>">
+    <meta property="og:description" content="<%= content_for(:meta_description) || "Conectamos você direto ao hotel ou pousada. 0% de comissão, atendimento direto e diárias mais baratas." %>">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= request.original_url.split('?').first %>">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Hospedagem Direta">
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/icon-48.png" type="image/png" sizes="48x48">
+    <link rel="icon" href="/icon.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <%= stylesheet_link_tag "tailwind", "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <%= adsense_script_tag %>
+    <%= google_analytics_tag %>
+  </head>
+
+  <body class="flex flex-col min-h-screen text-slate-800 bg-slate-50 font-sans selection:bg-blue-600 selection:text-white">
+    <%= render "shared/impersonation_banner" %>
+    <!-- Header Navbar -->
+    <header class="sticky top-0 z-50 bg-[#001F54] text-white shadow-lg border-b border-blue-900/60" data-controller="menu">
+
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 sm:h-20">
+          
+          <!-- Pure Typographic Logo -->
+          <a href="/" class="flex items-baseline flex-nowrap whitespace-nowrap shrink-0 font-black tracking-tight text-xl sm:text-2xl text-white group">
+            <span class="text-white font-extrabold">hospedagem</span>
+            <span class="text-emerald-400 font-black">direta</span>
+            <span class="text-xs text-blue-300 font-bold ml-1 tracking-normal opacity-80 group-hover:opacity-100 transition-opacity">.com.br</span>
+          </a>
+
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex items-center space-x-6 text-sm font-semibold">
+            <a href="/" class="text-blue-100 hover:text-white hover:bg-blue-900/40 px-3 py-2 rounded-lg transition-colors">
+              Início
+            </a>
+            <a href="/#acomodacoes-destaque" class="text-blue-100 hover:text-white hover:bg-blue-900/40 px-3 py-2 rounded-lg transition-colors">
+              Acomodações
+            </a>
+
+            <% if can_claim_company? %>
+              <a href="<%= new_claim_path %>" class="text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 px-3.5 py-1.5 rounded-lg transition-all text-xs font-bold flex items-center gap-1.5">
+                <span>⚡</span>
+                <span>Reivindicar Empresa</span>
+              </a>
+            <% end %>
+
+            <a href="<%= contact_path %>" class="text-blue-100 hover:text-white hover:bg-blue-900/40 px-3 py-2 rounded-lg transition-colors">
+              Contato
+            </a>
+          </nav>
+
+          <!-- User Actions -->
+          <div class="hidden sm:flex items-center gap-3">
+            <% if user_signed_in? %>
+              <%= link_to app_root_path, class: "bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-lg shadow-md transition-all flex items-center gap-1.5" do %>
+                <span>👤</span> Painel
+              <% end %>
+              <%= link_to "Sair", destroy_user_session_path, data: { turbo_method: :delete }, class: "text-blue-200 hover:text-white text-xs font-medium px-2 py-1" %>
+            <% else %>
+              <%= link_to new_user_session_path, class: "bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm px-4 py-2 rounded-lg shadow-md shadow-emerald-500/20 transition-all flex items-center gap-1.5" do %>
+                <span>🔑</span> Entrar
+              <% end %>
+            <% end %>
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <div class="md:hidden flex items-center gap-2">
+            <button type="button" class="p-2 rounded-lg text-blue-200 hover:text-white hover:bg-blue-900/60 focus:outline-none" data-action="click->menu#toggle" aria-label="Abrir Menu">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Dropdown -->
+      <div class="hidden md:hidden bg-[#00153B] border-t border-blue-900/50 px-4 pt-3 pb-6 space-y-2 text-sm" data-menu-target="links">
+        <a href="/" class="block text-white hover:bg-blue-900/50 px-3 py-2 rounded-md font-medium">Início</a>
+        <a href="/#acomodacoes-destaque" class="block text-white hover:bg-blue-900/50 px-3 py-2 rounded-md font-medium">Acomodações em Destaque</a>
+        <% if can_claim_company? %>
+          <a href="<%= new_claim_path %>" class="block text-emerald-400 hover:bg-emerald-500/10 px-3 py-2 rounded-md font-bold">Reivindicar Empresa</a>
+        <% end %>
+        <a href="<%= contact_path %>" class="block text-white hover:bg-blue-900/50 px-3 py-2 rounded-md font-medium">Contato</a>
+        <div class="pt-2 border-t border-blue-900/50 flex flex-col gap-2">
+          <% if user_signed_in? %>
+            <%= link_to "Meu Painel", app_root_path, class: "block bg-blue-600 text-white font-bold text-center py-2.5 rounded-lg" %>
+            <%= link_to "Sair", destroy_user_session_path, data: { turbo_method: :delete }, class: "block text-center text-blue-300 py-1 text-xs" %>
+          <% else %>
+            <%= link_to "Entrar na Conta", new_user_session_path, class: "block bg-emerald-500 text-slate-950 font-bold text-center py-2.5 rounded-lg" %>
+          <% end %>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="flex-grow">
+      <% if flash[:notice].present? %>
+        <div class="max-w-7xl mx-auto px-4 mt-4">
+          <div class="bg-emerald-50 text-emerald-800 border border-emerald-200 px-4 py-3 rounded-xl font-medium text-sm flex items-center gap-2 shadow-sm">
+            <span class="text-base">✅</span>
+            <span><%= flash[:notice] %></span>
+          </div>
+        </div>
+      <% end %>
+      <% if flash[:alert].present? %>
+        <div class="max-w-7xl mx-auto px-4 mt-4">
+          <div class="bg-rose-50 text-rose-800 border border-rose-200 px-4 py-3 rounded-xl font-medium text-sm flex items-center gap-2 shadow-sm">
+            <span class="text-base">⚠️</span>
+            <span><%= flash[:alert] %></span>
+          </div>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#00153B] text-slate-300 border-t border-blue-900/50 pt-12 pb-8 mt-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-blue-900/50">
+          
+          <!-- Column 1: Brand & Mission -->
+          <div class="space-y-4">
+            <a href="/" class="flex items-baseline font-black tracking-tight text-2xl text-white">
+              <span class="text-white font-extrabold">hospedagem</span>
+              <span class="text-emerald-400 font-black">direta</span>
+              <span class="text-xs text-slate-400 font-bold ml-1">.com.br</span>
+            </a>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              O portal que conecta viajantes diretamente a hotéis, pousadas, chalés e resorts em todo o Brasil. Sem comissões de até 25% cobradas por plataformas de reserva online, permitindo negociação direta e o menor preço garantido.
+            </p>
+            <div class="pt-1 flex flex-col gap-2.5">
+              <span class="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full w-fit">
+                <span>👉</span> hospedagemdireta.com.br
+              </span>
+              <div class="flex items-center gap-2 pt-1">
+                <a href="https://www.youtube.com/@hospedagemdireta" target="_blank" rel="noopener" class="text-slate-300 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold bg-blue-900/40 hover:bg-blue-900/80 px-2.5 py-1.5 rounded-lg border border-blue-800/60" title="Canal no YouTube">
+                  <svg class="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                  <span>YouTube</span>
+                </a>
+                <a href="https://www.instagram.com/hospedagemdireta" target="_blank" rel="noopener" class="text-slate-300 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold bg-blue-900/40 hover:bg-blue-900/80 px-2.5 py-1.5 rounded-lg border border-blue-800/60" title="Instagram">
+                  <svg class="w-4 h-4 text-pink-400 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                  <span>Instagram</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2: Destinos & Cidades Populares -->
+          <div>
+            <h3 class="font-bold text-white text-sm tracking-wider uppercase mb-4 flex items-center gap-2">
+              <span>📍</span> Cidades Populares
+            </h3>
+            <ul class="space-y-2 text-xs">
+              <li><a href="/rs/gramado" class="hover:text-emerald-400 transition-colors">Pousadas em Gramado (RS)</a></li>
+              <li><a href="/sp/campos-do-jordao" class="hover:text-emerald-400 transition-colors">Hotéis em Campos do Jordão (SP)</a></li>
+              <li><a href="/al/maragogi" class="hover:text-emerald-400 transition-colors">Resorts em Maragogi (AL)</a></li>
+              <li><a href="/sp/ubatuba" class="hover:text-emerald-400 transition-colors">Pousadas em Ubatuba (SP)</a></li>
+              <li><a href="/sc/florianopolis" class="hover:text-emerald-400 transition-colors">Chalés em Florianópolis (SC)</a></li>
+              <li><a href="/go/caldas-novas" class="hover:text-emerald-400 transition-colors">Hotéis em Caldas Novas (GO)</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Navegue por Estados -->
+          <div>
+            <h3 class="font-bold text-white text-sm tracking-wider uppercase mb-4 flex items-center gap-2">
+              <span>🗺️</span> Navegue por Estados
+            </h3>
+            <div class="flex flex-wrap gap-1.5">
+              <% State.order(:acronym).each do |state| %>
+                <a href="/<%= state.slug %>" class="bg-blue-900/60 hover:bg-emerald-500 hover:text-slate-950 text-blue-100 text-xs font-semibold px-2.5 py-1 rounded transition-colors" title="<%= state.name %>">
+                  <%= state.acronym %>
+                </a>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Column 4: Sobre / Institutional -->
+          <div>
+            <h3 class="font-bold text-white text-sm tracking-wider uppercase mb-4 flex items-center gap-2">
+              <span>ℹ️</span> Sobre
+            </h3>
+            <ul class="space-y-2.5 text-xs font-medium">
+              <% if user_signed_in? %>
+                <li><a href="<%= app_root_path %>" class="text-blue-300 hover:text-white transition-colors">Meu Painel</a></li>
+              <% end %>
+              <% if can_claim_company? %>
+                <li>
+                  <a href="<%= new_claim_path %>" class="text-emerald-400 hover:text-emerald-300 font-bold transition-colors flex items-center gap-1">
+                    <span>⚡</span> Reivindicar Empresa
+                  </a>
+                </li>
+              <% end %>
+              <li><a href="<%= about_path %>" class="hover:text-emerald-400 transition-colors">Quem Somos</a></li>
+              <li><a href="<%= terms_path %>" class="hover:text-emerald-400 transition-colors">Termos de Uso</a></li>
+              <li><a href="<%= privacy_path %>" class="hover:text-emerald-400 transition-colors">Política de Privacidade</a></li>
+              <li><a href="<%= contact_path %>" class="hover:text-emerald-400 transition-colors">Contato</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- RFB Public Data Transparency Banner -->
+        <div class="my-6 p-4 rounded-xl bg-blue-950/60 border border-blue-900/80 text-xs text-slate-400 space-y-1">
+          <p class="font-bold text-slate-300 flex items-center gap-1.5">
+            <span>ℹ️</span> Transparência e Origem dos Dados Públicos
+          </p>
+          <p class="leading-relaxed text-[11px]">
+            Os cadastros de estabelecimentos de hospedagem exibidos neste portal foram consolidados a partir de bases de dados públicos da Receita Federal do Brasil (RFB) e fontes públicas oficiais. O Hospedagem Direta atua como um diretório informativo para conectar viajantes e estabelecimentos. Se você é o proprietário ou gestor e deseja atualizar contatos ou confirmar a gestão da sua página, <% if can_claim_company? %>acesse <a href="<%= new_claim_path %>" class="text-emerald-400 underline font-bold hover:text-emerald-300">Reivindicar Empresa</a><% else %>acesse seu painel de empresa<% end %>.
+          </p>
+        </div>
+
+        <!-- Footer Bottom Bar -->
+        <div class="pt-4 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 gap-4 border-t border-blue-900/40">
+          <p>&copy; <%= Time.current.year %> <strong>hospedagemdireta.com.br</strong>. Todos os direitos reservados.</p>
+          <p class="text-slate-400">Conectando hospedagens e hóspedes de forma direta e transparente em todo o Brasil.</p>
+        </div>
+      </div>
+    </footer>
+
+    <%= render "shared/contact_disclaimer_modal" %>
+    <%= render "layouts/cookie_banner" %>
+  </body>
+</html>

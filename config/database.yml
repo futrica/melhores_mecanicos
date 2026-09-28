@@ -1,0 +1,36 @@
+# SQLite. Versions 3.8.0 and up are supported.
+default: &default
+  adapter: sqlite3
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 16 } %>
+  timeout: 10000
+  pragmas:
+    journal_mode: wal
+    synchronous: normal
+    mmap_size: 134217728
+    cache_size: 5000
+    busy_timeout: 10000
+
+development:
+  <<: *default
+  database: storage/development.sqlite3
+
+test:
+  <<: *default
+  database: storage/test.sqlite3
+
+production:
+  primary:
+    <<: *default
+    database: storage/production.sqlite3
+  cache:
+    <<: *default
+    database: storage/production_cache.sqlite3
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *default
+    database: storage/production_queue.sqlite3
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *default
+    database: storage/production_cable.sqlite3
+    migrations_paths: db/cable_migrate

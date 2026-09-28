@@ -1,0 +1,16 @@
+Olá, <%= @resource.name.presence || @email %>!
+
+Seja bem-vindo(a) ao Hospedagem Direta!
+
+Para confirmar o seu endereço de e-mail e ativar sua conta, por favor acesse o link abaixo:
+<%= confirmation_url(@resource, confirmation_token: @token) %>
+
+--------------------------------------------------
+DICA IMPORTANTE:
+Caso não encontre nossas mensagens na caixa de entrada, verifique também a sua pasta de Spam ou Lixo Eletrônico. Se a mensagem estiver lá, marque-a como "Não é spam".
+--------------------------------------------------
+
+Se você não solicitou a criação desta conta, por favor desconsidere este e-mail.
+
+Hospedagem Direta
+https://hospedagemdireta.com.br

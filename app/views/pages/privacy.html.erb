@@ -1,0 +1,163 @@
+<%# app/views/pages/privacy.html.erb %>
+<% content_for :title, "Política de Privacidade | Hospedagem Direta" %>
+<% content_for :meta_description, "Conheça a Política de Privacidade do portal Hospedagem Direta. Saiba como gerenciamos dados de hospedagens e viajantes, cookies do Google AdSense e a conformidade com a LGPD." %>
+
+<div class="bg-slate-50 min-h-screen pb-16">
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-b from-[#001F54] via-[#001845] to-[#00153B] text-white py-14 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <div class="absolute -top-24 -left-24 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-4xl mx-auto text-center relative z-10 space-y-3">
+      <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-xs sm:text-sm tracking-wide uppercase shadow-sm">
+        <span>🔒</span> Privacidade & LGPD
+      </span>
+
+      <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight">
+        Política de Privacidade e Proteção de Dados
+      </h1>
+
+      <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        Compromisso com a transparência, segurança da informação e respeito absoluto às diretrizes de privacidade e uso de cookies.
+      </p>
+    </div>
+  </section>
+
+  <!-- Content Container -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20 space-y-8">
+    
+    <!-- Intro Card -->
+    <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 text-slate-700 leading-relaxed space-y-4">
+      <p class="text-base font-medium text-slate-800">
+        No portal <strong>Hospedagem Direta</strong> (hospedagemdireta.com.br), a privacidade e a segurança dos dados dos nossos visitantes, viajantes e parceiros hoteleiros são prioridades fundamentais.
+      </p>
+      <p class="text-sm text-slate-600">
+        Este documento descreve detalhadamente como coletamos, utilizamos, armazenamos e protegemos as informações enviadas por você ou obtidas a partir de fontes públicas.
+      </p>
+    </div>
+
+    <!-- Section 1: LGPD & Coleta de Dados -->
+    <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 space-y-6">
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+        <span class="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-black text-xl shadow-inner">⚖️</span>
+        <div>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">1. Conformidade com a LGPD e Coleta de Dados</h2>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium">Tratamento responsável segundo a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).</p>
+        </div>
+      </div>
+
+      <div class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+          <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+            <span>🏛️</span> A) Dados Públicos de Pessoas Jurídicas (Hospedagens)
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Nossa base de consulta inclui dados cadastrais estritamente públicos de Pessoas Jurídicas (hotéis, pousadas, albergues e chalés), obtidos legalmente através do Cadastro Nacional da Pessoa Jurídica (CNPJ) sob a licença de dados abertos da Receita Federal do Brasil. O objetivo é conectar viajantes aos estabelecimentos locais.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+          <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+            <span>🏢</span> B) Dados de Cadastro e Reivindicação de Hospedagens
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Quando um proprietário ou gestor se cadastra para gerenciar ou reivindicar uma página de hospedagem, coletamos dados de contato comercial (nome do responsável, e-mail corporativo, número de WhatsApp e documentos de comprovação de vínculo). Transações de planos de destaque são processadas com criptografia SSL por gateways seguros (como o Stripe), e não armazenamos dados completos de cartão de crédito em nossos servidores.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+          <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+            <span>🧳</span> C) Dados de Cadastro de Hóspedes e Viajantes
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Ao criar uma conta de viajante, armazenamos exclusivamente as informações fornecidas voluntariamente (como e-mail e telefone) para permitir o login e o gerenciamento da sua conta. O Hospedagem Direta <strong>não vende nem aluga dados de viajantes</strong> a terceiros.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Arquivos de Log -->
+    <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 space-y-4 text-slate-700 leading-relaxed">
+      <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+        <span>📊</span> 2. Arquivos de Log e Segurança
+      </h2>
+      <p class="text-sm sm:text-base">
+        Como a maioria dos portais da web, utilizamos arquivos de log para monitorar a segurança dos nossos servidores, prevenir spam e gerar estatísticas agregadas de tráfego.
+      </p>
+      <p class="text-xs sm:text-sm text-slate-600">
+        As informações contidas nesses arquivos incluem endereço IP, tipo de navegador, provedor de internet (ISP), páginas de entrada/saída e carimbos de data/hora. Esses dados estatísticos não estão vinculados a informações de identificação pessoal direta.
+      </p>
+    </div>
+
+    <!-- Section 3: Cookies de Terceiros e Google AdSense -->
+    <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 space-y-4 text-slate-700 leading-relaxed">
+      <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+        <span>🍪</span> 3. Cookies de Terceiros e Redes de Anúncios
+      </h2>
+      <p class="text-sm sm:text-base">
+        Para viabilizar a manutenção gratuita da plataforma para viajantes e pousadas, o site pode exibir anúncios publicitários via **Google AdSense**.
+      </p>
+
+      <div class="p-4 rounded-xl bg-amber-50 border-l-4 border-amber-500 text-amber-900 text-xs sm:text-sm space-y-2">
+        <strong>Como funcionam os Cookies de Anúncios:</strong>
+        <p>
+          O Google e seus parceiros utilizam cookies para veicular anúncios personalizados com base nas visitas anteriores realizadas a este ou a outros sites na internet. Você pode optar por desativar a publicidade personalizada a qualquer momento.
+        </p>
+      </div>
+
+      <p class="text-xs sm:text-sm text-slate-600 pt-2">
+        Para gerenciar ou desativar o uso de cookies de anúncios, acesse as <%= link_to "Configurações de Anúncios do Google", "https://policies.google.com/technologies/ads", target: "_blank", rel: "noopener", class: "text-blue-600 font-bold underline hover:text-blue-700" %> ou a ferramenta <%= link_to "About Ads", "https://www.aboutads.info", target: "_blank", rel: "noopener", class: "text-blue-600 font-bold underline hover:text-blue-700" %>.
+      </p>
+    </div>
+
+    <!-- Section 4: Como Gerenciar Cookies no Navegador -->
+    <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 space-y-4 text-slate-700 leading-relaxed">
+      <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+        <span>🛠️</span> 4. Como Gerenciar Cookies no Seu Navegador
+      </h2>
+      <p class="text-sm sm:text-base">
+        Você pode alterar ou bloquear os cookies diretamente nas configurações de privacidade do seu navegador:
+      </p>
+      <ul class="text-xs sm:text-sm text-slate-600 space-y-2 pl-4 list-disc">
+        <li><strong>Google Chrome:</strong> Configurações &gt; Privacidade e segurança &gt; Cookies e outros dados do site.</li>
+        <li><strong>Mozilla Firefox:</strong> Configurações &gt; Privacidade e Segurança &gt; Cookies e dados de sites.</li>
+        <li><strong>Apple Safari:</strong> Preferências &gt; Privacidade &gt; Gerenciar dados de sites.</li>
+        <li><strong>Microsoft Edge:</strong> Configurações &gt; Permissões do site &gt; Cookies e dados armazenados.</li>
+      </ul>
+    </div>
+
+    <!-- Section 5: Links Externos e WhatsApp -->
+    <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 space-y-4 text-slate-700 leading-relaxed">
+      <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+        <span>🔗</span> 5. Links para Sites Externos e Conversas de WhatsApp
+      </h2>
+      <p class="text-sm sm:text-base">
+        Nosso portal disponibiliza botões de atalho para contatos diretos por WhatsApp e links para sites oficiais de hotéis e pousadas.
+      </p>
+      <p class="text-xs sm:text-sm text-slate-600">
+        Não nos responsabilizamos pelas políticas de privacidade, termos ou conteúdos praticados por sites terceiros ou em conversas privadas no aplicativo de mensagens. Recomendamos consultar a política do estabelecimento ao iniciar um contato.
+      </p>
+    </div>
+
+    <!-- Section 6: Direitos do Titular (LGPD) -->
+    <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 space-y-4 text-slate-700 leading-relaxed">
+      <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+        <span>🙋‍♂️</span> 6. Seus Direitos (LGPD) e Solicitação de Remoção
+      </h2>
+      <p class="text-sm sm:text-base">
+        Conforme o Artigo 18 da LGPD, você possui o direito de confirmar a existência de tratamento, acessar seus dados, solicitar a correção de dados incompletos ou desatualizados e pedir a eliminação do seu cadastro.
+      </p>
+      <p class="text-xs sm:text-sm text-slate-600">
+        Para exercitar qualquer um desses direitos de forma totalmente gratuita, basta entrar em contato conosco através da nossa página de <%= link_to "Contato", contact_path, class: "text-emerald-600 font-bold underline hover:text-emerald-700" %>.
+      </p>
+    </div>
+
+    <!-- Footer of Document -->
+    <div class="p-6 rounded-2xl bg-slate-200/60 border border-slate-300/70 text-xs text-slate-600 text-center space-y-1">
+      <p>Esta Política de Privacidade é regida pela legislação brasileira e revisada periodicamente.</p>
+      <p class="font-semibold text-slate-700">Última atualização: Fevereiro de 2026.</p>
+    </div>
+
+  </div>
+</div>
+

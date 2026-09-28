@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <title><%= content_for(:title) || "Painel | Hospedagem Direta" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="<%= content_for(:meta_description) || "Gerencie suas hospedagens favoritas, avaliações e perfil de cliente." %>">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="turbo-cache-control" content="no-cache">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/icon-48.png" type="image/png" sizes="48x48">
+    <link rel="icon" href="/icon.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <%= stylesheet_link_tag "tailwind", "application", "legacy", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="app-layout">
+    <%= render "shared/impersonation_banner" %>
+    <header class="app-header" data-controller="menu">
+      <div class="app-nav-container">
+        <a href="/" class="logo flex items-baseline flex-nowrap whitespace-nowrap shrink-0 font-black tracking-tight text-lg sm:text-xl text-white group" style="text-decoration: none;">
+          <span class="text-white font-extrabold">hospedagem</span>
+          <span class="text-emerald-400 font-black">direta</span>
+          <span class="text-xs text-blue-300 font-bold ml-1 tracking-normal">.com.br</span>
+        </a>
+
+        <nav class="app-nav-links" data-menu-target="links">
+          <% if current_user.admin? %>
+            <%= link_to app_admin_dashboard_path, class: "app-nav-link #{"active" if current_page?(app_admin_dashboard_path)}" do %>
+              <span>📊</span> Painel Admin
+            <% end %>
+            <%= link_to app_admin_users_path, class: "app-nav-link #{"active" if current_page?(app_admin_users_path)}" do %>
+              <span>👥</span> Usuários
+            <% end %>
+            <%= link_to app_admin_contacts_path, class: "app-nav-link #{"active" if current_page?(app_admin_contacts_path)}" do %>
+              <span>📬</span> Contatos
+            <% end %>
+          <% else %>
+            <%= link_to app_root_path, class: "app-nav-link #{"active" if current_page?(app_root_path)}" do %>
+              <span>🏠</span> Painel
+            <% end %>
+          <% end %>
+          <a href="/" class="app-nav-link">
+            <span>🔍</span> Ver Site
+          </a>
+
+          <div class="app-nav-mobile-user">
+            <div class="app-user-info-mobile">
+              <div class="app-user-avatar"><%= (current_user.name || current_user.email).first(2).upcase %></div>
+              <div class="app-user-details-mobile">
+                <span class="app-user-name"><%= current_user.name || current_user.email.split("@").first %></span>
+                <span class="app-user-role"><%= current_user.admin? ? "Administrador 👑" : (current_user.client? ? "Cliente" : current_user.role.titleize) %></span>
+              </div>
+            </div>
+            <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "app-logout-btn-mobile" do %>
+              <span>🚪</span> Sair da Conta
+            <% end %>
+          </div>
+        </nav>
+
+        <div class="app-nav-right">
+          <div class="app-user-info">
+            <div class="app-user-avatar"><%= (current_user.name || current_user.email).first(2).upcase %></div>
+            <div class="app-user-details">
+              <span class="app-user-name"><%= current_user.name || current_user.email.split("@").first %></span>
+              <span class="app-user-role"><%= current_user.admin? ? "Administrador 👑" : (current_user.client? ? "Cliente" : current_user.role.titleize) %></span>
+            </div>
+          </div>
+          <%= link_to "Sair", destroy_user_session_path, data: { turbo_method: :delete }, class: "app-logout-btn" %>
+        </div>
+
+        <button type="button" class="hamburger-btn" data-action="click->menu#toggle" aria-label="Menu" aria-expanded="false">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <% if flash[:notice].present? %>
+        <div class="flash-message flash-notice app-flash">
+          <span>✅</span> <%= flash[:notice] %>
+        </div>
+      <% end %>
+      <% if flash[:alert].present? %>
+        <div class="flash-message flash-alert app-flash">
+          <span>⚠️</span> <%= flash[:alert] %>
+        </div>
+      <% end %>
+      <%= yield %>
+    </main>
+  </body>
+</html>

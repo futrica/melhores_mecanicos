@@ -1,0 +1,10 @@
+# test/fixtures/neighborhoods.yml
+centro_guara:
+  city: guara
+  name: Centro
+  slug: centro
+
+centro_campinas:
+  city: campinas
+  name: Centro
+  slug: centro

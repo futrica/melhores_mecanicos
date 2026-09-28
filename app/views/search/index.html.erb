@@ -1,0 +1,135 @@
+<%# app/views/search/index.html.erb %>
+
+<% content_for :title, "Resultados da Busca | Hospedagens Diretas & Pousadas" %>
+<% content_for :meta_description, "Filtre e encontre hotéis, pousadas, apart-hotéis, hostels e alojamentos em todo o Brasil para reservar sem intermediários ou taxas." %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans text-slate-800 pt-6 pb-16 space-y-6">
+  
+  <!-- Breadcrumb bar -->
+  <nav class="flex items-center gap-2 text-xs font-semibold text-slate-500 overflow-x-auto py-1">
+    <a href="/" class="hover:text-[#006ce4] transition-colors">Início</a>
+    <% if @state %>
+      <span>&rsaquo;</span>
+      <a href="/<%= @state.slug %>" class="hover:text-[#006ce4] transition-colors"><%= @state.name %> (<%= @state.acronym %>)</a>
+      <% if @cities.present? && @cities.one? %>
+        <% city = @cities.first %>
+        <span>&rsaquo;</span>
+        <a href="/<%= @state.slug %>/<%= city.slug %>" class="hover:text-[#006ce4] transition-colors"><%= city.name %></a>
+        <% if @neighborhoods.present? && @neighborhoods.one? %>
+          <% nh = @neighborhoods.first %>
+          <span>&rsaquo;</span>
+          <span class="text-slate-900 font-extrabold"><%= nh.name %></span>
+        <% elsif @neighborhood %>
+          <span>&rsaquo;</span>
+          <span class="text-slate-900 font-extrabold"><%= @neighborhood.name %></span>
+        <% end %>
+      <% elsif @cities.present? %>
+        <span>&rsaquo;</span>
+        <span class="text-slate-900 font-extrabold"><%= @cities.map(&:name).to_sentence %></span>
+      <% end %>
+    <% else %>
+      <span>&rsaquo;</span>
+      <span class="text-slate-900 font-extrabold">Resultados da busca</span>
+    <% end %>
+  </nav>
+
+  <!-- Home-Style Search Panel -->
+  <div class="search-panel-wrapper">
+    <%= render 'shared/search_panel' %>
+  </div>
+
+  <!-- Title & Controls Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+        <% if @state %>
+          Hospedagens em <%= @cities.present? ? @cities.map(&:name).to_sentence : @state.name %> (<%= number_with_delimiter(@pagy.count) %>)
+        <% else %>
+          Hospedagens no Brasil: <%= number_with_delimiter(@pagy.count) %> <%= @pagy.count == 1 ? "acomodação encontrada" : "acomodações encontradas" %>
+        <% end %>
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-600 font-medium mt-1">
+        Encontre acomodações verificadas com contato direto e sem taxas.
+      </p>
+    </div>
+
+    <!-- Sorting Controls -->
+    <div class="flex items-center gap-3 flex-wrap">
+      <form action="/busca" method="get" class="inline-block">
+        <% if params[:q].present? %><input type="hidden" name="q" value="<%= params[:q] %>"><% end %>
+        <% if params[:state_id].present? %><input type="hidden" name="state_id" value="<%= params[:state_id] %>"><% end %>
+        <% Array(params[:categories]).each do |cat| %><input type="hidden" name="categories[]" value="<%= cat %>"><% end %>
+        
+        <div class="relative inline-flex items-center">
+          <select name="sort" onchange="this.form.submit()" class="bg-white border border-slate-300 hover:border-slate-400 font-bold text-xs sm:text-sm text-slate-800 py-2.5 pl-4 pr-9 rounded-full shadow-sm appearance-none cursor-pointer outline-none focus:ring-2 focus:ring-[#006ce4]/30">
+            <option value="recommended" <%= params[:sort] == 'recommended' || params[:sort].blank? ? 'selected' : '' %>>⇅ Ordenar por: Nossas recomendações</option>
+            <option value="rating" <%= params[:sort] == 'rating' ? 'selected' : '' %>>★ Avaliação dos hóspedes (maior)</option>
+            <option value="newest" <%= params[:sort] == 'newest' ? 'selected' : '' %>>🆕 Mais recentes</option>
+            <option value="name" <%= params[:sort] == 'name' ? 'selected' : '' %>>🔤 Nome (A-Z)</option>
+          </select>
+          <div class="pointer-events-none absolute right-3 text-slate-500 text-xs">▼</div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- AdSense Top Banner Slot -->
+  <%= adsense_ad_tag(:top) %>
+
+  <!-- Main 2-Column Booking Layout Grid -->
+  <div class="flex flex-col lg:flex-row gap-6 items-start">
+    
+    <!-- Left Column: Booking Sidebar Filters -->
+    <%= render 'shared/booking_sidebar' %>
+
+    <!-- Right Column: Results Property Cards List -->
+    <main class="flex-grow w-full min-w-0">
+      
+      <% if params[:state_id].blank? %>
+        <div class="bg-white border-2 border-dashed border-[#006ce4]/40 rounded-2xl p-10 text-center shadow-sm space-y-4">
+          <div class="text-5xl text-[#006ce4]">📍</div>
+          <h3 class="text-2xl font-black text-slate-900">Selecione um Estado</h3>
+          <p class="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+            Selecione seu estado ou cidade no painel de busca no topo para visualizar as acomodações disponíveis com reserva direta sem taxas.
+          </p>
+        </div>
+      <% else %>
+        
+        <% if @companies.any? %>
+          <div class="space-y-4">
+            <% @companies.each do |company| %>
+              <%= render 'shared/booking_company_card', company: company %>
+            <% end %>
+          </div>
+
+          <!-- AdSense Inline Banner Slot -->
+          <%= adsense_ad_tag(:inline) %>
+
+          <!-- Pagination -->
+          <% if @pagy.pages > 1 %>
+            <div class="pagy-container mt-8 flex justify-center">
+              <%= raw @pagy.series_nav %>
+            </div>
+          <% end %>
+
+        <% else %>
+          <div class="bg-white border border-slate-200 rounded-2xl p-10 text-center shadow-sm space-y-4">
+            <div class="text-5xl">🔍</div>
+            <h3 class="text-xl font-black text-slate-900">Nenhum resultado encontrado</h3>
+            <p class="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+              Não encontramos empresas ativas correspondentes aos filtros selecionados.
+            </p>
+            <a href="/busca" class="inline-block bg-[#006ce4] hover:bg-[#0052b4] text-white font-extrabold text-sm px-6 py-3 rounded-xl shadow transition-all">
+              Limpar filtros
+            </a>
+          </div>
+        <% end %>
+
+      <% end %>
+
+    </main>
+
+  </div>
+
+</div>

@@ -1,0 +1,103 @@
+<%# app/views/locations/state.html.erb %>
+
+<% content_for :title, "Hospedagens em #{@state.name} (#{@state.acronym}) | Reserva Direta" %>
+<% content_for :meta_description, "Encontre os melhores hotéis, pousadas, apart-hotéis e hostels em #{@state.name} (#{@state.acronym}). Reserve direto com o estabelecimento sem taxas." %>
+<% content_for :meta_robots, (@pagy.count.positive? ? "index, follow" : "noindex, follow") %>
+
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans text-slate-800 pt-6 pb-16 space-y-6">
+  
+  <!-- Breadcrumb bar -->
+  <nav class="flex items-center gap-2 text-xs font-semibold text-slate-500 overflow-x-auto py-1">
+    <a href="/" class="hover:text-[#006ce4] transition-colors">Início</a>
+    <span>&rsaquo;</span>
+    <a href="/" class="hover:text-[#006ce4] transition-colors">Brasil</a>
+    <span>&rsaquo;</span>
+    <span class="text-slate-900 font-extrabold"><%= @state.name %> (<%= @state.acronym %>)</span>
+    <span>&rsaquo;</span>
+    <span class="text-slate-500">Resultados da busca</span>
+  </nav>
+
+  <!-- Home-Style Search Panel -->
+  <div class="search-panel-wrapper">
+    <%= render 'shared/search_panel' %>
+  </div>
+
+  <!-- Title & Controls Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+        Hospedagens em <%= @state.name %> (<%= number_with_delimiter(@pagy.count) %>)
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-600 font-medium mt-1">
+        Reserve hotéis, pousadas e chalés em <%= @state.name %> direto com a propriedade sem comissões.
+      </p>
+    </div>
+
+    <!-- Sorting Controls -->
+    <div class="flex items-center gap-3 flex-wrap">
+      <form action="<%= request.path %>" method="get" class="inline-block">
+        <% if params[:q].present? %><input type="hidden" name="q" value="<%= params[:q] %>"><% end %>
+        <% Array(params[:categories]).each do |cat| %><input type="hidden" name="categories[]" value="<%= cat %>"><% end %>
+        
+        <div class="relative inline-flex items-center">
+          <select name="sort" onchange="this.form.submit()" class="bg-white border border-slate-300 hover:border-slate-400 font-bold text-xs sm:text-sm text-slate-800 py-2.5 pl-4 pr-9 rounded-full shadow-sm appearance-none cursor-pointer outline-none focus:ring-2 focus:ring-[#006ce4]/30">
+            <option value="recommended" <%= params[:sort] == 'recommended' || params[:sort].blank? ? 'selected' : '' %>>⇅ Ordenar por: Nossas recomendações</option>
+            <option value="rating" <%= params[:sort] == 'rating' ? 'selected' : '' %>>★ Avaliação dos hóspedes (maior)</option>
+            <option value="newest" <%= params[:sort] == 'newest' ? 'selected' : '' %>>🆕 Mais recentes</option>
+            <option value="name" <%= params[:sort] == 'name' ? 'selected' : '' %>>🔤 Nome (A-Z)</option>
+          </select>
+          <div class="pointer-events-none absolute right-3 text-slate-500 text-xs">▼</div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- AdSense Top Banner Slot -->
+  <%= adsense_ad_tag(:top) %>
+
+  <!-- Main 2-Column Booking Layout Grid -->
+  <div class="flex flex-col lg:flex-row gap-6 items-start">
+    
+    <!-- Left Column: Booking Sidebar Filters -->
+    <%= render 'shared/booking_sidebar' %>
+
+    <!-- Right Column: Results Property Cards List -->
+    <main class="flex-grow w-full min-w-0">
+      
+      <% if @companies.any? %>
+        <div class="space-y-4">
+          <% @companies.each do |company| %>
+            <%= render 'shared/booking_company_card', company: company %>
+          <% end %>
+        </div>
+
+        <!-- AdSense Inline Banner Slot -->
+        <%= adsense_ad_tag(:inline) %>
+
+        <!-- Pagination -->
+        <% if @pagy.pages > 1 %>
+          <div class="pagy-container mt-8 flex justify-center">
+            <%= raw @pagy.series_nav %>
+          </div>
+        <% end %>
+
+      <% else %>
+        <div class="bg-white border border-slate-200 rounded-2xl p-10 text-center shadow-sm space-y-4">
+          <div class="text-5xl">🔍</div>
+          <h3 class="text-xl font-black text-slate-900">Nenhuma acomodação encontrada</h3>
+          <p class="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+            Não encontramos propriedades ativas correspondentes aos filtros selecionados em <%= @state.name %>.
+          </p>
+          <a href="/<%= @state.slug %>" class="inline-block bg-[#006ce4] hover:bg-[#0052b4] text-white font-extrabold text-sm px-6 py-3 rounded-xl shadow transition-all">
+            Limpar filtros de busca
+          </a>
+        </div>
+      <% end %>
+
+    </main>
+
+  </div>
+
+</div>

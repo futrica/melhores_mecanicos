@@ -1,0 +1,326 @@
+/* Custom application helpers that complement Tailwind CSS */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+/* Hide scrollbar for clean tab scrolling */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Stimulus JS active toggle classes for dropdowns */
+.city-dropdown-content-pane {
+  display: none;
+  z-index: 100 !important;
+}
+
+.relative.active {
+  z-index: 50 !important;
+}
+
+.relative.active > .city-dropdown-content-pane,
+[data-search-form-target="stateDropdown"].active .city-dropdown-content-pane,
+[data-search-form-target="cityDropdown"].active .city-dropdown-content-pane,
+[data-search-form-target="neighborhoodDropdown"].active .city-dropdown-content-pane,
+.city-dropdown-content-pane.active {
+  display: block !important;
+}
+
+.modal-overlay.active {
+  display: flex !important;
+}
+
+/* Authentication & Form Card Styles */
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+  padding: 3rem 1.5rem;
+  background-color: #f8fafc;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 480px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transition: all 0.25s ease;
+}
+
+.auth-card:hover {
+  border-color: #10b981;
+  box-shadow: 0 20px 30px -10px rgba(16, 185, 129, 0.12);
+}
+
+.auth-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.auth-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 56px;
+  height: 56px;
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border-radius: 16px;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.auth-title {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #001F54;
+}
+
+.auth-subtitle {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.auth-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.auth-input:focus {
+  background-color: #ffffff;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.auth-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.auth-password-wrapper .auth-input {
+  padding-right: 2.75rem;
+}
+
+.auth-password-toggle-btn {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.3rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.auth-checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auth-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #10b981;
+  cursor: pointer;
+}
+
+.auth-checkbox-label {
+  font-size: 0.82rem;
+  color: #475569;
+  cursor: pointer;
+}
+
+.auth-link-button {
+  background: none;
+  border: none;
+  color: #059669;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.82rem;
+}
+
+.auth-link-button:hover {
+  text-decoration: underline;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #10b981;
+  color: #022c22;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+  transition: all 0.2s ease;
+}
+
+.auth-submit-btn:hover {
+  background-color: #34d399;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+}
+
+.auth-footer {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 1.2rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.auth-footer a {
+  color: #059669;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+.city-select-trigger-btn {
+  width: 100%;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  color: #0f172a;
+  cursor: pointer;
+  outline: none;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: 20px;
+  max-width: 580px;
+  width: 100%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #001F54;
+  margin: 0;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #64748b;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  background: #f8fafc;
+}
+
+.modal-accept-btn {
+  background: #10b981;
+  color: #022c22;
+  font-weight: 800;
+  border: none;
+  padding: 0.65rem 1.25rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+

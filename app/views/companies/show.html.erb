@@ -1,0 +1,1216 @@
+<%# app/views/companies/show.html.erb %>
+
+<%
+  trade_name_display = @company.trade_name.presence || @company.legal_name
+  score_info = booking_score_info(@company)
+  estimated_price = booking_estimated_price(@company)
+
+  categories = @company.categories.to_a
+  main_category = categories.first&.name || "Hotéis e Pousadas"
+  main_style = category_style_for(main_category)
+
+  clean_cnae = @company.cnae_principal.to_s.gsub(/\D/, "")
+  mapped_cnae_name = Company::CNAE_MAPPINGS[clean_cnae]
+  is_main_cnae_lodging = mapped_cnae_name.present?
+
+  has_real_photos = @company.photos.attached? && @company.photos.any?
+  is_verified_or_rich = @company.approved? || @company.is_claimed? || has_real_photos
+
+  has_phone = (@company.phone_1.present? && is_valid_phone?(@company.phone_1)) || (@company.phone_2.present? && is_valid_phone?(@company.phone_2))
+
+  page_title = if is_verified_or_rich
+    if has_phone
+      "#{trade_name_display} em #{@city.name} - #{@state.acronym} | Fotos, WhatsApp e Reserva Direta [Sem Taxas]"
+    else
+      "#{trade_name_display} em #{@city.name} - #{@state.acronym} | Fotos e Reserva Direta [Sem Taxas]"
+    end
+  elsif is_main_cnae_lodging
+    if has_phone
+      "#{trade_name_display} em #{@city.name} - #{@state.acronym} | Telefone, Endereço e Dados Cadastrais"
+    else
+      "#{trade_name_display} em #{@city.name} - #{@state.acronym} | Endereço, CNPJ e Dados Oficiais"
+    end
+  else
+    if has_phone
+      "#{trade_name_display} em #{@city.name}/#{@state.acronym}: Telefone, Endereço e CNPJ"
+    else
+      "#{trade_name_display} em #{@city.name}/#{@state.acronym}: Endereço, Situação Cadastral e CNPJ"
+    end
+  end
+
+  meta_desc = if is_verified_or_rich
+    if has_phone
+      "Reserve direto em #{trade_name_display} em #{@city.name}/#{@state.acronym}. Fotos reais, acomodações e contato direto no WhatsApp sem taxas nem intermediários."
+    else
+      "Conheça #{trade_name_display} em #{@city.name}/#{@state.acronym}. Fotos reais da hospedagem, acomodações e informações completas para sua estadia."
+    end
+  elsif has_phone
+    "Telefone, endereço e dados cadastrais de #{trade_name_display} (CNPJ: #{@company.cnpj}) em #{@city.name}/#{@state.acronym}. Confira contato, localização e informações oficiais."
+  else
+    "Informações cadastrais oficiais de #{trade_name_display} (CNPJ: #{@company.cnpj}) em #{@city.name}/#{@state.acronym}. Endereço, CNAE e situação cadastral na Receita Federal."
+  end
+%>
+
+<% content_for :title, page_title %>
+<% content_for :meta_description, meta_desc %>
+<% content_for :meta_robots, (@company.indexable? ? "index, follow" : "noindex, follow") %>
+<% content_for :canonical_url, "https://hospedagemdireta.com.br/#{@state.slug}/#{@city.slug}/#{@neighborhood&.slug || 'centro'}/#{@company.slug}" %>
+
+<%
+  breadcrumb_items = [
+    { "@type" => "ListItem", "position" => 1, "name" => "Início", "item" => request.base_url },
+    { "@type" => "ListItem", "position" => 2, "name" => @state.acronym, "item" => "#{request.base_url}/#{@state.slug}" },
+    { "@type" => "ListItem", "position" => 3, "name" => @city.name, "item" => "#{request.base_url}/#{@state.slug}/#{@city.slug}" }
+  ]
+
+  if @neighborhood.present?
+    breadcrumb_items << {
+      "@type" => "ListItem",
+      "position" => 4,
+      "name" => @neighborhood.name,
+      "item" => "#{request.base_url}/#{@state.slug}/#{@city.slug}/#{@neighborhood.slug}"
+    }
+  end
+
+  breadcrumb_items << {
+    "@type" => "ListItem",
+    "position" => breadcrumb_items.size + 1,
+    "name" => trade_name_display,
+    "item" => request.original_url
+  }
+
+  lodging_hash = CompanySchemaMapper.new(@company, base_url: request.base_url, reviews: @reviews).to_schema_hash
+%>
+
+<script type="application/ld+json">
+  <%= raw({
+    "@context" => "https://schema.org",
+    "@type" => "BreadcrumbList",
+    "itemListElement" => breadcrumb_items
+  }.to_json) %>
+</script>
+
+<script type="application/ld+json">
+  <%= raw(lodging_hash.to_json) %>
+</script>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans text-slate-800 pt-6 pb-16 space-y-6">
+
+  <!-- Breadcrumbs Bar -->
+  <nav class="flex items-center gap-1.5 text-xs font-medium text-slate-500 flex-wrap py-1 leading-relaxed">
+    <a href="/" class="hover:text-[#006ce4] transition-colors">Início</a>
+    <span class="text-slate-400">&rsaquo;</span>
+    <a href="/<%= @state.slug %>" class="hover:text-[#006ce4] transition-colors"><%= @state.name %> (<%= @state.acronym %>)</a>
+    <span class="text-slate-400">&rsaquo;</span>
+    <a href="/<%= @state.slug %>/<%= @city.slug %>" class="hover:text-[#006ce4] transition-colors"><%= @city.name %></a>
+    <% if @neighborhood.present? %>
+      <span class="text-slate-400">&rsaquo;</span>
+      <a href="/<%= @state.slug %>/<%= @city.slug %>/<%= @neighborhood.slug %>" class="hover:text-[#006ce4] transition-colors"><%= @neighborhood.name %></a>
+    <% end %>
+    <span class="text-slate-400">&rsaquo;</span>
+    <span class="text-slate-900 font-extrabold"><%= trade_name_display %></span>
+  </nav>
+
+  <!-- AdSense Top Banner (Free Plan Only) -->
+  <% if @company.free_plan? %>
+    <%= adsense_ad_tag(:top) %>
+  <% end %>
+
+  <!-- Booking.com Style Header & Photo Gallery Grid Container -->
+  <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-4 sm:p-6 lg:p-8 space-y-6 relative">
+    
+    <!-- Top Header Bar (Title, Rating, Address, Top Right Actions) -->
+    <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-slate-100 pb-5">
+      <div class="space-y-2">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-amber-400 font-extrabold text-sm flex items-center gap-0.5">
+            ★★★★ <span class="bg-amber-100 text-amber-800 text-[10px] font-black px-1.5 py-0.5 rounded ml-1">👍</span>
+          </span>
+          <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
+            ⚡ Reserva Direta &bull; 0% Taxa
+          </span>
+          <% if @company.premium? %>
+            <span class="inline-flex items-center gap-1 bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 text-[11px] font-black px-2.5 py-0.5 rounded-full shadow-xs">
+              ⭐ Hospedagem em Destaque
+            </span>
+          <% end %>
+          <% if @company.approved? %>
+            <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-800 border border-blue-200/80 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
+              ✓ Hospedagem Verificada
+            </span>
+          <% end %>
+
+          <% if @company.website.present? %>
+            <% web_url = @company.website.start_with?('http') ? @company.website : "https://#{@company.website}" %>
+            <a href="<%= web_url %>" target="_blank" rel="noopener" class="inline-flex items-center gap-1 bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200/80 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full transition-colors">
+              🌐 Website Oficial
+            </a>
+          <% end %>
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+          <%= trade_name_display %>
+        </h1>
+
+        <div class="text-xs sm:text-sm font-medium text-slate-600 flex items-center gap-1.5 flex-wrap">
+          <span class="font-bold text-slate-800">📍 <%= @company.street %>, <%= @company.number %> <%= "- #{@company.complement}" if @company.complement.present? %></span>
+          <% if @neighborhood.present? %>
+            <span>&bull;</span>
+            <span class="font-bold text-[#006ce4]"><%= @neighborhood.name %></span>
+          <% end %>
+          <span>&bull;</span>
+          <span class="font-black text-slate-900"><%= @city.name %> - <%= @state.acronym %></span>
+          <span>&bull;</span>
+          <a href="#sobre-empresa" class="font-extrabold text-[#006ce4] hover:underline">Excelente localização - ver mapa</a>
+        </div>
+
+        <% unless is_main_cnae_lodging %>
+          <div class="bg-amber-50 border border-amber-200/90 rounded-xl p-4 text-amber-950 space-y-1 mt-3">
+            <div class="flex items-center gap-1.5 font-extrabold text-amber-950 text-xs sm:text-sm">
+              <span>ℹ️</span>
+              <span>Sobre a listagem desta empresa no Hospedagem Direta</span>
+            </div>
+            <p class="text-xs leading-relaxed text-slate-700 font-medium">
+              Esta empresa possui em seu cadastro oficial de operações (CNAE Secundário na Receita Federal) atividades relacionadas ao setor de hospedagem, hotéis, pousadas, hostels ou alojamentos.
+            </p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Top Right Actions (Favorite, Share, Primary Contact Button) -->
+      <div class="flex items-center gap-2 shrink-0 flex-wrap">
+        <% if !user_signed_in? || current_user.client? %>
+          <% if user_signed_in? && current_user.client? %>
+            <%= button_to toggle_favorite_path(company_id: @company.id), method: :post, data: { turbo: false },
+                class: "inline-flex items-center justify-center w-10 h-10 rounded-full border text-base transition-all shadow-2xs #{ current_user.favorited?(@company) ? 'bg-rose-50 border-rose-200 text-rose-600' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100' }",
+                title: current_user.favorited?(@company) ? "Remover dos favoritos" : "Salvar nos favoritos" do %>
+              <span><%= current_user.favorited?(@company) ? "❤️" : "🤍" %></span>
+            <% end %>
+          <% else %>
+            <a href="<%= new_user_session_path %>" class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-base transition-all shadow-2xs" title="Faça login para salvar nos favoritos">
+              <span>🤍</span>
+            </a>
+          <% end %>
+        <% end %>
+
+        <% if @company.has_whatsapp? %>
+          <% if user_signed_in? %>
+            <a href="<%= @company.whatsapp_url %>" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-[#006ce4] hover:bg-[#0057b8] text-white font-extrabold text-sm px-6 py-2.5 rounded-xl shadow-md transition-all">
+              <span>📱 Reservar Direto</span>
+            </a>
+          <% else %>
+            <a href="<%= new_user_session_path %>" class="inline-flex items-center gap-2 bg-[#006ce4] hover:bg-[#0057b8] text-white font-extrabold text-sm px-6 py-2.5 rounded-xl shadow-md transition-all">
+              <span>🔒 Reservar Direto</span>
+            </a>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Photo Gallery Section -->
+    <%
+      all_gallery_photos = []
+
+      # 1. Company Property Photos
+      if @company.photos.attached? && @company.photos.any?
+        @company.photos.each_with_index do |photo, idx|
+          all_gallery_photos << {
+            url: rails_blob_path(photo, only_path: true),
+            title: trade_name_display,
+            subtitle: idx == 0 ? "Foto Principal da Propriedade" : "Foto da Propriedade (#{idx + 1})",
+            badge: "📸 Propriedade",
+            source: "company"
+          }
+        end
+      end
+      has_real_photos = all_gallery_photos.any?
+      display_photos = all_gallery_photos.map { |p| p[:url] }
+    %>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+      <!-- Main Photo Grid (Col 1 to 8) -->
+      <div class="lg:col-span-8 space-y-3">
+        <% if has_real_photos %>
+          <!-- Real Photos Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 h-72 sm:h-80 md:h-[380px]" style="min-height: 288px; max-height: 380px;">
+            <!-- Big Cover Photo (Left 2 cols or 3 cols if 1 photo) -->
+            <div class="<%= display_photos.size == 1 ? 'md:col-span-3' : 'md:col-span-2' %> h-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-sm relative group cursor-pointer" onclick="openPhotoModal(0)">
+              <img src="<%= display_photos[0] %>" alt="<%= trade_name_display %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              <span class="absolute bottom-3 left-3 bg-slate-900/80 text-white text-xs font-extrabold px-3 py-1.5 rounded-xl backdrop-blur-xs flex items-center gap-1.5 shadow-sm z-10">
+                <span><%= all_gallery_photos[0][:badge] %></span>
+              </span>
+              <span class="absolute top-3 right-3 bg-slate-900/70 group-hover:bg-blue-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-xl backdrop-blur-xs flex items-center gap-1.5 transition-all shadow-sm z-10">
+                <span>🔍 Ver fotos (<%= all_gallery_photos.size %>)</span>
+              </span>
+            </div>
+
+            <!-- Stacked Photos (Right col) -->
+            <% if display_photos.size > 1 %>
+              <div class="hidden md:flex flex-col gap-3 h-full overflow-hidden">
+                <% if display_photos.size == 2 %>
+                  <div class="h-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-sm relative group cursor-pointer" onclick="openPhotoModal(1)">
+                    <img src="<%= display_photos[1] %>" alt="<%= trade_name_display %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <span class="absolute bottom-2 left-2 bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-xs z-10">
+                      <%= all_gallery_photos[1][:badge] %>
+                    </span>
+                  </div>
+                <% else %>
+                  <div class="h-[calc(50%-6px)] rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-sm relative group cursor-pointer" onclick="openPhotoModal(1)">
+                    <img src="<%= display_photos[1] %>" alt="<%= trade_name_display %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <span class="absolute bottom-2 left-2 bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-xs z-10">
+                      <%= all_gallery_photos[1][:badge] %>
+                    </span>
+                  </div>
+                  <div class="h-[calc(50%-6px)] rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-sm relative group cursor-pointer" onclick="openPhotoModal(2)">
+                    <img src="<%= display_photos[2] %>" alt="<%= trade_name_display %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <span class="absolute bottom-2 left-2 bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-xs z-10">
+                      <%= all_gallery_photos[2][:badge] %>
+                    </span>
+                    <% if display_photos.size > 3 %>
+                      <div class="absolute inset-0 bg-slate-950/60 flex items-center justify-center text-white text-xs font-black tracking-wider uppercase text-center p-1 backdrop-blur-2xs z-20">
+                        +<%= display_photos.size - 3 %> <%= (display_photos.size - 3) == 1 ? "foto" : "fotos" %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Bottom Thumbnails Row (Only rendered if there are more than 3 photos) -->
+          <% if display_photos.size > 3 %>
+            <div class="grid grid-cols-4 sm:grid-cols-6 gap-2.5 h-20 pt-1">
+              <% display_photos.each_with_index do |photo_url, idx| %>
+                <% next if idx < 3 %>
+                <div class="h-full rounded-xl overflow-hidden bg-slate-900 border border-slate-200 relative group cursor-pointer" onclick="openPhotoModal(<%= idx %>)">
+                  <img src="<%= photo_url %>" alt="<%= trade_name_display %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                  <span class="absolute bottom-1 left-1 bg-slate-900/80 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded backdrop-blur-2xs truncate max-w-[90%] z-10">
+                    <%= all_gallery_photos[idx][:badge] %>
+                  </span>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <!-- No Photos Uploaded Placeholder -->
+          <div class="h-[280px] rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 shadow-sm relative flex flex-col items-center justify-center p-6 text-center text-white">
+            <span class="text-5xl mb-3">🔧</span>
+            <h4 class="text-base font-bold text-slate-200 mb-1"><%= trade_name_display %></h4>
+            <p class="text-xs text-slate-400 max-w-md">Oficina sem fotos cadastradas ainda. É o proprietário? Reivindique este perfil gratuitamente para adicionar fotos, horário de funcionamento e WhatsApp direto.</p>
+            <% if can_claim_company? %>
+              <%= link_to "Reivindicar Perfil Grátis", new_claim_path(cnpj: @company.cnpj), class: "mt-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs px-4 py-2 rounded-xl transition-all shadow" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Right Summary & Real Rating Box (Col 9 to 12) -->
+      <div class="lg:col-span-4 space-y-4 flex flex-col justify-between">
+        <!-- Review Score Card (Real System) -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs space-y-4">
+          <% if score_info[:has_reviews] %>
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <span class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider block mb-0.5">Avaliação dos Hóspedes</span>
+                <h3 class="font-extrabold text-slate-900 text-lg leading-tight">
+                  <%= score_info[:label] %>
+                </h3>
+                <p class="text-xs text-slate-500 font-medium"><%= score_info[:count] %> <%= score_info[:count] == 1 ? "avaliação real" : "avaliações reais" %></p>
+              </div>
+              <div class="bg-[#003580] text-white text-base font-black px-3.5 py-1.5 rounded-xl text-center shadow-2xs flex items-center gap-1">
+                <span>★</span>
+                <span><%= score_info[:score] %></span>
+              </div>
+            </div>
+
+            <% last_review = @company.reviews.order(created_at: :desc).first %>
+            <% if last_review.present? && last_review.comment.present? %>
+              <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 space-y-2">
+                <p class="text-xs text-slate-700 italic leading-relaxed">
+                  "<%= last_review.comment %>"
+                </p>
+                <div class="flex items-center justify-between text-[11px] font-bold text-slate-600">
+                  <span class="text-slate-800"><%= last_review.reviewer_name %></span>
+                  <span class="text-amber-500">★ <%= last_review.rating %></span>
+                </div>
+              </div>
+            <% end %>
+
+            <a href="#reviews-section" class="block text-center text-xs font-extrabold text-[#006ce4] hover:underline pt-2 border-t border-slate-100">
+              Ver todas as <%= score_info[:count] %> avaliações &rarr;
+            </a>
+          <% else %>
+            <div class="text-center py-2 space-y-3">
+              <span class="text-3xl">⭐</span>
+              <div>
+                <h3 class="font-extrabold text-slate-900 text-base">Ainda não avaliado</h3>
+                <p class="text-xs text-slate-500 mt-1">Seja o primeiro a avaliar a estadia neste estabelecimento!</p>
+              </div>
+              <a href="#review-form" class="inline-block bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs px-4 py-2 rounded-xl transition-all shadow-2xs">
+                ✍️ Avaliar Hospedagem
+              </a>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Endorsements & Highlights Card (Recomendações dos Hóspedes & Destaques) -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-2xs space-y-3">
+          <h3 class="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-1.5 border-b border-slate-100 pb-2">
+            <span>🏷️</span>
+            <span>Recomendações &amp; Destaques</span>
+          </h3>
+
+          <% all_tags = @company.reviews.flat_map { |r| Array(r.tags) }.reject(&:blank?) %>
+          <% endorsement_counts = all_tags.tally.sort_by { |_tag, count| -count } %>
+
+          <% if endorsement_counts.any? %>
+            <div class="flex flex-wrap gap-2 pt-0.5">
+              <% endorsement_counts.first(3).each do |tag, count| %>
+                <div class="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200/80 text-emerald-900 text-xs font-extrabold px-2.5 py-1.5 rounded-xl shadow-2xs">
+                  <span><%= Review.tag_icon(tag) %></span>
+                  <span><%= tag %></span>
+                  <span class="bg-emerald-200 text-emerald-950 text-[10px] px-1.5 py-0.2 rounded-full font-black"><%= count %></span>
+                </div>
+              <% end %>
+              <% remaining_tags = endorsement_counts.size - 3 %>
+              <% if remaining_tags > 0 %>
+                <a href="#reviews-section" class="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-black px-2.5 py-1.5 rounded-xl transition-colors" title="Ver todas as recomendações">
+                  <span>+ <%= remaining_tags %></span>
+                </a>
+              <% end %>
+            </div>
+          <% else %>
+            <!-- Highlights -->
+            <% highlights = [] %>
+            <% highlights << { icon: "⚡", name: "Contato Direto 0% Taxas", bg: "bg-emerald-50 border-emerald-200/80 text-emerald-900" } %>
+            <% highlights << { icon: "💬", name: "WhatsApp Direto", bg: "bg-blue-50 border-blue-200/80 text-blue-900" } %>
+
+            <div class="flex flex-wrap gap-2 pt-0.5">
+              <% highlights.first(3).each do |item| %>
+                <div class="inline-flex items-center gap-1.5 <%= item[:bg] %> border text-xs font-extrabold px-2.5 py-1.5 rounded-xl shadow-2xs">
+                  <span><%= item[:icon] %></span>
+                  <span><%= item[:name] %></span>
+                </div>
+              <% end %>
+              <% remaining_highlights = highlights.size - 3 %>
+              <% if remaining_highlights > 0 %>
+                <a href="#instalacoes-servicos" class="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-black px-2.5 py-1.5 rounded-xl transition-colors" title="Ver todos os destaques">
+                  <span>+ <%= remaining_highlights %></span>
+                </a>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Map Snippet Box -->
+        <div class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 relative h-36 group cursor-pointer" onclick="document.getElementById('sobre-empresa').scrollIntoView({behavior: 'smooth'})">
+          <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=600&q=80" alt="Mapa" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500">
+          <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 p-3 text-center">
+            <div class="bg-[#006ce4] text-white font-extrabold text-xs px-4 py-2 rounded-xl shadow-lg flex items-center gap-1.5 hover:bg-[#0057b8] transition-colors">
+              <span>📍</span>
+              <span>Mostrar no mapa</span>
+            </div>
+            <span class="text-[11px] font-bold text-white shadow-xs"><%= @city.name %> - <%= @state.acronym %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Direct Booking Hero Callout Banner (Exclusive for Premium Plan) -->
+  <% if @company.premium? %>
+    <div class="bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-700 rounded-2xl p-6 sm:p-8 text-white shadow-xl shadow-emerald-600/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div class="space-y-2 max-w-2xl">
+        <div class="inline-flex items-center gap-1.5 bg-emerald-500/30 border border-emerald-300/30 text-emerald-100 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide">
+          <span>⚡ Sem Intermediários</span>
+          <span>&bull;</span>
+          <span>Economize nas Diárias</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight">
+          Reserve Direto com a Recepção
+        </h2>
+        <p class="text-sm text-emerald-100 leading-relaxed font-medium">
+          Evite as comissões de até 25% cobradas pelas plataformas online. Entre em contato direto pelo WhatsApp da hospedagem e negocie as melhores condições!
+        </p>
+      </div>
+
+      <div class="w-full md:w-auto flex flex-col sm:flex-row md:flex-col gap-3 shrink-0">
+        <% if @company.has_whatsapp? %>
+          <% if user_signed_in? %>
+            <a href="<%= @company.whatsapp_url %>" target="_blank" rel="noopener" class="w-full bg-white hover:bg-emerald-50 text-emerald-900 font-black text-sm py-3.5 px-6 rounded-xl text-center shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+              <span class="text-xl">💬</span>
+              <span>WhatsApp Direto da Recepção</span>
+            </a>
+          <% else %>
+            <a href="<%= new_user_session_path %>" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black text-sm py-3.5 px-6 rounded-xl text-center shadow-lg transition-all flex items-center justify-center gap-2" title="Faça login para liberar o WhatsApp direto">
+              <span class="text-xl">🔒</span>
+              <span>Liberar WhatsApp (Faça Login)</span>
+            </a>
+          <% end %>
+        <% end %>
+
+        <% if @company.business_hours.present? %>
+          <div class="text-xs text-center text-emerald-100 font-semibold bg-emerald-800/40 border border-emerald-500/30 py-2 px-3 rounded-lg">
+            🕒 Horário: <%= @company.business_hours %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% elsif user_signed_in? && current_user.company? && current_user.company == @company %>
+    <!-- Teaser Banner for Owner on Free Plan -->
+    <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl p-6 text-white shadow-md flex flex-col md:flex-row items-center justify-between gap-4 border border-blue-700/50">
+      <div class="space-y-1">
+        <span class="bg-amber-400 text-slate-950 font-black text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full">Dica de Vendas</span>
+        <h3 class="text-lg font-extrabold text-white">Ative o Plano Premium (R$ 39,90/mês)</h3>
+        <p class="text-xs text-blue-200">Libere o banner destacado de WhatsApp com 1 clique direto para os viajantes e potencialize suas reservas sem comissão.</p>
+      </div>
+      <a href="<%= pricing_path %>" class="shrink-0 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs px-5 py-3 rounded-xl transition-all shadow-md">
+        🚀 Conhecer Plano Premium
+      </a>
+    </div>
+  <% end %>
+
+  <!-- Main 2-Column Grid (Main Content & Sidebar) -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- Left Main Column (8 Cols) -->
+    <div class="lg:col-span-8 space-y-8">
+
+
+      <!-- Section: Verified Contact Information -->
+      <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6" id="contato-hospedagem">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+          <h2 class="text-xl font-black text-slate-900 flex items-center gap-2">
+            <span>📞</span>
+            <span>Informações de Contato Direto</span>
+          </h2>
+          <span class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+            Reserva sem Taxa
+          </span>
+        </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- Telefone Principal -->
+            <% if @company.phone_1.present? && is_valid_phone?(@company.phone_1) %>
+              <div class="bg-slate-50 border border-slate-200/80 p-4 rounded-xl space-y-1">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Telefone Principal</span>
+                <div class="flex items-center justify-between gap-2 pt-1" data-controller="reveal-contact">
+                  <span class="font-extrabold text-slate-900 text-sm masked-text" id="phone1-text"><%= mask_phone(@company.phone_1) %></span>
+                  <button type="button" class="btn-reveal-contact bg-[#006ce4] hover:bg-[#0052b4] text-white text-xs font-bold py-1.5 px-3 rounded-lg transition-colors shadow-sm" data-action="click->reveal-contact#reveal" data-company-id="<%= @company.id %>" data-full="<%= @company.phone_1.strip %>" data-target="phone1-text" data-type="phone" data-whatsapp="<%= @company.phone_1_whatsapp %>" data-company-name="<%= trade_name_display %>">
+                    Ver Telefone
+                  </button>
+                </div>
+                <% if @company.phone_1_whatsapp %>
+                  <span class="inline-block text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded mt-1">✓ WhatsApp Habilitado</span>
+                <% end %>
+              </div>
+            <% end %>
+
+            <!-- Telefone Secundário -->
+            <% if @company.phone_2.present? && is_valid_phone?(@company.phone_2) %>
+              <div class="bg-slate-50 border border-slate-200/80 p-4 rounded-xl space-y-1">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Telefone Secundário</span>
+                <div class="flex items-center justify-between gap-2 pt-1" data-controller="reveal-contact">
+                  <span class="font-extrabold text-slate-900 text-sm masked-text" id="phone2-text"><%= mask_phone(@company.phone_2) %></span>
+                  <button type="button" class="btn-reveal-contact bg-[#006ce4] hover:bg-[#0052b4] text-white text-xs font-bold py-1.5 px-3 rounded-lg transition-colors shadow-sm" data-action="click->reveal-contact#reveal" data-company-id="<%= @company.id %>" data-full="<%= @company.phone_2.strip %>" data-target="phone2-text" data-type="phone" data-whatsapp="<%= @company.phone_2_whatsapp %>" data-company-name="<%= trade_name_display %>">
+                    Ver Telefone
+                  </button>
+                </div>
+                <% if @company.phone_2_whatsapp %>
+                  <span class="inline-block text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded mt-1">✓ WhatsApp Habilitado</span>
+                <% end %>
+              </div>
+            <% end %>
+
+            <!-- E-mail Oficial -->
+            <div class="bg-slate-50 border border-slate-200/80 p-4 rounded-xl space-y-1 sm:col-span-2">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">E-mail Oficial da Hospedagem</span>
+              <div class="flex items-center justify-between gap-2 pt-1" data-controller="reveal-contact">
+                <% if is_valid_email?(@company.email) %>
+                  <span class="font-extrabold text-slate-900 text-sm masked-text" id="email-text"><%= mask_email(@company.email) %></span>
+                  <button type="button" class="btn-reveal-contact bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold py-1.5 px-3 rounded-lg transition-colors shadow-sm" data-action="click->reveal-contact#reveal" data-company-id="<%= @company.id %>" data-full="<%= @company.email.downcase.strip %>" data-target="email-text" data-type="email">
+                    Ver E-mail
+                  </button>
+                <% else %>
+                  <span class="text-xs text-slate-500 font-medium">Não informado</span>
+                <% end %>
+              </div>
+            </div>
+
+          </div>
+
+        <% unless @company.approved? %>
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-900 space-y-1">
+            <div class="flex items-center gap-1.5 font-extrabold text-amber-950">
+              <span>⚠️</span>
+              <span>Transparência de Dados Públicos</span>
+            </div>
+            <p class="leading-relaxed text-slate-700">
+              Esta acomodação ainda não possui perfil verificado pelo nosso portal. As informações acima foram extraídas da base pública de dados da Receita Federal do Brasil.<% unless user_signed_in? && current_user.client? %> Se você é o gestor deste local, <a href="<%= new_claim_path(company_id: @company.id) %>" class="font-bold text-blue-600 underline">reivindique o perfil aqui</a> para personalizar dados e WhatsApp.<% end %>
+            </p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Security & Anti-Scam Advice Box -->
+      <div class="bg-blue-50/80 border border-blue-200/80 rounded-2xl p-6 space-y-4 text-blue-950 shadow-sm">
+        <div class="flex items-center justify-between gap-2 border-b border-blue-200/60 pb-3">
+          <h3 class="font-black text-sm sm:text-base flex items-center gap-2 text-blue-950">
+            <span class="text-lg">🛡️</span>
+            <span>Dicas para uma Reserva Direta Segura</span>
+          </h3>
+          <span class="text-[10px] font-bold text-blue-700 uppercase tracking-wider bg-blue-100/80 px-2 py-0.5 rounded">Prevenção a Golpes</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-medium text-blue-900">
+          <div class="bg-white/80 border border-blue-200/60 p-3.5 rounded-xl space-y-1">
+            <div class="font-bold text-blue-950 flex items-center gap-1.5">
+              <span>💳</span> 1. Verifique o PIX
+            </div>
+            <p class="text-[11px] leading-relaxed text-slate-600">
+              Exija que a chave PIX informada corresponda à Razão Social ou CNPJ do estabelecimento.
+            </p>
+          </div>
+
+          <div class="bg-white/80 border border-blue-200/60 p-3.5 rounded-xl space-y-1">
+            <div class="font-bold text-blue-950 flex items-center gap-1.5">
+              <span>📹</span> 2. Chamada de Vídeo
+            </div>
+            <p class="text-[11px] leading-relaxed text-slate-600">
+              Antes de sinalizar reservas, solicite uma rápida chamada de vídeo para mostrar o local.
+            </p>
+          </div>
+
+          <div class="bg-white/80 border border-blue-200/60 p-3.5 rounded-xl space-y-1">
+            <div class="font-bold text-blue-950 flex items-center gap-1.5">
+              <span>🔍</span> 3. Alerta de Preço
+            </div>
+            <p class="text-[11px] leading-relaxed text-slate-600">
+              Desconfie de valores excessivamente abaixo do mercado exigindo sinal imediato.
+            </p>
+          </div>
+        </div>
+
+        <p class="text-[11px] text-slate-500 font-medium italic border-t border-blue-200/60 pt-2.5">
+          * O Hospedagem Direta conecta anfitriões e hóspedes sem cobrar comissões. Não intermediamos pagamentos nem nos responsabilizamos por transações financeiras realizadas fora do portal.
+        </p>
+      </div>
+
+      <!-- Section: About Property & Lodging Text -->
+      <% text_generator = CompanyTextGenerator.new(@company) %>
+      <% faq_items = text_generator.generate_faq %>
+
+      <% cache ["v4_company_about", @company] do %>
+        <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4" id="sobre-empresa">
+          <h2 class="text-xl font-black text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+            <span>🏨</span>
+            <span>Sobre a Hospedagem</span>
+          </h2>
+
+          <div class="prose prose-slate max-w-none text-sm leading-relaxed text-slate-700 space-y-3">
+            <% if @company.description.present? %>
+              <div class="whitespace-pre-line leading-relaxed"><%= sanitize(@company.description) %></div>
+            <% else %>
+              <p><%= sanitize(text_generator.generate_about, tags: %w[strong]) %></p>
+            <% end %>
+          </div>
+
+          <div class="bg-gradient-to-r from-blue-50 to-emerald-50 border border-blue-200/80 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-700 mt-4">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">📍</span>
+              <div>
+                <span class="font-bold text-slate-900 block text-sm">Hospedagem e Turismo em <%= @city.name %> - <%= @state.acronym %></span>
+                <span>O portal reúne <strong><%= @city.companies.count %> opções de acomodação</strong> em <%= @city.name %>, conectando viajantes diretamente aos proprietários com 0% de comissão.</span>
+              </div>
+            </div>
+            <a href="/<%= @state.slug %>/<%= @city.slug %>" class="shrink-0 bg-blue-900 hover:bg-blue-800 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl transition-all shadow-sm">
+              🔍 Oficinas em <%= @city.name %> &rarr;
+            </a>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Section: Registration & Cadastral Data (Free Plan Only - Hidden on Premium Profiles) -->
+      <% if @company.free_plan? %>
+        <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4" id="dados-cadastrais">
+          <h2 class="text-xl font-black text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+            <span>🛡️</span>
+            <span>Informações de Registro & Transparência do Estabelecimento</span>
+          </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70">
+            <span class="text-slate-500 font-bold uppercase tracking-wider block">Razão Social</span>
+            <span class="font-extrabold text-slate-900 text-sm block mt-0.5"><%= @company.legal_name %></span>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70">
+            <span class="text-slate-500 font-bold uppercase tracking-wider block">CNPJ</span>
+            <span class="font-extrabold text-slate-900 text-sm block mt-0.5 font-mono"><%= @company.cnpj %></span>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70">
+            <span class="text-slate-500 font-bold uppercase tracking-wider block">CNAE Principal</span>
+            <span class="font-extrabold text-slate-900 text-sm block mt-0.5"><%= @company.cnae_principal_display %></span>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70">
+            <span class="text-slate-500 font-bold uppercase tracking-wider block">Situação Cadastral</span>
+            <span class="font-extrabold text-emerald-700 text-sm block mt-0.5">✓ <%= @company.status.presence || "ATIVA" %></span>
+          </div>
+
+          <% if @company.opening_date.present? %>
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70">
+              <span class="text-slate-500 font-bold uppercase tracking-wider block">Data de Fundação</span>
+              <span class="font-extrabold text-slate-900 text-sm block mt-0.5"><%= @company.opening_date.strftime("%d/%m/%Y") %></span>
+            </div>
+          <% end %>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70">
+            <span class="text-slate-500 font-bold uppercase tracking-wider block">Porte Registrado</span>
+            <span class="font-extrabold text-slate-900 text-sm block mt-0.5"><%= @company.company_size.presence || "Sem Enquadramento" %></span>
+          </div>
+        </div>
+
+        <% unless is_main_cnae_lodging %>
+          <div class="bg-slate-50 border-l-4 border-blue-500 p-4 rounded-xl space-y-1 mt-4">
+            <p class="text-xs text-slate-700 leading-relaxed font-medium">
+              ℹ️ <strong>Sobre a listagem desta empresa:</strong><br>
+              Esta empresa possui em seu cadastro oficial de operações (CNAE Secundário) atividades relacionadas ao setor de hospedagem, hotéis, pousadas, hostels ou alojamentos.
+            </p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+      <!-- Section: Location & Map Address -->
+      <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4" id="endereco-localizacao">
+        <h2 class="text-xl font-black text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+          <span>📍</span>
+          <span>Endereço & Como Chegar</span>
+        </h2>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3">
+          <div class="text-sm text-slate-800 space-y-1">
+            <p class="font-bold text-base"><%= @company.street %>, <%= @company.number %> <%= "- #{@company.complement}" if @company.complement.present? %></p>
+            <p class="text-slate-600 font-medium">
+              Bairro: <strong><%= @neighborhood&.name || "Centro" %></strong> &bull; Cidade: <strong><%= @city.name %> / <%= @state.acronym %></strong>
+            </p>
+            <p class="text-xs text-slate-500 font-mono">CEP: <%= @company.zip_code %></p>
+          </div>
+
+          <div class="pt-2 flex items-center gap-3 flex-wrap">
+            <% map_query = ERB::Util.url_encode("#{@company.street}, #{@company.number}, #{@city.name} - #{@state.acronym}, BR") %>
+            <a href="https://www.google.com/maps/search/?api=1&query=<%= map_query %>" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 bg-[#006ce4] hover:bg-[#0052b4] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow transition-all">
+              <span>🧭 Abrir no Google Maps</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- AdSense Inline Banner Slot (Free Plan Only) -->
+      <% if @company.free_plan? %>
+        <%= adsense_ad_tag(:inline) %>
+      <% end %>
+
+      <!-- Section: FAQ Accordion (Free Plan Only - Hidden on Premium Profiles) -->
+      <% if @company.free_plan? %>
+        <% cache ["v3_company_faq", @company] do %>
+          <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4" id="faq-section">
+            <h2 class="text-xl font-black text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+              <span>❓</span>
+              <span>Perguntas Frequentes (FAQ)</span>
+            </h2>
+
+            <div class="space-y-3">
+              <% faq_items.each_with_index do |item, idx| %>
+                <details class="group bg-slate-50 border border-slate-200/80 rounded-xl overflow-hidden" <%= "open" if idx == 0 %>>
+                  <summary class="flex items-center justify-between p-4 cursor-pointer font-bold text-sm text-slate-900 group-open:bg-slate-100/80 transition-colors">
+                    <span><%= sanitize(item[:question], tags: %w[strong]) %></span>
+                    <span class="text-slate-400 group-open:rotate-180 transition-transform text-xs">▼</span>
+                  </summary>
+                  <div class="p-4 pt-2 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60 bg-white">
+                    <p><%= sanitize(item[:answer], tags: %w[strong]) %></p>
+                  </div>
+                </details>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+
+
+      <!-- Section: Reviews & Guest Endorsements -->
+      <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6" id="reviews-section">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+          <h2 class="text-xl font-black text-slate-900 flex items-center gap-2">
+            <span>⭐</span>
+            <span>Avaliações & Recomendações dos Hóspedes</span>
+          </h2>
+        </div>
+
+        <% if score_info[:has_reviews] %>
+          <% avg = @company.average_rating %>
+          <div class="bg-blue-50 border border-blue-100 p-5 rounded-2xl flex items-center gap-4">
+            <div class="bg-[#001F54] text-white font-black text-2xl px-4 py-2.5 rounded-2xl font-mono shadow-sm flex items-center gap-1.5">
+              <span class="text-amber-400 text-xl">★</span>
+              <span><%= avg %></span>
+            </div>
+            <div>
+              <div class="font-extrabold text-lg text-slate-900">
+                <%= score_info[:label] %>
+              </div>
+              <div class="flex items-center gap-1 text-amber-500 text-sm mt-0.5">
+                <% 5.times do |i| %>
+                  <span><%= i < avg.round ? "★" : "☆" %></span>
+                <% end %>
+                <span class="text-xs text-slate-500 font-medium ml-2">(<%= @reviews.count %> <%= @reviews.count == 1 ? "avaliação" : "avaliações" %>)</span>
+              </div>
+            </div>
+          </div>
+        <% else %>
+          <div class="bg-amber-50/80 border border-amber-200 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <div class="space-y-1">
+              <div class="flex items-center gap-1 text-amber-400 text-base justify-center sm:justify-start">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+              </div>
+              <h3 class="font-extrabold text-slate-900 text-sm">Esta hospedagem ainda não possui avaliações</h3>
+              <p class="text-xs text-slate-600">Seja o primeiro a avaliar e compartilhe sua experiência com outros viajantes!</p>
+            </div>
+          </div>
+        <% end %>
+
+        <%# Endorsements Summary Grid %>
+        <% all_tags = @reviews.flat_map { |r| Array(r.tags) }.reject(&:blank?) %>
+        <% endorsement_counts = all_tags.tally.sort_by { |_tag, count| -count } %>
+        <% if endorsement_counts.any? %>
+          <div class="space-y-2">
+            <h3 class="text-xs font-black uppercase tracking-wider text-slate-500">Recomendações dos Clientes (Endorsements)</h3>
+            <div class="flex flex-wrap gap-2">
+              <% endorsement_counts.each do |tag, count| %>
+                <div class="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200/80 text-emerald-900 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
+                  <span><%= Review.tag_icon(tag) %></span>
+                  <span><%= tag %></span>
+                  <span class="bg-emerald-200 text-emerald-950 text-[10px] px-1.5 py-0.2 rounded-full font-black"><%= count %></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Review Form Container -->
+        <div id="review-form" class="pt-4 border-t border-slate-100 space-y-3">
+          <h3 class="font-extrabold text-base text-slate-900 flex items-center gap-2">
+            <span>✍️</span>
+            <span>⭐ Avaliar Hospedagem</span>
+          </h3>
+          <% if user_signed_in? && current_user.client? %>
+            <% if current_user.reviewed?(@company) %>
+              <div class="bg-emerald-50 border border-emerald-200 text-emerald-900 p-4 rounded-xl font-bold text-xs">
+                ✅ Você já enviou sua avaliação para esta hospedagem. Muito obrigado por colaborar com a comunidade!
+              </div>
+            <% else %>
+              <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl space-y-4">
+                <h3 class="font-extrabold text-base text-slate-900">Enviar Sua Avaliação de Hóspede</h3>
+                <p class="text-xs text-slate-600">Selecione sua nota de 1 a 5 estrelas e recomende os principais diferenciais da hospedagem.</p>
+                
+                <%= form_with url: company_reviews_path(@company), model: @new_review, local: true, class: "space-y-4" do |f| %>
+                  <% if @new_review&.errors&.any? %>
+                    <div class="bg-rose-50 border border-rose-200 text-rose-800 p-3 rounded-xl text-xs space-y-1">
+                      <% @new_review.errors.full_messages.each do |msg| %>
+                        <p>&bull; <%= msg %></p>
+                      <% end %>
+                    </div>
+                  <% end %>
+
+                  <div class="space-y-1.5" data-controller="star-rating">
+                    <div class="flex items-center justify-between">
+                      <label class="text-xs font-bold text-slate-700 block">Sua nota <span class="text-rose-500">*</span></label>
+                      <span class="text-xs font-extrabold text-amber-600" data-star-rating-target="label">Clique para escolher de 1 a 5 estrelas</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 py-1">
+                      <% (1..5).each do |i| %>
+                        <label class="cursor-pointer text-3xl text-slate-300 transition-transform duration-150 hover:scale-125 select-none"
+                               data-star-rating-target="star"
+                               data-rating="<%= i %>"
+                               data-action="mouseenter->star-rating#hover mouseleave->star-rating#reset">
+                          <input type="radio" 
+                                 name="review[rating]" 
+                                 value="<%= i %>" 
+                                 class="sr-only" 
+                                 required 
+                                 data-star-rating-target="input" 
+                                 data-action="change->star-rating#change"
+                                 <%= "checked" if @new_review&.rating == i %>>
+                          <span>★</span>
+                        </label>
+                      <% end %>
+                    </div>
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-700 block">Recomendações e Destaques (Opcional)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      <% Review::POSITIVE_TAGS.each_with_index do |tag, idx| %>
+                        <label class="flex items-center gap-2 bg-white border border-slate-200 hover:border-blue-400 p-2.5 rounded-xl text-xs font-bold cursor-pointer transition-colors">
+                          <%= f.check_box :tags, { multiple: true, id: "tag_#{idx}", class: "rounded text-blue-600 focus:ring-blue-500" }, tag, nil %>
+                          <span><%= Review.tag_icon(tag) %> <%= tag %></span>
+                        </label>
+                      <% end %>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="w-full bg-[#006ce4] hover:bg-[#0052b4] text-white font-extrabold text-sm py-3 px-6 rounded-xl shadow transition-all flex items-center justify-center gap-2">
+                    <span>Enviar Avaliação</span>
+                    <span>🚀</span>
+                  </button>
+                <% end %>
+              </div>
+            <% end %>
+          <% elsif !user_signed_in? %>
+            <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl text-center space-y-3">
+              <h3 class="font-extrabold text-base text-slate-900">Avaliar Esta Hospedagem</h3>
+              <p class="text-xs text-slate-600 max-w-md mx-auto">Faça login com sua conta de cliente para compartilhar sua experiência e avaliar o local.</p>
+              <a href="<%= new_user_session_path %>" class="inline-block bg-[#006ce4] hover:bg-[#0052b4] text-white font-extrabold text-xs py-2.5 px-5 rounded-xl shadow transition-all">
+                🔒 Faça Login para Avaliar
+              </a>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Section: Related Lodging Properties (Free Plan Only - Hidden on Premium Profiles) -->
+      <% if @company.free_plan? && (@related_neighborhood_companies.any? || @related_city_companies.any? || @related_general_companies.any?) %>
+        <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6" id="hospedagens-relacionadas">
+          <h2 class="text-xl font-black text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+            <span>🏢</span>
+            <span>Outras Hospedagens em <%= @city.name %> - <%= @state.acronym %></span>
+          </h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <% (@related_neighborhood_companies + @related_city_companies + @related_general_companies).uniq.first(6).each do |rel| %>
+              <a href="<%= company_seo_path(rel) %>" class="bg-slate-50 border border-slate-200/80 hover:border-blue-500 p-4 rounded-xl transition-all hover:shadow-md group flex flex-col justify-between space-y-3">
+                <div>
+                  <h4 class="font-extrabold text-sm text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
+                    <%= rel.trade_name.presence || rel.legal_name %>
+                  </h4>
+                  <p class="text-xs text-slate-500 mt-1 font-medium">
+                    📍 <%= rel.neighborhood&.name || "Centro" %> &bull; <%= rel.city.name %>/<%= rel.state.acronym %>
+                  </p>
+                </div>
+
+                <div class="flex items-center justify-between text-xs pt-2 border-t border-slate-200/60">
+                  <span class="text-emerald-700 font-extrabold text-[11px]">⚡ Reserva Direta</span>
+                  <span class="font-bold text-blue-600">Ver &rarr;</span>
+                </div>
+              </a>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+    <!-- Right Sidebar (4 Cols) -->
+    <aside class="lg:col-span-4 space-y-6 sticky top-6">
+
+      <% if !@company.approved? && !@company.is_claimed? && can_claim_company? %>
+        <!-- Owner Claim Box (Only shown if company is unclaimed / not approved) -->
+        <div class="bg-gradient-to-br from-blue-950 via-slate-900 to-blue-900 text-white rounded-2xl p-6 shadow-md border border-blue-800/40 space-y-4">
+          <div class="flex items-center gap-2 text-emerald-400 font-extrabold text-xs uppercase tracking-wider">
+            <span>🏨 Proprietário ou Gerente</span>
+          </div>
+
+          <h3 class="text-lg font-black leading-snug text-white">
+            É o dono desta hospedagem?
+          </h3>
+
+          <p class="text-xs text-blue-100 leading-relaxed">
+            Reivindique o perfil de <strong><%= trade_name_display %></strong> gratuitamente. Adicione seu WhatsApp oficial, atualize fotos e receba pedidos de reserva direto sem pagar comissão!
+          </p>
+
+          <a href="<%= new_claim_path(company_id: @company.id) %>" class="block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs py-3 px-4 rounded-xl text-center shadow-md transition-all">
+            ⚡ Reivindicar Perfil Gratuitamente
+          </a>
+        </div>
+      <% end %>
+
+      <!-- Direct Booking Card Summary -->
+      <div class="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-4">
+        <h3 class="font-black text-base text-slate-900 flex items-center gap-1.5">
+          <span>⚡</span>
+          <span>Por que Reservar Direto?</span>
+        </h3>
+
+        <ul class="space-y-2.5 text-xs text-slate-600">
+          <li class="flex items-start gap-2">
+            <span class="text-emerald-600 font-bold text-sm">✓</span>
+            <span><strong>0% de Taxas:</strong> Garantia do menor valor por diária.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-emerald-600 font-bold text-sm">✓</span>
+            <span><strong>Contato Imediato:</strong> Converse no WhatsApp com a recepção.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-emerald-600 font-bold text-sm">✓</span>
+            <span><strong>Flexibilidade:</strong> Combine horários e pedidos especiais sem intermediários.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- AdSense Sidebar Banner Slot (Free Plan Only) -->
+      <% if @company.free_plan? %>
+        <%= adsense_ad_tag(:sidebar) %>
+      <% end %>
+
+    </aside>
+
+  </div>
+
+</div>
+
+<!-- Property Photo Lightbox Modal (Full Featured Carousel) -->
+<div id="photo-lightbox-modal" class="hidden fixed inset-0 z-50 overflow-hidden bg-slate-950/95 backdrop-blur-md flex flex-col justify-between p-3 sm:p-6 select-none" onclick="handleLightboxBackdropClick(event)">
+  
+  <!-- Top Bar: Counter, Badge & Controls -->
+  <div class="flex items-center justify-between gap-4 z-50 w-full max-w-7xl mx-auto pt-1 px-2">
+    <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+      <span id="lightbox-badge" class="bg-blue-600/90 text-white text-xs font-extrabold px-3 py-1.5 rounded-full backdrop-blur-xs border border-blue-400/30 flex items-center gap-1.5 shadow-sm">
+        📸 Propriedade
+      </span>
+      <span id="lightbox-counter" class="text-slate-300 text-xs sm:text-sm font-bold bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-700/60">
+        Foto 1 de 1
+      </span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button type="button" onclick="toggleLightboxZoom()" title="Alternar Zoom" class="text-slate-300 hover:text-white bg-slate-900/80 hover:bg-slate-800 border border-slate-700/60 w-10 h-10 rounded-full flex items-center justify-center font-bold text-base transition-all shadow-md">
+        🔍
+      </button>
+      <button type="button" onclick="closePhotoModal()" title="Fechar (ESC)" class="text-white hover:text-slate-200 bg-rose-600/80 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center font-black text-lg transition-all shadow-lg border border-rose-500/40">
+        ✕
+      </button>
+    </div>
+  </div>
+
+  <!-- Center Area: Prev Button, Image Viewport, Next Button -->
+  <div class="relative flex-1 flex items-center justify-center w-full max-w-7xl mx-auto my-2 px-2 overflow-hidden">
+    
+    <!-- Prev Button -->
+    <button type="button" id="lightbox-prev" onclick="prevPhoto(event)" title="Foto anterior (Seta Esquerda)" class="absolute left-2 sm:left-4 z-40 text-white bg-slate-900/80 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-500 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center font-black text-xl sm:text-2xl transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer">
+      ❮
+    </button>
+
+    <!-- Main Display Container -->
+    <div id="lightbox-img-container" class="relative max-h-[72vh] max-w-full flex items-center justify-center overflow-hidden transition-all">
+      <img id="lightbox-img" src="" alt="" class="max-h-[72vh] max-w-full rounded-2xl object-contain shadow-2xl border border-slate-800 transition-all duration-300 cursor-zoom-in" onclick="toggleLightboxZoom()">
+    </div>
+
+    <!-- Next Button -->
+    <button type="button" id="lightbox-next" onclick="nextPhoto(event)" title="Próxima foto (Seta Direita)" class="absolute right-2 sm:right-4 z-40 text-white bg-slate-900/80 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-500 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center font-black text-xl sm:text-2xl transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer">
+      ❯
+    </button>
+
+  </div>
+
+  <!-- Bottom Bar: Title, Subtitle & Thumbnails Strip -->
+  <div class="w-full max-w-7xl mx-auto space-y-3 z-50 px-2 pb-1">
+    
+    <!-- Caption / Details -->
+    <div class="text-center space-y-0.5 max-w-2xl mx-auto">
+      <h4 id="lightbox-title" class="text-white text-base sm:text-lg font-black tracking-tight drop-shadow-md"></h4>
+      <p id="lightbox-subtitle" class="text-slate-300 text-xs sm:text-sm font-semibold drop-shadow-sm"></p>
+    </div>
+
+    <!-- Thumbnail Strip -->
+    <div id="lightbox-thumbnails-container" class="flex items-center justify-center gap-2 overflow-x-auto py-2 px-1 scrollbar-none max-w-4xl mx-auto">
+      <!-- Thumbnails rendered dynamically -->
+    </div>
+
+  </div>
+</div>
+
+<script>
+  var globalPropertyPhotos = <%= raw all_gallery_photos.to_json %>;
+  var currentPhotoIdx = 0;
+  var isZoomed = false;
+
+  function initLightboxThumbnails() {
+    var container = document.getElementById('lightbox-thumbnails-container');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    globalPropertyPhotos.forEach(function(photo, idx) {
+      var thumb = document.createElement('img');
+      thumb.src = photo.url;
+      thumb.alt = photo.title || '';
+      thumb.id = 'lightbox-thumb-' + idx;
+      thumb.className = 'w-14 h-10 sm:w-18 sm:h-12 object-cover rounded-xl cursor-pointer transition-all border-2 border-slate-700/80 opacity-50 hover:opacity-100 flex-shrink-0';
+      thumb.onclick = function(e) {
+        e.stopPropagation();
+        openPhotoModal(idx);
+      };
+      container.appendChild(thumb);
+    });
+  }
+
+  function updateLightboxPhoto() {
+    if (!globalPropertyPhotos || globalPropertyPhotos.length === 0) return;
+    
+    if (currentPhotoIdx < 0) currentPhotoIdx = globalPropertyPhotos.length - 1;
+    if (currentPhotoIdx >= globalPropertyPhotos.length) currentPhotoIdx = 0;
+
+    var photo = globalPropertyPhotos[currentPhotoIdx];
+    var img = document.getElementById('lightbox-img');
+    var badge = document.getElementById('lightbox-badge');
+    var counter = document.getElementById('lightbox-counter');
+    var title = document.getElementById('lightbox-title');
+    var subtitle = document.getElementById('lightbox-subtitle');
+
+    if (img) {
+      img.src = photo.url;
+      img.alt = photo.title || '';
+    }
+    if (badge) {
+      badge.textContent = photo.badge || '📸 Foto';
+    }
+    if (counter) {
+      counter.textContent = 'Foto ' + (currentPhotoIdx + 1) + ' de ' + globalPropertyPhotos.length;
+    }
+    if (title) {
+      title.textContent = photo.title || '';
+    }
+    if (subtitle) {
+      subtitle.textContent = photo.subtitle || '';
+      subtitle.style.display = photo.subtitle ? 'block' : 'none';
+    }
+
+    if (isZoomed) {
+      toggleLightboxZoom(false);
+    }
+
+    globalPropertyPhotos.forEach(function(_, idx) {
+      var thumb = document.getElementById('lightbox-thumb-' + idx);
+      if (thumb) {
+        if (idx === currentPhotoIdx) {
+          thumb.className = 'w-14 h-10 sm:w-18 sm:h-12 object-cover rounded-xl cursor-pointer transition-all border-2 border-emerald-400 opacity-100 scale-105 shadow-lg flex-shrink-0 ring-2 ring-emerald-500/50';
+          thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+          thumb.className = 'w-14 h-10 sm:w-18 sm:h-12 object-cover rounded-xl cursor-pointer transition-all border-2 border-slate-700/80 opacity-50 hover:opacity-100 flex-shrink-0';
+        }
+      }
+    });
+
+    var prevBtn = document.getElementById('lightbox-prev');
+    var nextBtn = document.getElementById('lightbox-next');
+    if (prevBtn && nextBtn) {
+      if (globalPropertyPhotos.length <= 1) {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+      } else {
+        prevBtn.style.display = 'flex';
+        nextBtn.style.display = 'flex';
+      }
+    }
+  }
+
+  function openPhotoModal(idx) {
+    currentPhotoIdx = (typeof idx === 'number') ? idx : 0;
+    var modal = document.getElementById('photo-lightbox-modal');
+    if (!modal) return;
+    
+    initLightboxThumbnails();
+    updateLightboxPhoto();
+    
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePhotoModal() {
+    var modal = document.getElementById('photo-lightbox-modal');
+    if (modal) {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+    if (isZoomed) {
+      toggleLightboxZoom(false);
+    }
+  }
+
+  function prevPhoto(e) {
+    if (e) e.stopPropagation();
+    currentPhotoIdx--;
+    updateLightboxPhoto();
+  }
+
+  function nextPhoto(e) {
+    if (e) e.stopPropagation();
+    currentPhotoIdx++;
+    updateLightboxPhoto();
+  }
+
+  function toggleLightboxZoom(forceState) {
+    var img = document.getElementById('lightbox-img');
+    var container = document.getElementById('lightbox-img-container');
+    if (!img || !container) return;
+    
+    if (typeof forceState === 'boolean') {
+      isZoomed = forceState;
+    } else {
+      isZoomed = !isZoomed;
+    }
+
+    if (isZoomed) {
+      img.classList.remove('max-h-[72vh]', 'object-contain', 'cursor-zoom-in');
+      img.classList.add('max-h-none', 'max-w-none', 'w-auto', 'h-auto', 'cursor-zoom-out');
+      container.classList.add('overflow-auto');
+    } else {
+      img.classList.remove('max-h-none', 'max-w-none', 'w-auto', 'h-auto', 'cursor-zoom-out');
+      img.classList.add('max-h-[72vh]', 'object-contain', 'cursor-zoom-in');
+      container.classList.remove('overflow-auto');
+    }
+  }
+
+  function handleLightboxBackdropClick(e) {
+    if (e.target.id === 'photo-lightbox-modal' || e.target.id === 'lightbox-img-container') {
+      closePhotoModal();
+    }
+  }
+
+  document.addEventListener('keydown', function(e) {
+    var modal = document.getElementById('photo-lightbox-modal');
+    if (!modal || modal.classList.contains('hidden')) return;
+
+    if (e.key === 'Escape') {
+      closePhotoModal();
+    } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+      prevPhoto();
+    } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+      nextPhoto();
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var lightboxViewport = document.getElementById('lightbox-img-container');
+    if (lightboxViewport) {
+      var touchStartX = 0;
+      var touchEndX = 0;
+      lightboxViewport.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      lightboxViewport.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        var diffX = touchEndX - touchStartX;
+        if (Math.abs(diffX) > 40) {
+          if (diffX < 0) {
+            nextPhoto();
+          } else {
+            prevPhoto();
+          }
+        }
+      }, { passive: true });
+    }
+  });
+</script>
