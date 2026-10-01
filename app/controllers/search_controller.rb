@@ -156,10 +156,10 @@ class SearchController < ApplicationController
   # API endpoint for cities of a state (only cities with active companies)
   def cities
     if params[:state_id].present?
-      cities = Rails.cache.fetch("state_#{params[:state_id]}_cities_api_v3", expires_in: 1.hour) do
+      cities = Rails.cache.fetch("state_#{params[:state_id]}_cities_api_mm_v1", expires_in: 1.hour) do
         state = State.find_by(id: params[:state_id])
         if state
-          state.cities.joins(:companies).distinct.order(:name).select(:id, :name).to_a
+          state.cities.joins(:companies).distinct.order(:name).select(:id, :name, :slug).to_a
         else
           []
         end
@@ -174,16 +174,16 @@ class SearchController < ApplicationController
   def neighborhoods
     city_ids = Array(params[:city_ids]).reject(&:blank?)
     if city_ids.any?
-      cache_key = "cities_#{city_ids.sort.join('_')}_neighborhoods_api_v2"
+      cache_key = "cities_#{city_ids.sort.join('_')}_neighborhoods_api_mm_v1"
       sorted_neighborhoods = Rails.cache.fetch(cache_key, expires_in: 24.hours) do
         neighborhoods = Neighborhood.where(city_id: city_ids)
                                     .joins(:city, :companies)
                                     .distinct
-                                    .select("neighborhoods.id, neighborhoods.name, cities.name as city_name, cities.id as city_id")
+                                    .select("neighborhoods.id, neighborhoods.name, neighborhoods.slug, cities.name as city_name, cities.id as city_id, cities.slug as city_slug")
         neighborhoods.to_a.sort_by do |n|
           is_digit = n.name.to_s.strip.match?(/\A\d/) ? 1 : 0
           [ n.city_name.to_s.downcase, is_digit, n.name.to_s.downcase ]
-        end.map { |n| { id: n.id, name: n.name, city_name: n.city_name, city_id: n.city_id } }
+        end.map { |n| { id: n.id, name: n.name, slug: n.slug, city_name: n.city_name, city_id: n.city_id, city_slug: n.city_slug } }
       end
       render json: sorted_neighborhoods
     else

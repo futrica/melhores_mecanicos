@@ -58,6 +58,15 @@ RSpec.describe "Locations", type: :request do
       expect(response.body).to include("Oficinas Mecânicas em São Paulo (SP)")
       expect(response.body).to include("Guaratinguetá")
       expect(response.body).to include("Auto Mecânica do Zé")
+      expect(response.body).to include("Nome da Oficina")
+      expect(response.body).to include("data-search-form-initial-state-id-value=\"#{state.id}\"")
+      expect(response.body).to include("data-search-form-initial-state-slug-value=\"#{state.slug}\"")
+    end
+
+    it "filters by search query q on state page" do
+      get state_page_path(state_slug: state.slug, q: "Mecânica do Zé")
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Auto Mecânica do Zé")
     end
 
     it "returns HTTP 404 Not Found without redirect when state slug is invalid" do

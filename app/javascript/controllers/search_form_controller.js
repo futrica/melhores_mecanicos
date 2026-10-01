@@ -2,35 +2,48 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [
+    "queryInput",
+    "clearQueryBtn",
+    "clearBtn",
     "stateInput",
+    "stateSlugInput",
     "stateSelectBtn",
+    "stateBtnText",
     "stateDropdown",
     "stateSearch",
     "stateList",
     "cityInput",
+    "citySlugInput",
     "citySelectBtn",
+    "cityBtnText",
     "cityDropdown",
     "citySearch",
     "cityList",
     "neighborhoodSelectBtn",
+    "neighborhoodBtnText",
     "neighborhoodDropdown",
     "neighborhoodSearch",
     "neighborhoodList",
     "neighborhoodCount",
-    "categoryInput",
+    "neighborhoodSlugInput",
     "stateRequiredModal"
   ]
 
   static values = {
-    defaultCityId: String,
     initialStateId: String,
+    initialStateSlug: String,
     initialCityId: String,
-    initialNeighborhoodId: String
+    initialCitySlug: String,
+    initialNeighborhoodId: String,
+    initialNeighborhoodSlug: String,
+    currentPath: String
   }
 
   connect() {
     const urlParams = new URLSearchParams(window.location.search);
-    let stateId = (this.hasStateInputTarget && this.stateInputTarget.value) || urlParams.get("state_id") || (this.hasInitialStateIdValue ? this.initialStateIdValue : "");
+    let stateId = (this.hasStateInputTarget && this.stateInputTarget.value) || 
+                  urlParams.get("state_id") || 
+                  (this.hasInitialStateIdValue ? this.initialStateIdValue : "");
 
     if (stateId) {
       if (this.hasStateInputTarget) {
@@ -38,22 +51,32 @@ export default class extends Controller {
       }
       const selectedOption = this.element.querySelector(`.state-option[data-id="${stateId}"]`);
       if (selectedOption) {
-        this.stateSelectBtnTarget.innerText = selectedOption.dataset.name;
+        if (this.hasStateBtnTextTarget) {
+          this.stateBtnTextTarget.innerText = selectedOption.dataset.name;
+        }
+        if (this.hasStateSlugInputTarget && selectedOption.dataset.slug) {
+          this.stateSlugInputTarget.value = selectedOption.dataset.slug;
+        }
       }
 
       this.fetchCities(stateId).then(() => {
-        let cityId = (this.hasCityInputTarget && this.cityInputTarget.value) || urlParams.get("city_id") || urlParams.get("city_ids[]") || (this.hasInitialCityIdValue ? this.initialCityIdValue : "");
-        if (!cityId && this.hasDefaultCityIdValue && this.defaultCityIdValue) {
-          cityId = this.defaultCityIdValue;
-        }
+        let cityId = (this.hasCityInputTarget && this.cityInputTarget.value) || 
+                     urlParams.get("city_id") || 
+                     urlParams.get("city_ids[]") || 
+                     (this.hasInitialCityIdValue ? this.initialCityIdValue : "");
 
-        if (cityId) {
+        if (cityId && this.hasCityListTarget) {
           if (this.hasCityInputTarget) {
             this.cityInputTarget.value = cityId;
           }
           const selectedCityOption = this.cityListTarget.querySelector(`.city-option[data-id="${cityId}"]`);
           if (selectedCityOption) {
-            this.citySelectBtnTarget.innerText = selectedCityOption.dataset.name;
+            if (this.hasCityBtnTextTarget) {
+              this.cityBtnTextTarget.innerText = selectedCityOption.dataset.name;
+            }
+            if (this.hasCitySlugInputTarget && selectedCityOption.dataset.slug) {
+              this.citySlugInputTarget.value = selectedCityOption.dataset.slug;
+            }
           }
 
           this.fetchNeighborhoods().then(() => {
@@ -64,7 +87,7 @@ export default class extends Controller {
               neighborhoodIds = this.initialNeighborhoodIdValue.split(",").map(id => id.trim()).filter(Boolean);
             }
 
-            if (neighborhoodIds.length > 0) {
+            if (neighborhoodIds.length > 0 && this.hasNeighborhoodListTarget) {
               neighborhoodIds.forEach(id => {
                 const checkbox = this.neighborhoodListTarget.querySelector(`input[value="${id}"]`);
                 if (checkbox) checkbox.checked = true;
@@ -75,17 +98,24 @@ export default class extends Controller {
         }
       });
     }
-    
-    // Close dropdowns when clicking outside
+
+    // Close dropdowns on outside click
     this.closeDropdownsOutsideHandler = this.closeDropdownsOutside.bind(this);
     document.addEventListener("click", this.closeDropdownsOutsideHandler);
 
+    // Escape key modal/dropdown closer
     this.handleKeyDown = (event) => {
-      if (event.key === "Escape" && this.hasStateRequiredModalTarget && this.stateRequiredModalTarget.style.display === "flex") {
-        this.closeStateRequiredModal();
+      if (event.key === "Escape") {
+        if (this.hasStateRequiredModalTarget && this.stateRequiredModalTarget.style.display === "flex") {
+          this.closeStateRequiredModal();
+        } else {
+          this.closeAllDropdowns();
+        }
       }
     };
     document.addEventListener("keydown", this.handleKeyDown);
+
+    this.updateClearBtnVisibility();
   }
 
   disconnect() {
@@ -97,13 +127,112 @@ export default class extends Controller {
     }
   }
 
-  handleSubmit(event) {
-    if (!this.stateInputTarget.value) {
+  // Handle Query Input
+  handleQueryInput() {
+    const hasText = this.hasQueryInputTarget && this.queryInputTarget.value.trim().length > 0;
+    if (this.hasClearQueryBtnTarget) {
+      this.clearQueryBtnTarget.classList.toggle("hidden", !hasText);
+    }
+    this.updateClearBtnVisibility();
+  }
+
+  handleQueryKeydown(event) {
+    if (event.key === "Enter") {
       event.preventDefault();
-      this.openStateRequiredModal();
+      this.handleSubmit(event);
     }
   }
 
+  clearQuery(event) {
+    if (event) event.preventDefault();
+    if (this.hasQueryInputTarget) {
+      this.queryInputTarget.value = "";
+      this.queryInputTarget.focus();
+    }
+    if (this.hasClearQueryBtnTarget) {
+      this.clearQueryBtnTarget.classList.add("hidden");
+    }
+    this.updateClearBtnVisibility();
+  }
+
+  updateClearBtnVisibility() {
+    if (!this.hasClearBtnTarget) return;
+    const hasQuery = this.hasQueryInputTarget && this.queryInputTarget.value.trim().length > 0;
+    const hasCity = this.hasCityInputTarget && this.cityInputTarget.value.trim().length > 0;
+    const hasCheckedNeighborhoods = this.hasNeighborhoodListTarget && 
+      this.neighborhoodListTarget.querySelectorAll("input[type='checkbox']:checked").length > 0;
+
+    const shouldShow = hasQuery || hasCity || hasCheckedNeighborhoods;
+    this.clearBtnTarget.classList.toggle("hidden", !shouldShow);
+  }
+
+  // Form submission with intelligent dynamic routing
+  handleSubmit(event) {
+    if (event && typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
+
+    const stateId = this.hasStateInputTarget ? this.stateInputTarget.value.trim() : "";
+    if (!stateId) {
+      this.openStateRequiredModal();
+      return;
+    }
+
+    const stateSlug = (this.hasStateSlugInputTarget && this.stateSlugInputTarget.value.trim()) ||
+                      (this.hasInitialStateSlugValue ? this.initialStateSlugValue : "");
+    const citySlug = (this.hasCitySlugInputTarget && this.citySlugInputTarget.value.trim()) ||
+                     (this.hasInitialCitySlugValue ? this.initialCitySlugValue : "");
+    const query = this.hasQueryInputTarget ? this.queryInputTarget.value.trim() : "";
+
+    // Checked neighborhoods
+    let checkedNeighborhoods = [];
+    if (this.hasNeighborhoodListTarget) {
+      checkedNeighborhoods = Array.from(this.neighborhoodListTarget.querySelectorAll("input[type='checkbox']:checked"));
+    }
+
+    // Determine base canonical URL
+    let basePath = "";
+    if (stateSlug) {
+      if (citySlug) {
+        if (checkedNeighborhoods.length === 1 && checkedNeighborhoods[0].dataset.slug) {
+          basePath = `/${stateSlug}/${citySlug}/${checkedNeighborhoods[0].dataset.slug}`;
+        } else {
+          basePath = `/${stateSlug}/${citySlug}`;
+        }
+      } else {
+        basePath = `/${stateSlug}`;
+      }
+    } else {
+      basePath = "/busca";
+    }
+
+    // Build URL search parameters
+    const params = new URLSearchParams();
+    if (query) {
+      params.set("q", query);
+    }
+
+    if (basePath === "/busca") {
+      if (stateId) params.set("state_id", stateId);
+      if (this.hasCityInputTarget && this.cityInputTarget.value) {
+        params.set("city_id", this.cityInputTarget.value);
+      }
+    }
+
+    // If multiple neighborhoods selected, append neighborhood_ids[]
+    if (checkedNeighborhoods.length > 1 || (checkedNeighborhoods.length === 1 && !basePath.includes(checkedNeighborhoods[0].dataset.slug))) {
+      checkedNeighborhoods.forEach(cb => {
+        params.append("neighborhood_ids[]", cb.value);
+      });
+    }
+
+    const queryString = params.toString();
+    const finalUrl = queryString ? `${basePath}?${queryString}` : basePath;
+
+    window.location.href = finalUrl;
+  }
+
+  // Modal handlers
   openStateRequiredModal() {
     if (this.hasStateRequiredModalTarget) {
       this.stateRequiredModalTarget.style.display = "flex";
@@ -129,7 +258,7 @@ export default class extends Controller {
     this.toggleStateDropdown(event);
   }
 
-  // Toggles the state single-select dropdown
+  // Dropdown Toggles
   toggleStateDropdown(event) {
     if (event && typeof event.stopPropagation === "function") {
       event.stopPropagation();
@@ -138,138 +267,130 @@ export default class extends Controller {
     if (this.hasStateDropdownTarget) {
       this.stateDropdownTarget.classList.toggle("active");
       if (this.stateDropdownTarget.classList.contains("active") && this.hasStateSearchTarget) {
-        this.stateSearchTarget.focus();
         this.stateSearchTarget.value = "";
         this.filterStates();
+        setTimeout(() => this.stateSearchTarget.focus(), 50);
       }
     }
   }
 
-  // Action for choosing a state
+  toggleCityDropdown(event) {
+    if (event && typeof event.stopPropagation === "function") {
+      event.stopPropagation();
+    }
+    if (this.hasCitySelectBtnTarget && this.citySelectBtnTarget.disabled) return;
+
+    this.closeAllDropdownsExcept(this.cityDropdownTarget);
+    if (this.hasCityDropdownTarget) {
+      this.cityDropdownTarget.classList.toggle("active");
+      if (this.cityDropdownTarget.classList.contains("active") && this.hasCitySearchTarget) {
+        this.citySearchTarget.value = "";
+        this.filterCities();
+        setTimeout(() => this.citySearchTarget.focus(), 50);
+      }
+    }
+  }
+
+  toggleNeighborhoodDropdown(event) {
+    if (event && typeof event.stopPropagation === "function") {
+      event.stopPropagation();
+    }
+    if (this.hasNeighborhoodSelectBtnTarget && this.neighborhoodSelectBtnTarget.disabled) return;
+
+    this.closeAllDropdownsExcept(this.neighborhoodDropdownTarget);
+    if (this.hasNeighborhoodDropdownTarget) {
+      this.neighborhoodDropdownTarget.classList.toggle("active");
+      if (this.neighborhoodDropdownTarget.classList.contains("active") && this.hasNeighborhoodSearchTarget) {
+        this.neighborhoodSearchTarget.value = "";
+        this.filterNeighborhoods();
+        setTimeout(() => this.neighborhoodSearchTarget.focus(), 50);
+      }
+    }
+  }
+
+  // Selection actions
   selectState(event) {
     event.stopPropagation();
     const option = event.currentTarget;
     const id = option.dataset.id;
+    const slug = option.dataset.slug || "";
     const name = option.dataset.name;
 
-    this.stateInputTarget.value = id;
-    this.stateSelectBtnTarget.innerText = name;
-    
+    if (this.hasStateInputTarget) this.stateInputTarget.value = id;
+    if (this.hasStateSlugInputTarget) this.stateSlugInputTarget.value = slug;
+    if (this.hasStateBtnTextTarget) this.stateBtnTextTarget.innerText = name;
+
     if (this.hasStateDropdownTarget) {
       this.stateDropdownTarget.classList.remove("active");
     }
 
-    this.stateChanged(id);
+    // Reset city and neighborhood
+    this.clearCities();
+    this.clearNeighborhoods();
+
+    // Visual feedback on city button
+    if (this.hasCityBtnTextTarget) this.cityBtnTextTarget.innerText = "Carregando cidades...";
+    if (this.hasCitySelectBtnTarget) this.citySelectBtnTarget.disabled = true;
+
+    this.fetchCities(id).then(() => {
+      // Auto open city dropdown for seamless dynamic UX
+      setTimeout(() => {
+        this.toggleCityDropdown();
+      }, 100);
+    });
   }
 
-  // Filter states list in the dropdown
+  selectCity(event) {
+    event.stopPropagation();
+    const option = event.currentTarget;
+    const id = option.dataset.id || "";
+    const slug = option.dataset.slug || "";
+    const name = option.dataset.name;
+
+    if (this.hasCityInputTarget) this.cityInputTarget.value = id;
+    if (this.hasCitySlugInputTarget) this.citySlugInputTarget.value = slug;
+    if (this.hasCityBtnTextTarget) this.cityBtnTextTarget.innerText = name;
+
+    if (this.hasCityDropdownTarget) {
+      this.cityDropdownTarget.classList.remove("active");
+    }
+
+    this.updateClearBtnVisibility();
+
+    if (!id) {
+      // Selected "All cities"
+      this.clearNeighborhoods();
+      return;
+    }
+
+    if (this.hasNeighborhoodBtnTextTarget) {
+      this.neighborhoodBtnTextTarget.innerText = "Carregando bairros...";
+    }
+    if (this.hasNeighborhoodSelectBtnTarget) {
+      this.neighborhoodSelectBtnTarget.disabled = true;
+    }
+
+    this.fetchNeighborhoods();
+  }
+
+  // Filter lists inside dropdowns
   filterStates() {
-    const query = this.stateSearchTarget.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const query = (this.stateSearchTarget.value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const options = this.stateListTarget.querySelectorAll(".state-option");
     
     options.forEach(option => {
       const stateName = option.dataset.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      if (stateName.includes(query)) {
-        option.style.display = "block";
+      const acronym = (option.querySelector("span:last-child")?.innerText || "").toLowerCase();
+      if (stateName.includes(query) || acronym.includes(query)) {
+        option.style.display = "flex";
       } else {
         option.style.display = "none";
       }
     });
   }
 
-  // Toggles the cities dropdown list
-  toggleCityDropdown(event) {
-    event.stopPropagation();
-    this.closeAllDropdownsExcept(this.cityDropdownTarget);
-    if (this.hasCityDropdownTarget) {
-      this.cityDropdownTarget.classList.toggle("active");
-      if (this.cityDropdownTarget.classList.contains("active") && this.hasCitySearchTarget) {
-        this.citySearchTarget.focus();
-      }
-    }
-  }
-
-  // Toggles the neighborhoods dropdown list
-  toggleNeighborhoodDropdown(event) {
-    event.stopPropagation();
-    this.closeAllDropdownsExcept(this.neighborhoodDropdownTarget);
-    if (this.hasNeighborhoodDropdownTarget) {
-      this.neighborhoodDropdownTarget.classList.toggle("active");
-      if (this.neighborhoodDropdownTarget.classList.contains("active") && this.hasNeighborhoodSearchTarget) {
-        this.neighborhoodSearchTarget.focus();
-      }
-    }
-  }
-
-  // Handles state changes and fetches cities
-  stateChanged(stateId) {
-    if (stateId) {
-      this.fetchCities(stateId);
-    } else {
-      this.clearCities();
-      this.clearNeighborhoods();
-    }
-  }
-
-  // Fetch cities via API
-  async fetchCities(stateId) {
-    try {
-      const response = await fetch(`/api/cities?state_id=${stateId}`);
-      const cities = await response.json();
-      this.renderCitiesList(cities);
-      this.clearNeighborhoods();
-    } catch (error) {
-      console.error("Error fetching cities:", error);
-    }
-  }
-
-  // Render options for cities (single select)
-  renderCitiesList(cities) {
-    if (!this.hasCityListTarget) return;
-
-    if (cities.length === 0) {
-      this.cityListTarget.innerHTML = `<div class="px-3 py-2 text-xs text-slate-500 italic text-center">Nenhuma cidade encontrada</div>`;
-      this.citySelectBtnTarget.disabled = true;
-      this.citySelectBtnTarget.innerText = "Nenhuma cidade disponível";
-      return;
-    }
-
-    this.citySelectBtnTarget.disabled = false;
-    this.citySelectBtnTarget.innerText = "Selecionar cidade...";
-
-    let html = "";
-    cities.forEach(city => {
-      html += `
-        <div class="city-option px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-900 cursor-pointer rounded-lg transition-colors" data-id="${city.id}" data-name="${city.name}" data-action="click->search-form#selectCity">
-          ${city.name}
-        </div>
-      `;
-    });
-    this.cityListTarget.innerHTML = html;
-  }
-
-  // Action for choosing a city
-  selectCity(event) {
-    event.stopPropagation();
-    const option = event.currentTarget;
-    const id = option.dataset.id;
-    const name = option.dataset.name;
-
-    if (this.hasCityInputTarget) {
-      this.cityInputTarget.value = id;
-    }
-    this.citySelectBtnTarget.innerText = name;
-    
-    if (this.hasCityDropdownTarget) {
-      this.cityDropdownTarget.classList.remove("active");
-    }
-
-    this.fetchNeighborhoods();
-  }
-
-  // Search/Filter cities in the list
   filterCities() {
-    const query = this.citySearchTarget.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const query = (this.citySearchTarget.value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const options = this.cityListTarget.querySelectorAll(".city-option");
     
     options.forEach(option => {
@@ -282,10 +403,79 @@ export default class extends Controller {
     });
   }
 
-  // Fetch neighborhoods based on selected single city
+  filterNeighborhoods() {
+    const query = (this.neighborhoodSearchTarget.value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const labels = this.neighborhoodListTarget.querySelectorAll(".neighborhood-checkbox-label");
+    
+    labels.forEach(label => {
+      const nName = (label.dataset.neighborhoodName || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      if (nName.includes(query)) {
+        label.style.display = "flex";
+      } else {
+        label.style.display = "none";
+      }
+    });
+  }
+
+  // API Fetches
+  async fetchCities(stateId) {
+    if (!stateId) {
+      this.clearCities();
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/cities?state_id=${stateId}`);
+      const cities = await response.json();
+      this.renderCitiesList(cities);
+    } catch (error) {
+      console.error("Erro ao carregar cidades:", error);
+      if (this.hasCityBtnTextTarget) this.cityBtnTextTarget.innerText = "Erro ao carregar";
+    }
+  }
+
+  renderCitiesList(cities) {
+    if (!this.hasCityListTarget) return;
+
+    if (cities.length === 0) {
+      this.cityListTarget.innerHTML = `<div class="px-3 py-2 text-xs text-slate-500 italic text-center">Nenhuma cidade encontrada</div>`;
+      if (this.hasCitySelectBtnTarget) this.citySelectBtnTarget.disabled = true;
+      if (this.hasCityBtnTextTarget) this.cityBtnTextTarget.innerText = "Nenhuma cidade disponível";
+      return;
+    }
+
+    if (this.hasCitySelectBtnTarget) this.citySelectBtnTarget.disabled = false;
+    if (this.hasCityBtnTextTarget && (!this.hasCityInputTarget || !this.cityInputTarget.value)) {
+      this.cityBtnTextTarget.innerText = "Selecionar cidade...";
+    }
+
+    let html = `
+      <div class="city-option px-3 py-2 text-xs font-bold text-blue-600 hover:bg-blue-50 cursor-pointer rounded-lg transition-colors border-b border-slate-100 flex items-center gap-1.5" 
+           data-id="" 
+           data-slug="" 
+           data-name="Todas as cidades" 
+           data-action="click->search-form#selectCity">
+        <span>📍</span>
+        <span>Todas as cidades</span>
+      </div>
+    `;
+
+    cities.forEach(city => {
+      html += `
+        <div class="city-option px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#093892] cursor-pointer rounded-lg transition-colors" 
+             data-id="${city.id}" 
+             data-slug="${city.slug || ''}" 
+             data-name="${city.name}" 
+             data-action="click->search-form#selectCity">
+          ${city.name}
+        </div>
+      `;
+    });
+    this.cityListTarget.innerHTML = html;
+  }
+
   async fetchNeighborhoods() {
     const cityId = this.hasCityInputTarget ? this.cityInputTarget.value : "";
-    
     if (!cityId) {
       this.clearNeighborhoods();
       return;
@@ -296,232 +486,128 @@ export default class extends Controller {
       const neighborhoods = await response.json();
       this.renderNeighborhoodsList(neighborhoods);
     } catch (error) {
-      console.error("Error fetching neighborhoods:", error);
+      console.error("Erro ao carregar bairros:", error);
+      if (this.hasNeighborhoodBtnTextTarget) this.neighborhoodBtnTextTarget.innerText = "Erro ao carregar";
     }
   }
 
-  // Render checkboxes for neighborhoods
   renderNeighborhoodsList(neighborhoods) {
     if (!this.hasNeighborhoodListTarget) return;
 
     if (neighborhoods.length === 0) {
-      this.neighborhoodListTarget.innerHTML = `<div class="px-3 py-2 text-xs text-slate-500 italic text-center">Nenhum bairro encontrado</div>`;
-      this.neighborhoodSelectBtnTarget.disabled = true;
-      this.neighborhoodSelectBtnTarget.innerText = "Nenhum bairro disponível";
+      this.neighborhoodListTarget.innerHTML = `<div class="px-3 py-2 text-xs text-slate-500 italic text-center">Nenhum bairro cadastrado</div>`;
+      if (this.hasNeighborhoodSelectBtnTarget) this.neighborhoodSelectBtnTarget.disabled = true;
+      if (this.hasNeighborhoodBtnTextTarget) this.neighborhoodBtnTextTarget.innerText = "Sem bairros";
       return;
     }
 
-    this.neighborhoodSelectBtnTarget.disabled = false;
-    this.neighborhoodSelectBtnTarget.innerText = "Selecionar bairros...";
-    this.neighborhoodCountTarget.style.display = "none";
-    this.neighborhoodCountTarget.innerText = "";
+    if (this.hasNeighborhoodSelectBtnTarget) this.neighborhoodSelectBtnTarget.disabled = false;
+    if (this.hasNeighborhoodBtnTextTarget) this.neighborhoodBtnTextTarget.innerText = "Selecionar bairros...";
+    if (this.hasNeighborhoodCountTarget) {
+      this.neighborhoodCountTarget.classList.add("hidden");
+      this.neighborhoodCountTarget.innerText = "0";
+    }
     
     let html = "";
     neighborhoods.forEach(n => {
       html += `
-        <label class="city-checkbox-label flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-900 rounded-lg cursor-pointer transition-colors" data-neighborhood-name="${n.name.toLowerCase()}" data-city-name="${n.city_name}">
-          <input type="checkbox" name="neighborhood_ids[]" value="${n.id}" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" data-action="change->search-form#neighborhoodToggled">
+        <label class="neighborhood-checkbox-label flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#093892] rounded-lg cursor-pointer transition-colors" 
+               data-neighborhood-name="${n.name.toLowerCase()}">
+          <input type="checkbox" 
+                 name="neighborhood_ids[]" 
+                 value="${n.id}" 
+                 data-slug="${n.slug || ''}" 
+                 class="w-4 h-4 text-[#093892] rounded border-slate-300 focus:ring-[#00A1FC] cursor-pointer" 
+                 data-action="change->search-form#neighborhoodToggled">
           <span>${n.name}</span>
         </label>
       `;
     });
     this.neighborhoodListTarget.innerHTML = html;
-    this.reorderCheckboxes(this.neighborhoodListTarget, "neighborhood");
   }
 
-  // Search/Filter neighborhoods in the list
-  filterNeighborhoods() {
-    const query = this.neighborhoodSearchTarget.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const labels = this.neighborhoodListTarget.querySelectorAll(".city-checkbox-label");
-    
-    labels.forEach(label => {
-      const nName = label.dataset.neighborhoodName.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      const cName = (label.dataset.cityName || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      if (nName.includes(query) || cName.includes(query)) {
-        label.style.display = "flex";
-      } else {
-        label.style.display = "none";
-      }
-    });
-  }
-
-  // Event handler for neighborhood checkbox toggle
   neighborhoodToggled() {
     this.updateSelectedNeighborhoodsDisplay();
-    this.reorderCheckboxes(this.neighborhoodListTarget, "neighborhood");
+    this.updateClearBtnVisibility();
   }
 
-  // Update button text and selected neighborhoods count badge
   updateSelectedNeighborhoodsDisplay() {
-    const checkedCheckboxes = this.neighborhoodListTarget.querySelectorAll("input[type='checkbox']:checked");
-    const count = checkedCheckboxes.length;
-    
+    if (!this.hasNeighborhoodListTarget) return;
+    const checked = this.neighborhoodListTarget.querySelectorAll("input[type='checkbox']:checked");
+    const count = checked.length;
+
     if (count === 0) {
-      this.neighborhoodSelectBtnTarget.innerText = "Selecionar bairros...";
-      this.neighborhoodCountTarget.style.display = "none";
-      this.neighborhoodCountTarget.innerText = "";
+      if (this.hasNeighborhoodBtnTextTarget) this.neighborhoodBtnTextTarget.innerText = "Selecionar bairros...";
+      if (this.hasNeighborhoodCountTarget) this.neighborhoodCountTarget.classList.add("hidden");
     } else if (count === 1) {
-      const nName = checkedCheckboxes[0].nextElementSibling.innerText;
-      this.neighborhoodSelectBtnTarget.innerText = nName;
-      this.neighborhoodCountTarget.style.display = "inline-flex";
-      this.neighborhoodCountTarget.innerText = "1";
+      const name = checked[0].nextElementSibling.innerText;
+      if (this.hasNeighborhoodBtnTextTarget) this.neighborhoodBtnTextTarget.innerText = name;
+      if (this.hasNeighborhoodCountTarget) {
+        this.neighborhoodCountTarget.classList.remove("hidden");
+        this.neighborhoodCountTarget.innerText = "1";
+      }
     } else {
-      this.neighborhoodSelectBtnTarget.innerText = `${count} bairros`;
-      this.neighborhoodCountTarget.style.display = "inline-flex";
-      this.neighborhoodCountTarget.innerText = count.toString();
-    }
-  }
-
-  // Reorder checkbox list to put checked ones at the top
-  reorderCheckboxes(container, type = "city") {
-    const labels = Array.from(container.querySelectorAll(".city-checkbox-label"));
-    const checkedLabels = labels.filter(l => l.querySelector("input").checked);
-    const uncheckedLabels = labels.filter(l => !l.querySelector("input").checked);
-
-    container.innerHTML = "";
-
-    // 1. Render checked items at the top
-    if (checkedLabels.length > 0) {
-      const sectionTitle = document.createElement("div");
-      sectionTitle.className = "checkbox-section-title px-3 py-1 text-[11px] font-extrabold text-blue-600 uppercase tracking-wider border-b border-blue-100 mb-1 w-full flex items-center gap-1";
-      sectionTitle.innerText = "✓ Selecionados";
-      container.appendChild(sectionTitle);
-      
-      checkedLabels.forEach(l => {
-        l.style.display = "flex"; // Ensure it is visible if it was filtered out
-        container.appendChild(l);
-      });
-      
-      const divider = document.createElement("div");
-      divider.className = "border-b border-slate-100 my-1.5 w-full";
-      container.appendChild(divider);
-    }
-
-    // 2. Render unchecked items below
-    if (uncheckedLabels.length > 0) {
-      if (type === "neighborhood") {
-        // Sort unchecked list by city name first, then by neighborhood name (numbers last)
-        uncheckedLabels.sort((a, b) => {
-          const cityA = a.dataset.cityName || "";
-          const cityB = b.dataset.cityName || "";
-          const nameA = a.dataset.neighborhoodName || "";
-          const nameB = b.dataset.neighborhoodName || "";
-          
-          const compCity = cityA.localeCompare(cityB);
-          if (compCity !== 0) return compCity;
-
-          const isNumA = /^\d/.test(nameA);
-          const isNumB = /^\d/.test(nameB);
-          if (isNumA !== isNumB) {
-            return isNumA ? 1 : -1;
-          }
-          return nameA.localeCompare(nameB);
-        });
-
-        let currentCity = "";
-        uncheckedLabels.forEach(label => {
-          const cityName = label.dataset.cityName;
-          if (cityName !== currentCity) {
-            currentCity = cityName;
-            const groupHeader = document.createElement("div");
-            groupHeader.className = "city-group-title px-3 py-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider bg-slate-100/80 rounded-md my-1 w-full";
-            groupHeader.innerText = cityName.toUpperCase();
-            container.appendChild(groupHeader);
-          }
-          container.appendChild(label);
-        });
-      } else {
-        // Simple alphabetical sort for cities
-        uncheckedLabels.sort((a, b) => {
-          const nameA = a.textContent.trim();
-          const nameB = b.textContent.trim();
-          return nameA.localeCompare(nameB);
-        });
-        uncheckedLabels.forEach(l => container.appendChild(l));
+      if (this.hasNeighborhoodBtnTextTarget) this.neighborhoodBtnTextTarget.innerText = `${count} bairros`;
+      if (this.hasNeighborhoodCountTarget) {
+        this.neighborhoodCountTarget.classList.remove("hidden");
+        this.neighborhoodCountTarget.innerText = count.toString();
       }
     }
   }
 
-  // Select category tab
-  selectCategory(event) {
-    event.preventDefault();
-    const btn = event.currentTarget;
-    const value = btn.dataset.categoryValue;
-    
-    // Update hidden input
-    if (this.hasCategoryInputTarget) {
-      this.categoryInputTarget.value = value;
-    }
-
-    // Toggle active classes on tabs
-    const tabs = this.element.querySelectorAll(".category-tab-btn");
-    tabs.forEach(tab => {
-      if (tab === btn) {
-        tab.classList.add("active");
-      } else {
-        tab.classList.remove("active");
-      }
-    });
-  }
-
-  // Helper clearers
+  // Clear Helpers
   clearCities() {
-    if (this.hasCityInputTarget) {
-      this.cityInputTarget.value = "";
-    }
-    if (this.hasCityListTarget) {
-      this.cityListTarget.innerHTML = "";
-    }
-    this.citySelectBtnTarget.innerText = "Selecionar cidade...";
-    this.citySelectBtnTarget.disabled = true;
+    if (this.hasCityInputTarget) this.cityInputTarget.value = "";
+    if (this.hasCitySlugInputTarget) this.citySlugInputTarget.value = "";
+    if (this.hasCityListTarget) this.cityListTarget.innerHTML = "";
+    if (this.hasCityBtnTextTarget) this.cityBtnTextTarget.innerText = "Selecionar cidade...";
+    if (this.hasCitySelectBtnTarget) this.citySelectBtnTarget.disabled = true;
   }
 
   clearNeighborhoods() {
-    if (this.hasNeighborhoodListTarget) {
-      this.neighborhoodListTarget.innerHTML = "";
+    if (this.hasNeighborhoodListTarget) this.neighborhoodListTarget.innerHTML = "";
+    if (this.hasNeighborhoodBtnTextTarget) this.neighborhoodBtnTextTarget.innerText = "Selecione a cidade";
+    if (this.hasNeighborhoodSelectBtnTarget) this.neighborhoodSelectBtnTarget.disabled = true;
+    if (this.hasNeighborhoodCountTarget) {
+      this.neighborhoodCountTarget.classList.add("hidden");
+      this.neighborhoodCountTarget.innerText = "0";
     }
-    this.neighborhoodSelectBtnTarget.innerText = "Selecionar bairros...";
-    this.neighborhoodSelectBtnTarget.disabled = true;
-    this.neighborhoodCountTarget.style.display = "none";
-    this.neighborhoodCountTarget.innerText = "";
+    if (this.hasNeighborhoodSlugInputTarget) this.neighborhoodSlugInputTarget.value = "";
   }
 
   clearForm(event) {
     if (event) event.preventDefault();
-    
-    if (this.hasStateInputTarget) this.stateInputTarget.value = "";
-    if (this.hasStateSelectBtnTarget) this.stateSelectBtnTarget.innerText = "Selecione o Estado";
-    this.clearCities();
+
+    if (this.hasQueryInputTarget) this.queryInputTarget.value = "";
+    if (this.hasClearQueryBtnTarget) this.clearQueryBtnTarget.classList.add("hidden");
+
+    if (this.hasCityInputTarget) this.cityInputTarget.value = "";
+    if (this.hasCitySlugInputTarget) this.citySlugInputTarget.value = "";
+    if (this.hasCityBtnTextTarget) this.cityBtnTextTarget.innerText = "Selecionar cidade...";
+
     this.clearNeighborhoods();
-    
-    if (this.hasCategoryInputTarget) this.categoryInputTarget.value = "all";
-    const tabs = this.element.querySelectorAll(".category-tab-btn");
-    tabs.forEach(tab => {
-      if (tab.dataset.categoryValue === "all") {
-        tab.classList.add("active");
-      } else {
-        tab.classList.remove("active");
-      }
-    });
+    this.updateClearBtnVisibility();
 
-    const qInput = this.element.querySelector("#search-q");
-    if (qInput) qInput.value = "";
-
-    const checkboxes = this.element.querySelectorAll(".checkbox-filter-label input[type='checkbox']");
-    checkboxes.forEach(cb => cb.checked = false);
-
+    // If currently on /busca, reload clean /busca
     if (window.location.pathname === "/busca") {
       window.location.href = "/busca";
     }
   }
 
+  // Dropdown visibility helpers
   closeAllDropdownsExcept(exceptDropdown) {
     const dropdowns = [this.stateDropdownTarget, this.cityDropdownTarget, this.neighborhoodDropdownTarget];
     dropdowns.forEach(dd => {
-      if (dd !== exceptDropdown) {
+      if (dd && dd !== exceptDropdown) {
         dd.classList.remove("active");
       }
     });
+  }
+
+  closeAllDropdowns() {
+    if (this.hasStateDropdownTarget) this.stateDropdownTarget.classList.remove("active");
+    if (this.hasCityDropdownTarget) this.cityDropdownTarget.classList.remove("active");
+    if (this.hasNeighborhoodDropdownTarget) this.neighborhoodDropdownTarget.classList.remove("active");
   }
 
   closeDropdownsOutside(event) {

@@ -129,6 +129,15 @@ class LocationsController < ApplicationController
       )
     end
 
+    # Direct contact filters
+    if params[:only_phone] == "1"
+      @companies = @companies.where("companies.phone_1 IS NOT NULL AND companies.phone_1 != '' OR companies.phone_2 IS NOT NULL AND companies.phone_2 != ''")
+    end
+
+    if params[:only_email] == "1"
+      @companies = @companies.where("companies.email IS NOT NULL AND companies.email != ''")
+    end
+
     # Sorting
     ordered_companies = case params[:sort]
     when "rating"

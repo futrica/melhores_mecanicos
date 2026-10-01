@@ -130,6 +130,8 @@ RSpec.describe "Search and Autocomplete APIs", type: :request do
       json_response = JSON.parse(response.body)
       expect(json_response).to be_an(Array)
       expect(json_response.map { |c| c["name"] }).to include("Guaratinguetá")
+      first_city = json_response.find { |c| c["name"] == "Guaratinguetá" }
+      expect(first_city).to have_key("slug")
     end
 
     it "returns empty array for invalid state_id" do
@@ -149,6 +151,8 @@ RSpec.describe "Search and Autocomplete APIs", type: :request do
       json_response = JSON.parse(response.body)
       expect(json_response).to be_an(Array)
       expect(json_response.first["name"]).to eq("Centro")
+      expect(json_response.first).to have_key("slug")
+      expect(json_response.first).to have_key("city_slug")
     end
 
     it "returns empty array when city_ids is missing" do
