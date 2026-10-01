@@ -1,12 +1,12 @@
 <div style="max-width: 750px; margin: 2rem auto; padding: 0 1.5rem;">
   <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--text-main, #1e293b); margin-bottom: 0.5rem;">Cadastrar Nova Empresa</h1>
-  <p style="color: var(--text-muted, #64748b); font-size: 0.95rem; margin-bottom: 2rem;">Preencha as informações da sua pousada, hotel ou hospedagem para criar o perfil público.</p>
+  <p style="color: var(--text-muted, #64748b); font-size: 0.95rem; margin-bottom: 2rem;">Preencha as informações da sua oficina mecânica ou centro automotivo para criar o perfil público.</p>
 
   <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border-color, #e2e8f0); border-radius: 16px; padding: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
     <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; border-radius: 12px; padding: 1rem 1.25rem; font-size: 0.85rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.75rem;">
       <span style="font-size: 1.2rem;">💡</span>
       <div>
-        <strong>Conversão de Perfil:</strong> Ao cadastrar seu estabelecimento, seu perfil será convertido para <strong>Perfil de Empresa</strong>. Quaisquer avaliações ou favoritos antigos de hóspede serão limpos automaticamente para manter sua conta exclusiva da empresa.
+        <strong>Conversão de Perfil:</strong> Ao cadastrar seu estabelecimento, seu perfil será convertido para <strong>Perfil de Empresa</strong>. Quaisquer avaliações ou favoritos antigos de cliente serão limpos automaticamente para manter sua conta exclusiva da empresa.
       </div>
     </div>
     <%= form_with model: [:app, @company], local: true, style: "display: flex; flex-direction: column; gap: 1.25rem;" do |f| %>
@@ -22,12 +22,12 @@
 
       <div>
         <%= f.label :trade_name, "Nome Fantasia *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
-        <%= f.text_field :trade_name, required: true, placeholder: "Ex: Pousada Sol e Mar", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+        <%= f.text_field :trade_name, required: true, placeholder: "Ex: Centro Automotivo Trevo", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
       </div>
 
       <div>
         <%= f.label :legal_name, "Razão Social *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
-        <%= f.text_field :legal_name, required: true, placeholder: "Ex: Pousada Sol e Mar LTDA", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+        <%= f.text_field :legal_name, required: true, placeholder: "Ex: Auto Mecânica Silva LTDA", style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
@@ -38,7 +38,7 @@
 
         <div>
           <%= f.label :cnae_principal, "CNAE Principal *", style: "display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main, #1e293b);" %>
-          <%= f.text_field :cnae_principal, required: true, placeholder: "Ex: 5510801", value: (@company.cnae_principal.presence || "5510801"), style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
+          <%= f.text_field :cnae_principal, required: true, placeholder: "Ex: 4520001", value: (@company.cnae_principal.presence || "4520001"), style: "width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem; box-sizing: border-box;" %>
         </div>
       </div>
 

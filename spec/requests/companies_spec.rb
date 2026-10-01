@@ -10,7 +10,7 @@ RSpec.describe "Companies", type: :request do
     it "renders the company page successfully when company exists" do
       get company_page_path(state_slug: state.slug, city_slug: city.slug, neighborhood_slug: neighborhood.slug, slug: company.slug)
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Pousada do Zé")
+      expect(response.body).to include("Auto Mecânica do Zé")
     end
 
     it "returns HTTP 404 Not Found without redirect when company does not exist" do
@@ -29,16 +29,16 @@ RSpec.describe "Companies", type: :request do
     it "includes optimized title, meta description, and Schema.org JSON-LD" do
       get company_page_path(state_slug: state.slug, city_slug: city.slug, neighborhood_slug: neighborhood.slug, slug: company.slug)
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Reserva Direta")
-      expect(response.body).to include('"@type":"Hotel"')
+      expect(response.body).to include("Orçamento Direto")
+      expect(response.body).to include('"@type":"AutoRepair"')
     end
   end
 
   describe "301 Redirects for www domain" do
-    it "redirects www.hospedagemdireta.com.br to canonical domain with 301" do
-      get "http://www.hospedagemdireta.com.br/sp/guaratingueta"
+    it "redirects www.melhoresmecanicos.com.br to canonical domain with 301" do
+      get "http://www.melhoresmecanicos.com.br/sp/guaratingueta"
       expect(response).to have_http_status(:moved_permanently)
-      expect(response.redirect_url).to eq("https://hospedagemdireta.com.br/sp/guaratingueta")
+      expect(response.redirect_url).to eq("https://melhoresmecanicos.com.br/sp/guaratingueta")
     end
   end
 

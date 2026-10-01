@@ -38,7 +38,7 @@ RSpec.describe "Stripe Integration Models", type: :model do
     let!(:state) { State.find_or_create_by!(acronym: "SP") { |s| s.name = "São Paulo"; s.slug = "sp" } }
     let!(:city) { City.find_or_create_by!(slug: "sao-paulo", state: state) { |c| c.name = "São Paulo"; c.ibge_code = "3550308" } }
 
-    let!(:company) { Company.create!(trade_name: "Hotel Teste", legal_name: "Hotel Teste LTDA", status: "ATIVA", cnae_principal: "5510801", cnpj: "12.345.678/0001-90", state: state, city: city) }
+    let!(:company) { Company.create!(trade_name: "Oficina Teste", legal_name: "Oficina Teste LTDA", status: "ATIVA", cnae_principal: "4520-0/01", cnpj: "12.345.678/0001-90", state: state, city: city) }
 
     let!(:product) { StripeProduct.create!(name: "Plano Premium", slug: "premium_test") }
     let!(:price) { StripePrice.create!(stripe_product: product, amount_cents: 3990.00, currency: "brl") }
@@ -57,7 +57,7 @@ RSpec.describe "Stripe Integration Models", type: :model do
     let!(:state) { State.find_or_create_by!(acronym: "SP") { |s| s.name = "São Paulo"; s.slug = "sp" } }
     let!(:city) { City.find_or_create_by!(slug: "sao-paulo", state: state) { |c| c.name = "São Paulo"; c.ibge_code = "3550308" } }
 
-    let!(:company) { Company.create!(trade_name: "Pousada Realtime VCR", legal_name: "Pousada LTDA", status: "ATIVA", cnae_principal: "5510801", cnpj: "99.888.777/0001-11", email: "pousada@teste.com", state: state, city: city) }
+    let!(:company) { Company.create!(trade_name: "Oficina Realtime VCR", legal_name: "Oficina LTDA", status: "ATIVA", cnae_principal: "4520-0/01", cnpj: "99.888.777/0001-11", email: "oficina@teste.com", state: state, city: city) }
 
     it "creates customer live on Stripe API" do
       customer_id = company.create_stripe_customer!

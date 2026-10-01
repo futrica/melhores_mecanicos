@@ -7,9 +7,9 @@ RSpec.describe AdminNotificationMailer, type: :mailer do
   let(:company) do
     Company.create!(
       legal_name: "Empresa Teste LTDA",
-      trade_name: "Pousada Teste",
+      trade_name: "Oficina Teste",
       cnpj: "12345678000199",
-      cnae_principal: "5510801",
+      cnae_principal: "4520-0/01",
       status: "ATIVA",
       state: state,
       city: city,
@@ -22,11 +22,11 @@ RSpec.describe AdminNotificationMailer, type: :mailer do
 
     it "renders the headers" do
       expect(mail.to).to eq([ "jmfutrica@gmail.com" ])
-      expect(mail.subject).to include("Nova reivindicação de empresa: Pousada Teste")
+      expect(mail.subject).to include("Nova reivindicação de empresa: Oficina Teste")
     end
 
     it "renders the body with company info" do
-      expect(mail.body.encoded).to include("Pousada Teste")
+      expect(mail.body.encoded).to include("Oficina Teste")
       expect(mail.body.encoded).to include("12345678000199")
     end
   end
@@ -43,7 +43,7 @@ RSpec.describe AdminNotificationMailer, type: :mailer do
 
     it "renders the headers" do
       expect(mail.to).to eq([ "jmfutrica@gmail.com" ])
-      expect(mail.subject).to include("Solicitação de remoção LGPD: Pousada Teste")
+      expect(mail.subject).to include("Solicitação de remoção LGPD: Oficina Teste")
     end
 
     it "renders the body with removal request info" do

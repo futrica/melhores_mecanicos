@@ -9,8 +9,8 @@ class SearchController < ApplicationController
       return
     end
 
-    # 1. Start with active companies (no eager loading upfront)
-    @companies = Company.where(status: "Ativa")
+    # 1. Start with active companies with direct contact (phone or email) by default
+    @companies = Company.where(status: "Ativa").with_direct_contact
 
     # 2. Filter by State (Required)
     if params[:state_id].present?

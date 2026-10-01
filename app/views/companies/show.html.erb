@@ -3,15 +3,14 @@
 <%
   trade_name_display = @company.trade_name.presence || @company.legal_name
   score_info = booking_score_info(@company)
-  estimated_price = booking_estimated_price(@company)
 
   categories = @company.categories.to_a
-  main_category = categories.first&.name || "Hotéis e Pousadas"
+  main_category = categories.first&.name || "Mecânica Geral & Reparação"
   main_style = category_style_for(main_category)
 
   clean_cnae = @company.cnae_principal.to_s.gsub(/\D/, "")
   mapped_cnae_name = Company::CNAE_MAPPINGS[clean_cnae]
-  is_main_cnae_lodging = mapped_cnae_name.present?
+  is_main_cnae_automotive = mapped_cnae_name.present?
 
   has_real_photos = @company.photos.attached? && @company.photos.any?
   is_verified_or_rich = @company.approved? || @company.is_claimed? || has_real_photos
@@ -20,11 +19,11 @@
 
   page_title = if is_verified_or_rich
     if has_phone
-      "#{trade_name_display} em #{@city.name} - #{@state.acronym} | Fotos, WhatsApp e Reserva Direta [Sem Taxas]"
+      "#{trade_name_display} em #{@city.name} - #{@state.acronym} | Contato, WhatsApp e Orçamento Direto [Sem Taxas]"
     else
-      "#{trade_name_display} em #{@city.name} - #{@state.acronym} | Fotos e Reserva Direta [Sem Taxas]"
+      "#{trade_name_display} em #{@city.name} - #{@state.acronym} | Fotos, Informações e Orçamento Direto [Sem Taxas]"
     end
-  elsif is_main_cnae_lodging
+  elsif is_main_cnae_automotive
     if has_phone
       "#{trade_name_display} em #{@city.name} - #{@state.acronym} | Telefone, Endereço e Dados Cadastrais"
     else
@@ -40,9 +39,9 @@
 
   meta_desc = if is_verified_or_rich
     if has_phone
-      "Reserve direto em #{trade_name_display} em #{@city.name}/#{@state.acronym}. Fotos reais, acomodações e contato direto no WhatsApp sem taxas nem intermediários."
+      "Entre em contato direto com #{trade_name_display} em #{@city.name}/#{@state.acronym}. Fotos reais, serviços automotivos e WhatsApp direto sem intermediários."
     else
-      "Conheça #{trade_name_display} em #{@city.name}/#{@state.acronym}. Fotos reais da hospedagem, acomodações e informações completas para sua estadia."
+      "Conheça #{trade_name_display} em #{@city.name}/#{@state.acronym}. Fotos reais da oficina mecânica, serviços e informações completas para seu veículo."
     end
   elsif has_phone
     "Telefone, endereço e dados cadastrais de #{trade_name_display} (CNPJ: #{@company.cnpj}) em #{@city.name}/#{@state.acronym}. Confira contato, localização e informações oficiais."
@@ -54,7 +53,7 @@
 <% content_for :title, page_title %>
 <% content_for :meta_description, meta_desc %>
 <% content_for :meta_robots, (@company.indexable? ? "index, follow" : "noindex, follow") %>
-<% content_for :canonical_url, "https://hospedagemdireta.com.br/#{@state.slug}/#{@city.slug}/#{@neighborhood&.slug || 'centro'}/#{@company.slug}" %>
+<% content_for :canonical_url, "https://www.melhoresmecanicos.com.br/#{@state.slug}/#{@city.slug}/#{@neighborhood&.slug || 'centro'}/#{@company.slug}" %>
 
 <%
   breadcrumb_items = [
@@ -126,17 +125,17 @@
           <span class="text-amber-400 font-extrabold text-sm flex items-center gap-0.5">
             ★★★★ <span class="bg-amber-100 text-amber-800 text-[10px] font-black px-1.5 py-0.5 rounded ml-1">👍</span>
           </span>
-          <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
-            ⚡ Reserva Direta &bull; 0% Taxa
+          <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-800 border border-blue-200/80 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
+            ⚡ Orçamento Direto &bull; 0% Taxa
           </span>
           <% if @company.premium? %>
             <span class="inline-flex items-center gap-1 bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 text-[11px] font-black px-2.5 py-0.5 rounded-full shadow-xs">
-              ⭐ Hospedagem em Destaque
+              ⭐ Oficina em Destaque
             </span>
           <% end %>
           <% if @company.approved? %>
-            <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-800 border border-blue-200/80 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
-              ✓ Hospedagem Verificada
+            <span class="inline-flex items-center gap-1 bg-sky-50 text-sky-800 border border-sky-200/80 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
+              ✓ Oficina Verificada
             </span>
           <% end %>
 
@@ -164,14 +163,14 @@
           <a href="#sobre-empresa" class="font-extrabold text-[#006ce4] hover:underline">Excelente localização - ver mapa</a>
         </div>
 
-        <% unless is_main_cnae_lodging %>
+        <% unless is_main_cnae_automotive %>
           <div class="bg-amber-50 border border-amber-200/90 rounded-xl p-4 text-amber-950 space-y-1 mt-3">
             <div class="flex items-center gap-1.5 font-extrabold text-amber-950 text-xs sm:text-sm">
               <span>ℹ️</span>
-              <span>Sobre a listagem desta empresa no Hospedagem Direta</span>
+              <span>Sobre a listagem desta empresa no Melhores Mecânicos</span>
             </div>
             <p class="text-xs leading-relaxed text-slate-700 font-medium">
-              Esta empresa possui em seu cadastro oficial de operações (CNAE Secundário na Receita Federal) atividades relacionadas ao setor de hospedagem, hotéis, pousadas, hostels ou alojamentos.
+              Esta empresa possui em seu cadastro oficial de operações (CNAE Secundário na Receita Federal) atividades relacionadas a serviços mecânicos, manutenção automotiva, auto elétrica ou reparação de veículos.
             </p>
           </div>
         <% end %>
@@ -344,10 +343,10 @@
               <span class="text-3xl">⭐</span>
               <div>
                 <h3 class="font-extrabold text-slate-900 text-base">Ainda não avaliado</h3>
-                <p class="text-xs text-slate-500 mt-1">Seja o primeiro a avaliar a estadia neste estabelecimento!</p>
+                <p class="text-xs text-slate-500 mt-1">Seja o primeiro a avaliar os serviços desta oficina mecânica!</p>
               </div>
               <a href="#review-form" class="inline-block bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs px-4 py-2 rounded-xl transition-all shadow-2xs">
-                ✍️ Avaliar Hospedagem
+                ✍️ Avaliar Oficina
               </a>
             </div>
           <% end %>
@@ -424,13 +423,13 @@
         <div class="inline-flex items-center gap-1.5 bg-emerald-500/30 border border-emerald-300/30 text-emerald-100 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide">
           <span>⚡ Sem Intermediários</span>
           <span>&bull;</span>
-          <span>Economize nas Diárias</span>
+          <span>Orçamento Sem Taxas</span>
         </div>
         <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight">
-          Reserve Direto com a Recepção
+          Fale Direto com a Oficina
         </h2>
         <p class="text-sm text-emerald-100 leading-relaxed font-medium">
-          Evite as comissões de até 25% cobradas pelas plataformas online. Entre em contato direto pelo WhatsApp da hospedagem e negocie as melhores condições!
+          Evite intermediários e comissões extras. Entre em contato direto pelo WhatsApp da oficina mecânica e solicite seu orçamento com quem entende do seu carro!
         </p>
       </div>
 
@@ -439,7 +438,7 @@
           <% if user_signed_in? %>
             <a href="<%= @company.whatsapp_url %>" target="_blank" rel="noopener" class="w-full bg-white hover:bg-emerald-50 text-emerald-900 font-black text-sm py-3.5 px-6 rounded-xl text-center shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
               <span class="text-xl">💬</span>
-              <span>WhatsApp Direto da Recepção</span>
+              <span>WhatsApp Direto da Oficina</span>
             </a>
           <% else %>
             <a href="<%= new_user_session_path %>" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black text-sm py-3.5 px-6 rounded-xl text-center shadow-lg transition-all flex items-center justify-center gap-2" title="Faça login para liberar o WhatsApp direto">
@@ -478,14 +477,14 @@
 
 
       <!-- Section: Verified Contact Information -->
-      <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6" id="contato-hospedagem">
+      <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6" id="contato-oficina">
         <div class="flex items-center justify-between border-b border-slate-100 pb-4">
           <h2 class="text-xl font-black text-slate-900 flex items-center gap-2">
             <span>📞</span>
             <span>Informações de Contato Direto</span>
           </h2>
           <span class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
-            Reserva sem Taxa
+            Contato sem Taxa
           </span>
         </div>
 
@@ -525,7 +524,7 @@
 
             <!-- E-mail Oficial -->
             <div class="bg-slate-50 border border-slate-200/80 p-4 rounded-xl space-y-1 sm:col-span-2">
-              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">E-mail Oficial da Hospedagem</span>
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">E-mail Oficial da Oficina</span>
               <div class="flex items-center justify-between gap-2 pt-1" data-controller="reveal-contact">
                 <% if is_valid_email?(@company.email) %>
                   <span class="font-extrabold text-slate-900 text-sm masked-text" id="email-text"><%= mask_email(@company.email) %></span>
@@ -558,7 +557,7 @@
         <div class="flex items-center justify-between gap-2 border-b border-blue-200/60 pb-3">
           <h3 class="font-black text-sm sm:text-base flex items-center gap-2 text-blue-950">
             <span class="text-lg">🛡️</span>
-            <span>Dicas para uma Reserva Direta Segura</span>
+            <span>Dicas para um Contato e Orçamento Seguro</span>
           </h3>
           <span class="text-[10px] font-bold text-blue-700 uppercase tracking-wider bg-blue-100/80 px-2 py-0.5 rounded">Prevenção a Golpes</span>
         </div>
@@ -593,19 +592,19 @@
         </div>
 
         <p class="text-[11px] text-slate-500 font-medium italic border-t border-blue-200/60 pt-2.5">
-          * O Hospedagem Direta conecta anfitriões e hóspedes sem cobrar comissões. Não intermediamos pagamentos nem nos responsabilizamos por transações financeiras realizadas fora do portal.
+          * O Melhores Mecânicos conecta motoristas e oficinas sem cobrar comissões. Não intermediamos pagamentos nem nos responsabilizamos por serviços realizados fora do portal.
         </p>
       </div>
 
-      <!-- Section: About Property & Lodging Text -->
+      <!-- Section: About Workshop Text -->
       <% text_generator = CompanyTextGenerator.new(@company) %>
       <% faq_items = text_generator.generate_faq %>
 
       <% cache ["v4_company_about", @company] do %>
         <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4" id="sobre-empresa">
           <h2 class="text-xl font-black text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
-            <span>🏨</span>
-            <span>Sobre a Hospedagem</span>
+            <span>🔧</span>
+            <span>Sobre a Oficina Mecânica</span>
           </h2>
 
           <div class="prose prose-slate max-w-none text-sm leading-relaxed text-slate-700 space-y-3">
@@ -620,8 +619,8 @@
             <div class="flex items-center gap-3">
               <span class="text-2xl">📍</span>
               <div>
-                <span class="font-bold text-slate-900 block text-sm">Hospedagem e Turismo em <%= @city.name %> - <%= @state.acronym %></span>
-                <span>O portal reúne <strong><%= @city.companies.count %> opções de acomodação</strong> em <%= @city.name %>, conectando viajantes diretamente aos proprietários com 0% de comissão.</span>
+                <span class="font-bold text-slate-900 block text-sm">Oficinas Mecânicas e Auto Centers em <%= @city.name %> - <%= @state.acronym %></span>
+                <span>O portal reúne <strong><%= @city.companies.count %> opções de oficinas</strong> em <%= @city.name %>, conectando motoristas diretamente aos profissionais com 0% de comissão.</span>
               </div>
             </div>
             <a href="/<%= @state.slug %>/<%= @city.slug %>" class="shrink-0 bg-blue-900 hover:bg-blue-800 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl transition-all shadow-sm">
@@ -673,11 +672,11 @@
           </div>
         </div>
 
-        <% unless is_main_cnae_lodging %>
+        <% unless is_main_cnae_automotive %>
           <div class="bg-slate-50 border-l-4 border-blue-500 p-4 rounded-xl space-y-1 mt-4">
             <p class="text-xs text-slate-700 leading-relaxed font-medium">
               ℹ️ <strong>Sobre a listagem desta empresa:</strong><br>
-              Esta empresa possui em seu cadastro oficial de operações (CNAE Secundário) atividades relacionadas ao setor de hospedagem, hotéis, pousadas, hostels ou alojamentos.
+              Esta empresa possui em seu cadastro oficial de operações (CNAE Secundário) atividades relacionadas a serviços mecânicos, manutenção automotiva, auto elétrica ou reparação de veículos.
             </p>
           </div>
         <% end %>
@@ -775,8 +774,8 @@
               <div class="flex items-center gap-1 text-amber-400 text-base justify-center sm:justify-start">
                 <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
               </div>
-              <h3 class="font-extrabold text-slate-900 text-sm">Esta hospedagem ainda não possui avaliações</h3>
-              <p class="text-xs text-slate-600">Seja o primeiro a avaliar e compartilhe sua experiência com outros viajantes!</p>
+              <h3 class="font-extrabold text-slate-900 text-sm">Esta oficina ainda não possui avaliações</h3>
+              <p class="text-xs text-slate-600">Seja o primeiro a avaliar e compartilhe sua experiência com outros motoristas!</p>
             </div>
           </div>
         <% end %>
@@ -803,17 +802,17 @@
         <div id="review-form" class="pt-4 border-t border-slate-100 space-y-3">
           <h3 class="font-extrabold text-base text-slate-900 flex items-center gap-2">
             <span>✍️</span>
-            <span>⭐ Avaliar Hospedagem</span>
+            <span>⭐ Avaliar Oficina</span>
           </h3>
           <% if user_signed_in? && current_user.client? %>
             <% if current_user.reviewed?(@company) %>
               <div class="bg-emerald-50 border border-emerald-200 text-emerald-900 p-4 rounded-xl font-bold text-xs">
-                ✅ Você já enviou sua avaliação para esta hospedagem. Muito obrigado por colaborar com a comunidade!
+                ✅ Você já enviou sua avaliação para esta oficina mecânica. Muito obrigado por colaborar com a comunidade!
               </div>
             <% else %>
               <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl space-y-4">
-                <h3 class="font-extrabold text-base text-slate-900">Enviar Sua Avaliação de Hóspede</h3>
-                <p class="text-xs text-slate-600">Selecione sua nota de 1 a 5 estrelas e recomende os principais diferenciais da hospedagem.</p>
+                <h3 class="font-extrabold text-base text-slate-900">Enviar Sua Avaliação de Cliente</h3>
+                <p class="text-xs text-slate-600">Selecione sua nota de 1 a 5 estrelas e recomende os principais diferenciais da oficina.</p>
                 
                 <%= form_with url: company_reviews_path(@company), model: @new_review, local: true, class: "space-y-4" do |f| %>
                   <% if @new_review&.errors&.any? %>
@@ -870,8 +869,8 @@
             <% end %>
           <% elsif !user_signed_in? %>
             <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl text-center space-y-3">
-              <h3 class="font-extrabold text-base text-slate-900">Avaliar Esta Hospedagem</h3>
-              <p class="text-xs text-slate-600 max-w-md mx-auto">Faça login com sua conta de cliente para compartilhar sua experiência e avaliar o local.</p>
+              <h3 class="font-extrabold text-base text-slate-900">Avaliar Esta Oficina</h3>
+              <p class="text-xs text-slate-600 max-w-md mx-auto">Faça login com sua conta de cliente para compartilhar sua experiência e avaliar o atendimento.</p>
               <a href="<%= new_user_session_path %>" class="inline-block bg-[#006ce4] hover:bg-[#0052b4] text-white font-extrabold text-xs py-2.5 px-5 rounded-xl shadow transition-all">
                 🔒 Faça Login para Avaliar
               </a>
@@ -880,12 +879,12 @@
         </div>
       </div>
 
-      <!-- Section: Related Lodging Properties (Free Plan Only - Hidden on Premium Profiles) -->
+      <!-- Section: Related Automotive Workshops (Free Plan Only - Hidden on Premium Profiles) -->
       <% if @company.free_plan? && (@related_neighborhood_companies.any? || @related_city_companies.any? || @related_general_companies.any?) %>
-        <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6" id="hospedagens-relacionadas">
+        <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6" id="oficinas-relacionadas">
           <h2 class="text-xl font-black text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
-            <span>🏢</span>
-            <span>Outras Hospedagens em <%= @city.name %> - <%= @state.acronym %></span>
+            <span>🔧</span>
+            <span>Outras Oficinas em <%= @city.name %> - <%= @state.acronym %></span>
           </h2>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -901,7 +900,7 @@
                 </div>
 
                 <div class="flex items-center justify-between text-xs pt-2 border-t border-slate-200/60">
-                  <span class="text-emerald-700 font-extrabold text-[11px]">⚡ Reserva Direta</span>
+                  <span class="text-blue-700 font-extrabold text-[11px]">⚡ Orçamento Direto</span>
                   <span class="font-bold text-blue-600">Ver &rarr;</span>
                 </div>
               </a>
@@ -917,20 +916,20 @@
 
       <% if !@company.approved? && !@company.is_claimed? && can_claim_company? %>
         <!-- Owner Claim Box (Only shown if company is unclaimed / not approved) -->
-        <div class="bg-gradient-to-br from-blue-950 via-slate-900 to-blue-900 text-white rounded-2xl p-6 shadow-md border border-blue-800/40 space-y-4">
-          <div class="flex items-center gap-2 text-emerald-400 font-extrabold text-xs uppercase tracking-wider">
-            <span>🏨 Proprietário ou Gerente</span>
+        <div class="bg-gradient-to-br from-[#051d4d] via-slate-900 to-[#093892] text-white rounded-2xl p-6 shadow-md border border-blue-800/40 space-y-4">
+          <div class="flex items-center gap-2 text-[#00A1FC] font-extrabold text-xs uppercase tracking-wider">
+            <span>🔧 Proprietário ou Responsável</span>
           </div>
 
           <h3 class="text-lg font-black leading-snug text-white">
-            É o dono desta hospedagem?
+            É o proprietário desta oficina?
           </h3>
 
           <p class="text-xs text-blue-100 leading-relaxed">
-            Reivindique o perfil de <strong><%= trade_name_display %></strong> gratuitamente. Adicione seu WhatsApp oficial, atualize fotos e receba pedidos de reserva direto sem pagar comissão!
+            Reivindique o perfil de <strong><%= trade_name_display %></strong> gratuitamente. Adicione seu WhatsApp oficial, atualize fotos e receba pedidos de orçamento direto sem pagar comissão!
           </p>
 
-          <a href="<%= new_claim_path(company_id: @company.id) %>" class="block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs py-3 px-4 rounded-xl text-center shadow-md transition-all">
+          <a href="<%= new_claim_path(company_id: @company.id) %>" class="block w-full bg-[#00A1FC] hover:bg-sky-400 text-slate-950 font-black text-xs py-3 px-4 rounded-xl text-center shadow-md transition-all">
             ⚡ Reivindicar Perfil Gratuitamente
           </a>
         </div>

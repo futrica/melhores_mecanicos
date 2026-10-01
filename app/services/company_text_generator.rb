@@ -29,76 +29,76 @@ class CompanyTextGenerator
     months_str = calculate_months.to_s
 
     q1_templates = [
-      "Como funciona a reserva direta em <strong>#{trade_name}</strong> (CNPJ: <strong>#{formatted_cnpj}</strong>)?",
-      "Como contactar <strong>#{trade_name}</strong> (CNPJ <strong>#{formatted_cnpj}</strong>) para cotar diárias?",
-      "Quais as informações de cadastro e reserva de <strong>#{trade_name}</strong> (CNPJ <strong>#{formatted_cnpj}</strong>)?"
+      "Como solicitar orçamento mecânico direto em <strong>#{trade_name}</strong> (CNPJ: <strong>#{formatted_cnpj}</strong>)?",
+      "Como entrar em contato com <strong>#{trade_name}</strong> (CNPJ <strong>#{formatted_cnpj}</strong>) para agendar manutenção?",
+      "Quais as informações cadastrais e canais de contato de <strong>#{trade_name}</strong> (CNPJ <strong>#{formatted_cnpj}</strong>)?"
     ]
     q2_templates = [
-      "Quais as vantagens de reservar direto com a <strong>#{trade_name}</strong> em <strong>#{city_name}</strong>?",
-      "Por que vale a pena negociar direto com a recepção de <strong>#{trade_name}</strong>?",
-      "Como economizar em diárias se hospedando em <strong>#{trade_name}</strong>?"
+      "Quais as vantagens de falar direto com a oficina <strong>#{trade_name}</strong> em <strong>#{city_name}</strong>?",
+      "Por que vale a pena negociar o conserto do carro diretamente com a equipe de <strong>#{trade_name}</strong>?",
+      "Como obter o melhor preço em serviços mecânicos na <strong>#{trade_name}</strong>?"
     ]
     q3_templates = [
-      "Qual é o segmento de hospedagem e serviços de <strong>#{trade_name}</strong>?",
-      "O que oferece o estabelecimento <strong>#{trade_name}</strong> em <strong>#{city_name}</strong>?",
-      "Quais serviços de acomodação a <strong>#{trade_name}</strong> disponibiliza?"
+      "Quais são os serviços automotivos e especialidades de <strong>#{trade_name}</strong>?",
+      "Quais serviços de mecânica e manutenção a empresa <strong>#{trade_name}</strong> oferece em <strong>#{city_name}</strong>?",
+      "Quais especialidades automotivas a <strong>#{trade_name}</strong> disponibiliza para o seu veículo?"
     ]
     q4_templates = [
-      "Qual o endereço e como chegar em <strong>#{trade_name}</strong>?",
-      "Onde fica localizada a <strong>#{trade_name}</strong> em <strong>#{city_name}</strong>?",
+      "Qual o endereço e como chegar na oficina <strong>#{trade_name}</strong>?",
+      "Onde fica localizada a oficina mecânica <strong>#{trade_name}</strong> em <strong>#{city_name}</strong>?",
       "Qual a localização exata de <strong>#{trade_name}</strong> no bairro <strong>#{neighborhood_name}</strong>?"
     ]
     q5_templates = [
-      "Como falar no WhatsApp com a recepção de <strong>#{trade_name}</strong>?",
-      "Qual é o telefone de contato para reservas na <strong>#{trade_name}</strong>?",
-      "Como obter atendimento direto com a <strong>#{trade_name}</strong> em <strong>#{city_name}</strong>?"
+      "Como falar no WhatsApp com a equipe da oficina <strong>#{trade_name}</strong>?",
+      "Qual é o telefone de contato para tirar dúvidas sobre o carro na <strong>#{trade_name}</strong>?",
+      "Como obter atendimento mecânico rápido com a <strong>#{trade_name}</strong> em <strong>#{city_name}</strong>?"
     ]
     q6_templates = [
-      "Quem administra e responde pelo estabelecimento <strong>#{trade_name}</strong>?",
-      "Qual é o corpo gestor responsável por <strong>#{trade_name}</strong>?",
+      "Quem administra e responde tecnicamente pela empresa <strong>#{trade_name}</strong>?",
+      "Qual é o quadro gestor e sócios responsáveis por <strong>#{trade_name}</strong>?",
       "Quem faz a gestão do estabelecimento <strong>#{trade_name}</strong>?"
     ]
     q7_templates = [
-      "Há quanto tempo a <strong>#{trade_name}</strong> atende na região de <strong>#{city_name}</strong>?",
-      "Qual a tradição de atendimento de <strong>#{trade_name}</strong> em <strong>#{city_name}</strong>?",
-      "Desde quando a <strong>#{trade_name}</strong> opera em <strong>#{city_name}</strong>?"
+      "Há quanto tempo a <strong>#{trade_name}</strong> presta serviços automotivos em <strong>#{city_name}</strong>?",
+      "Qual a tradição de atendimento e experiência de <strong>#{trade_name}</strong> em <strong>#{city_name}</strong>?",
+      "Desde quando a oficina <strong>#{trade_name}</strong> opera em <strong>#{city_name}</strong>?"
     ]
     q8_templates = [
-      "A <strong>#{trade_name}</strong> encontra-se com cadastro regular ativo em <strong>#{city_name}</strong>?",
-      "Qual o status cadastral oficial de <strong>#{trade_name}</strong>?",
-      "A hospedagem <strong>#{trade_name}</strong> está em operação regular no turismo de <strong>#{city_name}</strong>?"
+      "A oficina <strong>#{trade_name}</strong> encontra-se com cadastro regular ativo em <strong>#{city_name}</strong>?",
+      "Qual a situação cadastral oficial de <strong>#{trade_name}</strong> na Receita Federal?",
+      "A empresa automotiva <strong>#{trade_name}</strong> está em operação regular no mercado de <strong>#{city_name}</strong>?"
     ]
     q9_templates = [
-      "Quais as garantias de transparência ao negociar com <strong>#{trade_name}</strong>?",
-      "Como conferir os dados oficiais de <strong>#{trade_name}</strong>?",
+      "Quais as garantias de transparência ao contratar os serviços de <strong>#{trade_name}</strong>?",
+      "Como conferir os dados oficiais e o CNPJ de <strong>#{trade_name}</strong>?",
       "Qual a razão social e enquadramento registrado de <strong>#{trade_name}</strong>?"
     ]
     q10_templates = [
-      "Como solicitar orçamento de diárias e checar disponibilidade em <strong>#{trade_name}</strong>?",
-      "Como consultar tarifas e datas disponíveis para <strong>#{trade_name}</strong>?",
-      "Qual o melhor caminho para reservar uma acomodação na <strong>#{trade_name}</strong>?"
+      "Como solicitar um orçamento mecânico ou agendar revisão em <strong>#{trade_name}</strong>?",
+      "Como consultar preços de peças e mão de obra na oficina <strong>#{trade_name}</strong>?",
+      "Qual o melhor caminho para agendar uma avaliação técnica na <strong>#{trade_name}</strong>?"
     ]
 
     faqs = [
       {
         question: q1_templates[@rng.rand(q1_templates.size)],
-        answer: "A <strong>#{trade_name}</strong> (razão social <strong>#{legal_name}</strong>) é um estabelecimento registrado no município de <strong>#{city_name}/#{state_acronym}</strong>#{@company.opening_date.present? ? ", atuando no mercado desde <strong>#{opening_date_str}</strong>" : ""}. Você pode negociar diárias diretamente com a recepção sem pagar taxas de intermediação."
+        answer: "A empresa <strong>#{trade_name}</strong> (razão social <strong>#{legal_name}</strong>) é uma oficina automotiva registrada no município de <strong>#{city_name}/#{state_acronym}</strong>#{@company.opening_date.present? ? ", atuando no setor desde <strong>#{opening_date_str}</strong>" : ""}. Você pode solicitar orçamentos e agendamentos diretamente pelo WhatsApp sem pagar taxas de intermediação."
       },
       {
         question: q2_templates[@rng.rand(q2_templates.size)],
-        answer: "Ao falar diretamente com a <strong>#{trade_name}</strong> por telefone ou WhatsApp, você economiza até 25% por diária em relação às plataformas online de intermediação (OTAs), negociando condições exclusivas diretamente com o estabelecimento."
+        answer: "Ao falar diretamente com a equipe da <strong>#{trade_name}</strong> por telefone ou WhatsApp, você negocia com transparência de preços, peças e prazos de entrega, sem taxas de intermediação de aplicativos terceiros."
       },
       {
         question: q3_templates[@rng.rand(q3_templates.size)],
-        answer: "O estabelecimento atua no segmento de <strong>#{cnae_main_text}</strong>, atendendo viajantes e hóspedes que buscam acomodação com atendimento personalizado em <strong>#{city_name} - #{state_acronym}</strong>."
+        answer: "O estabelecimento atua no segmento de <strong>#{cnae_main_text}</strong>, atendendo proprietários de veículos e motoristas que buscam manutenção preventiva e corretiva com diagnóstico de qualidade em <strong>#{city_name} - #{state_acronym}</strong>."
       },
       {
         question: q4_templates[@rng.rand(q4_templates.size)],
-        answer: "A <strong>#{trade_name}</strong> está localizada na <strong>#{street_text}, nº #{number_text}#{complement_text}</strong>, bairro <strong>#{neighborhood_name}</strong>, <strong>#{city_name} - #{state_acronym}</strong> (CEP <strong>#{zip_code_text}</strong>)."
+        answer: "A oficina <strong>#{trade_name}</strong> está localizada na <strong>#{street_text}, nº #{number_text}#{complement_text}</strong>, bairro <strong>#{neighborhood_name}</strong>, <strong>#{city_name} - #{state_acronym}</strong> (CEP <strong>#{zip_code_text}</strong>)."
       },
       {
         question: q5_templates[@rng.rand(q5_templates.size)],
-        answer: "Você pode clicar no botão 'WhatsApp Direto' ou revelar os telefones de contato nesta página para falar instantaneamente com a equipe da <strong>#{trade_name}</strong> em <strong>#{city_name}</strong>."
+        answer: "Você pode clicar no botão 'WhatsApp Direto' ou revelar os telefones de contato nesta página para falar instantaneamente com a equipe técnica da <strong>#{trade_name}</strong> em <strong>#{city_name}</strong>."
       },
       {
         question: q6_templates[@rng.rand(q6_templates.size)],
@@ -106,19 +106,19 @@ class CompanyTextGenerator
       },
       {
         question: q7_templates[@rng.rand(q7_templates.size)],
-        answer: @company.opening_date.present? ? "A hospedagem atua na região desde <strong>#{opening_date_str}</strong>, acumulando cerca de <strong>#{years_str} ano(s)</strong>#{months_str != '0' ? " e <strong>#{months_str} mês(es)</strong>" : ""} de receptivo." : "O estabelecimento possui cadastro ativo e regular no setor de hospedagem em <strong>#{city_name}</strong>."
+        answer: @company.opening_date.present? ? "A empresa atua no setor automotivo regional desde <strong>#{opening_date_str}</strong>, acumulando cerca de <strong>#{years_str} ano(s)</strong>#{months_str != '0' ? " e <strong>#{months_str} mês(es)</strong>" : ""} de experiência em manutenção veicular." : "O estabelecimento possui cadastro ativo e regular no setor de serviços mecânicos em <strong>#{city_name}</strong>."
       },
       {
         question: q8_templates[@rng.rand(q8_templates.size)],
-        answer: "A situação cadastral da empresa perante os órgãos oficiais é <strong>#{status_text}</strong>, confirmando sua operação regular no mercado de <strong>#{city_name}</strong>."
+        answer: "A situação cadastral da empresa perante a Receita Federal é <strong>#{status_text}</strong>, confirmando sua operação regular e idônea no mercado de <strong>#{city_name}</strong>."
       },
       {
         question: q9_templates[@rng.rand(q9_templates.size)],
-        answer: "O estabelecimento opera sob a razão social <strong>#{legal_name}</strong> (CNPJ <strong>#{formatted_cnpj}</strong>) com porte registrado de <strong>#{company_size_text}</strong> e capital social declarado de <strong>#{capital_social_text}</strong>, garantindo total transparência ao viajante."
+        answer: "O estabelecimento opera sob a razão social <strong>#{legal_name}</strong> (CNPJ <strong>#{formatted_cnpj}</strong>) com porte registrado de <strong>#{company_size_text}</strong> e capital social declarado de <strong>#{capital_social_text}</strong>, garantindo total conformidade legal aos clientes."
       },
       {
         question: q10_templates[@rng.rand(q10_templates.size)],
-        answer: "Basta clicar nos botões de contato nesta página para abrir conversa direta no WhatsApp ou ligar para a recepção do estabelecimento em <strong>#{city_name}</strong> sem pagar comissões adicionais."
+        answer: "Basta clicar nos botões de contato nesta página para abrir conversa direta no WhatsApp ou ligar para a oficina em <strong>#{city_name}</strong> sem taxas de intermediação."
       }
     ]
 
@@ -130,11 +130,11 @@ class CompanyTextGenerator
   def block_foundation
     if @company.opening_date.blank?
       templates = [
-        "A hospedagem %{company_name} é um estabelecimento ativo de acomodação na cidade de %{city} - %{state}.",
-        "Com excelente localização em %{city}, a %{company_name} recebe viajantes e hóspedes buscando conforto e bom atendimento.",
-        "Sediada no município de %{city}/%{state}, a %{company_name} oferece opções de acomodação para quem visita a região.",
-        "A %{company_name} opera na cidade de %{city} mantendo o compromisso de atendimento direto aos hóspedes.",
-        "Com registro regularizado perante os órgãos competentes, a %{company_name} atua no segmento de hospedagens em %{city} - %{state}."
+        "A oficina automotiva %{company_name} é um estabelecimento ativo de serviços mecânicos na cidade de %{city} - %{state}.",
+        "Com excelente localização em %{city}, a %{company_name} atende motoristas e proprietários de veículos buscando diagnósticos precisos e bom atendimento.",
+        "Sediada no município de %{city}/%{state}, a %{company_name} oferece serviços especializados de manutenção veicular.",
+        "A %{company_name} opera na cidade de %{city} mantendo o compromisso de atendimento técnico transparente e ágil.",
+        "Com registro regularizado perante os órgãos competentes, a %{company_name} atua no segmento de reparação automotiva em %{city} - %{state}."
       ]
 
       index = @rng.rand(templates.size)
@@ -145,16 +145,16 @@ class CompanyTextGenerator
       )
     else
       templates = [
-        "A %{company_name} iniciou suas atividades em %{opening_date}, contando com mais de %{years} de tradição em receptivo na região.",
-        "Com fundação em %{opening_date}, a %{company_name} vem acumulando %{years} de experiência no atendimento aos hóspedes.",
-        "Aberta formalmente em %{opening_date}, a %{company_name} acumula %{years} e %{months} de história em %{city}.",
-        "Em %{year_founded} (precisamente em %{opening_date}), a %{company_name} deu início aos seus trabalhos na área de hospedagem.",
-        "Registrada e inaugurada em %{opening_date}, a %{company_name} possui uma trajetória de %{years} no setor hoteleiro.",
-        "A %{company_name} foi fundada no dia %{opening_date} e soma hoje %{years} de atuação ativa.",
-        "Desde o início de suas operações em %{opening_date}, a %{company_name} consolida sua presença em %{city} há %{years}.",
-        "Na data de %{opening_date}, foi oficialmente aberta a %{company_name}, completando %{years} de atendimento.",
-        "Estabelecida em %{year_founded} (em %{opening_date}), a %{company_name} preserva %{years} de receptivo aos visitantes.",
-        "Com início das atividades datado em %{opening_date}, a %{company_name} soma %{years} de constante evolução no turismo local."
+        "A %{company_name} iniciou suas atividades em %{opening_date}, contando com mais de %{years} de tradição em serviços mecânicos na região.",
+        "Com fundação em %{opening_date}, a %{company_name} vem acumulando %{years} de experiência técnica no setor automotivo.",
+        "Aberta formalmente em %{opening_date}, a %{company_name} acumula %{years} e %{months} de história e dedicação em %{city}.",
+        "Em %{year_founded} (precisamente em %{opening_date}), a %{company_name} deu início aos seus trabalhos na área de reparação automotiva.",
+        "Registrada e inaugurada em %{opening_date}, a %{company_name} possui uma trajetória consolidada de %{years} em manutenção de veículos.",
+        "A %{company_name} foi fundada no dia %{opening_date} e soma hoje %{years} de atuação ativa no mercado mecânico.",
+        "Desde o início de suas operações em %{opening_date}, a %{company_name} consolida sua presença automotiva em %{city} há %{years}.",
+        "Na data de %{opening_date}, foi oficialmente aberta a %{company_name}, completando %{years} de atendimento qualificado a motoristas.",
+        "Estabelecida em %{year_founded} (em %{opening_date}), a %{company_name} preserva %{years} de serviços técnicos dedicados aos clientes.",
+        "Com início das atividades datado em %{opening_date}, a %{company_name} soma %{years} de constante evolução no segmento automotivo regional."
       ]
 
       index = @rng.rand(templates.size)
@@ -172,15 +172,15 @@ class CompanyTextGenerator
 
   def block_location
     templates = [
-      "Localizada na %{street}, nº %{number}, no bairro %{neighborhood} em %{city} - %{state} (CEP %{zip_code}), oferece fácil acesso para os viajantes.",
+      "Localizada na %{street}, nº %{number}, no bairro %{neighborhood} em %{city} - %{state} (CEP %{zip_code}), oferece fácil acesso para os motoristas da região.",
       "A estrutura da %{company_name} encontra-se situada na %{street}, nº %{number}, bairro %{neighborhood}, no município de %{city}/%{state}.",
-      "Com endereço registrado na %{street}, nº %{number} (%{neighborhood}, %{city} - %{state}), posiciona-se estrategicamente para receber visitantes.",
-      "Situada no bairro %{neighborhood}, na %{street}, nº %{number} em %{city} (%{state}), proporciona conveniente localização para sua estadia.",
+      "Com endereço registrado na %{street}, nº %{number} (%{neighborhood}, %{city} - %{state}), posiciona-se estrategicamente para receber veículos com agilidade.",
+      "Situada no bairro %{neighborhood}, na %{street}, nº %{number} em %{city} (%{state}), proporciona conveniente localização para revisões e reparos.",
       "Instalada no município de %{city} - %{state}, a %{company_name} está localizada na %{street}, nº %{number}, %{neighborhood}.",
-      "A estrutura da hospedagem fica no endereço %{street}, nº %{number} - %{neighborhood}, na cidade de %{city} - %{state}, sob o CEP %{zip_code}.",
-      "Operando em %{city}/%{state}, o estabelecimento fica na %{street}, nº %{number}, no bairro %{neighborhood}.",
-      "Encontrada na %{street}, nº %{number} em %{city} - %{state}, a %{company_name} atende turistas e visitantes no bairro %{neighborhood} e arredores.",
-      "A hospedagem está sediada em %{city} - %{state}, no bairro %{neighborhood}, na %{street}, nº %{number}.",
+      "A oficina fica no endereço %{street}, nº %{number} - %{neighborhood}, na cidade de %{city} - %{state}, sob o CEP %{zip_code}.",
+      "Operando em %{city}/%{state}, o centro automotivo fica na %{street}, nº %{number}, no bairro %{neighborhood}.",
+      "Encontrada na %{street}, nº %{number} em %{city} - %{state}, a %{company_name} atende clientes no bairro %{neighborhood} e regiões vizinhas.",
+      "A oficina está sediada em %{city} - %{state}, no bairro %{neighborhood}, na %{street}, nº %{number}.",
       "Estratégica em %{city}/%{state}, a unidade está fixa na %{street}, nº %{number} (bairro %{neighborhood}, CEP %{zip_code})."
     ]
 
@@ -198,15 +198,15 @@ class CompanyTextGenerator
 
   def block_cnae
     templates = [
-      "Sua atividade econômica principal, conforme cadastro na Receita Federal, é %{cnae_main}%{cnae_secondaries}.",
-      "O estabelecimento é cadastrado no segmento de %{cnae_main}, atuando com foco em conforto e hospitalidade%{cnae_secondaries}.",
-      "Tendo como atividade registrada o setor de %{cnae_main}, a %{company_name} oferece serviços de receptivo%{cnae_secondaries}.",
-      "O campo de atuação prioritário da propriedade contempla %{cnae_main}%{cnae_secondaries}.",
-      "Classificada sob o CNAE principal %{cnae_main}, a organização integra a rede de serviços de hospedagem da região%{cnae_secondaries}.",
-      "Com registro para execução de %{cnae_main}, a empresa atende padrões cadastrais oficiais%{cnae_secondaries}.",
+      "Sua atividade econômica principal, conforme cadastro oficial na Receita Federal, é %{cnae_main}%{cnae_secondaries}.",
+      "O estabelecimento é cadastrado no segmento de %{cnae_main}, atuando com foco em precisão técnica e segurança veicular%{cnae_secondaries}.",
+      "Tendo como atividade registrada o setor de %{cnae_main}, a %{company_name} oferece serviços de manutenção automotiva%{cnae_secondaries}.",
+      "O campo de atuação prioritário da empresa contempla %{cnae_main}%{cnae_secondaries}.",
+      "Classificada sob o CNAE principal %{cnae_main}, a organização integra a rede de serviços automotivos da região%{cnae_secondaries}.",
+      "Com registro para execução de %{cnae_main}, a empresa atende rigorosamente aos padrões cadastrais oficiais%{cnae_secondaries}.",
       "O ramo mercantil principal da %{company_name} abrange %{cnae_main}%{cnae_secondaries}.",
-      "Dedicada ao setor de %{cnae_main}, a acomodação contribui para o fluxo turístico e de viagens em %{city}%{cnae_secondaries}.",
-      "Com habilitação cadastral em %{cnae_main}, destaca-se no setor de turismo e diárias%{cnae_secondaries}.",
+      "Dedicada ao setor de %{cnae_main}, a oficina contribui para a mobilidade e segurança dos veículos em %{city}%{cnae_secondaries}.",
+      "Com habilitação cadastral em %{cnae_main}, destaca-se no setor de reparação e cuidados mecânicos%{cnae_secondaries}.",
       "O registro principal do estabelecimento está centrado em %{cnae_main}%{cnae_secondaries}."
     ]
 
@@ -269,16 +269,16 @@ class CompanyTextGenerator
 
   def block_cta
     templates = [
-      "Para consultar disponibilidade e negociar diárias sem comissão na cidade de %{city}, entre em contato via WhatsApp ou telefone diretamente com a recepção.",
-      "Deseja reservar com o menor preço em %{city}? Fale direto com a equipe da %{company_name} através dos contatos exibidos no portal.",
-      "Consulte diárias e horários de check-in na %{company_name} em %{city} sem pagar taxas para plataformas intermediárias.",
-      "Para obter informações sobre acomodações e valores na cidade de %{city}, acesse os canais de contato direto da %{company_name}.",
-      "A equipe da %{company_name} recebe viajantes na cidade de %{city} e região oferecendo atendimento direto e transparente.",
-      "Dúvidas sobre reservas em %{city}? Fale com a recepção da %{company_name} pelo WhatsApp Direto.",
-      "Garanta o melhor valor na sua estadia em %{city} conectando-se diretamente com a %{company_name}.",
-      "Para reservas diretas e suporte em %{city}, acione o atendimento telefônico ou WhatsApp da %{company_name}.",
-      "A %{company_name} disponibiliza atendimento direto aos hóspedes no município de %{city}.",
-      "Conecte-se com a %{company_name} em %{city} e faça sua reserva direta sem taxa de intermediação."
+      "Para solicitar um orçamento prévio ou tirar dúvidas sobre o seu veículo na cidade de %{city}, entre em contato via WhatsApp ou telefone diretamente com a oficina.",
+      "Precisa de manutenção com preço justo e transparência em %{city}? Fale direto com a equipe da %{company_name} através dos contatos exibidos no portal.",
+      "Consulte prazos e valores de serviços mecânicos na %{company_name} em %{city} sem pagar taxas para intermediários.",
+      "Para obter informações sobre diagnósticos automotivos e serviços em %{city}, acesse os canais de contato direto da %{company_name}.",
+      "A equipe da %{company_name} atende clientes na cidade de %{city} e região oferecendo atendimento técnico direto e confiável.",
+      "Dúvidas sobre o conserto do seu carro em %{city}? Fale com a equipe da %{company_name} pelo WhatsApp Direto.",
+      "Garanta um serviço de confiança e orçamento transparente para seu carro em %{city} conectando-se diretamente com a %{company_name}.",
+      "Para agendamentos e suporte automotivo em %{city}, acione o atendimento telefônico ou WhatsApp da %{company_name}.",
+      "A %{company_name} disponibiliza atendimento direto aos motoristas no município de %{city}.",
+      "Conecte-se com a %{company_name} em %{city} e solicite seu orçamento mecânico direto sem comissões."
     ]
 
     index = @rng.rand(templates.size)

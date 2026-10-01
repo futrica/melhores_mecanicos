@@ -28,9 +28,9 @@ RSpec.describe UserMailer, type: :mailer do
     it "renders the client welcome email successfully" do
       mail = UserMailer.client_welcome(client_user)
 
-      expect(mail.subject).to include("Bem-vindo(a) ao Hospedagem Direta, João!")
+      expect(mail.subject).to include("Bem-vindo(a) ao Melhores Mecânicos, João!")
       expect(mail.to).to eq([ "cliente@teste.com" ])
-      expect(mail.from).to eq([ "contato@hospedagemdireta.com.br" ])
+      expect(mail.from).to eq([ "contato@melhoresmecanicos.com.br" ])
       expect(mail.html_part.body.decoded).to include("João")
       expect(mail.html_part.body.decoded).to include("sem intermediários e sem taxas de comissão")
     end
@@ -40,9 +40,9 @@ RSpec.describe UserMailer, type: :mailer do
     it "renders the company welcome email successfully" do
       mail = UserMailer.company_welcome(company_user)
 
-      expect(mail.subject).to include("Bem-vindo(a) ao Hospedagem Direta! Gerencie seu perfil de hospedagem")
+      expect(mail.subject).to include("Bem-vindo(a) ao Melhores Mecânicos! Gerencie seu perfil de oficina")
       expect(mail.to).to eq([ "empresa@teste.com" ])
-      expect(mail.from).to eq([ "contato@hospedagemdireta.com.br" ])
+      expect(mail.from).to eq([ "contato@melhoresmecanicos.com.br" ])
       expect(mail.html_part.body.decoded).to include("Maria")
       expect(mail.html_part.body.decoded).to include("Acessar Meu Painel de Empresa")
     end
@@ -54,10 +54,10 @@ RSpec.describe UserMailer, type: :mailer do
         state: state,
         city: city,
         cnpj: "11222333000199",
-        legal_name: "Pousada Teste LTDA",
-        trade_name: "Pousada Teste",
-        email: "pousada@teste.com",
-        cnae_principal: "5510801",
+        legal_name: "Auto Mecânica Teste LTDA",
+        trade_name: "Oficina Teste",
+        email: "oficina@teste.com",
+        cnae_principal: "4520-0/01",
         status: "Ativa",
         user: company_user
       )
@@ -66,13 +66,13 @@ RSpec.describe UserMailer, type: :mailer do
     it "renders the company approved email successfully with bcc to jmfutrica@gmail.com" do
       mail = UserMailer.company_approved(company)
 
-      expect(mail.subject).to eq("🎉 Seu perfil no Hospedagem Direta foi aprovado!")
+      expect(mail.subject).to eq("🎉 Seu perfil no Melhores Mecânicos foi aprovado!")
       expect(mail.to).to eq([ "empresa@teste.com" ])
       expect(mail.bcc).to eq([ "jmfutrica@gmail.com" ])
-      expect(mail.from).to eq([ "contato@hospedagemdireta.com.br" ])
+      expect(mail.from).to eq([ "contato@melhoresmecanicos.com.br" ])
       body_content = (mail.html_part&.body || mail.body).decoded
       expect(body_content).to include("Maria")
-      expect(body_content).to include("Pousada Teste")
+      expect(body_content).to include("Oficina Teste")
       expect(body_content).to include("foram aprovadas com sucesso")
     end
   end

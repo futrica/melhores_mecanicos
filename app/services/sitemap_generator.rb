@@ -27,7 +27,7 @@ class SitemapGenerator
     sitemap_dir.join("sitemap_index.xml")
   end
 
-  def self.generate!(base_url: "https://hospedagemdireta.com.br", skip_existing: true)
+  def self.generate!(base_url: "https://www.melhoresmecanicos.com.br", skip_existing: true)
     FileUtils.mkdir_p(sitemap_dir)
     sub_sitemap_files = []
 
@@ -78,7 +78,7 @@ class SitemapGenerator
     puts "✅ Sitemap gerado com sucesso: #{sorted_sub_sitemaps.size} sub-sitemaps reordenados por prioridade econômica."
   end
 
-  def self.reindex_by_priority!(base_url: "https://hospedagemdireta.com.br")
+  def self.reindex_by_priority!(base_url: "https://www.melhoresmecanicos.com.br")
     FileUtils.mkdir_p(sitemap_dir)
     all_files = Dir.glob(sitemap_dir.join("*.xml")).map { |f| "sitemaps/#{File.basename(f)}" }
     sorted_files = sort_sitemap_files_by_region(all_files)

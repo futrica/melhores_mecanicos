@@ -13,12 +13,12 @@ RSpec.describe "Admin Top Companies & Outreach", type: :request do
 
   let!(:company_high_views) do
     Company.create!(
-      trade_name: "Pousada Das Flores",
-      legal_name: "Pousada Das Flores LTDA",
+      trade_name: "Oficina Das Flores",
+      legal_name: "Oficina Das Flores LTDA",
       cnpj: "11111111000199",
-      email: "contato@pousadaflores.com.br",
+      email: "contato@oficinaflores.com.br",
       status: "ATIVA",
-      cnae_principal: "5510801",
+      cnae_principal: "4520-0/01",
       city: city,
       state: state,
       views_count: 100
@@ -27,19 +27,19 @@ RSpec.describe "Admin Top Companies & Outreach", type: :request do
 
   let!(:company_opted_out) do
     comp = Company.create!(
-      trade_name: "Hotel Recusado",
-      legal_name: "Hotel Recusado LTDA",
+      trade_name: "Oficina Recusada",
+      legal_name: "Oficina Recusada LTDA",
       cnpj: "33333333000177",
-      email: "recusado@hotel.com.br",
+      email: "recusado@oficina.com.br",
       status: "ATIVA",
-      cnae_principal: "5510801",
+      cnae_principal: "4520-0/01",
       city: city,
       state: state,
       views_count: 50
     )
     CompanyEmailOptOut.create!(
       company: comp,
-      email: "recusado@hotel.com.br",
+      email: "recusado@oficina.com.br",
       reason: "not_interested",
       feedback: "Não quero receber e-mails de propaganda"
     )
@@ -57,7 +57,7 @@ RSpec.describe "Admin Top Companies & Outreach", type: :request do
       get app_admin_top_companies_path
       expect(response).to have_http_status(:success)
       expect(response.body).to include("Empresas Mais Acessadas")
-      expect(response.body).to include("Pousada Das Flores")
+      expect(response.body).to include("Oficina Das Flores")
       expect(response.body).to include("100")
       expect(response.body).to include("Guaratinguetá / SP")
     end
@@ -65,7 +65,7 @@ RSpec.describe "Admin Top Companies & Outreach", type: :request do
     it "filters by email_status" do
       get app_admin_top_companies_path(email_status: "not_sent")
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Pousada Das Flores")
+      expect(response.body).to include("Oficina Das Flores")
     end
   end
 
@@ -73,7 +73,7 @@ RSpec.describe "Admin Top Companies & Outreach", type: :request do
     it "renders company details and outreach history" do
       get app_admin_top_company_path(company_high_views)
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Pousada Das Flores")
+      expect(response.body).to include("Oficina Das Flores")
       expect(response.body).to include("Histórico de E-mails Enviados")
     end
 
@@ -108,7 +108,7 @@ RSpec.describe "Admin Top Companies & Outreach", type: :request do
       DevelopmentMailInterceptor.delivering_email(mail) if defined?(DevelopmentMailInterceptor)
 
       expect(mail.to).to eq([ "jmfutrica@gmail.com" ])
-      expect(mail.subject).to include("[DEV -> contato@pousadaflores.com.br]")
+      expect(mail.subject).to include("[DEV -> contato@oficinaflores.com.br]")
     end
   end
 end

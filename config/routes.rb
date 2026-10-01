@@ -4,9 +4,9 @@ Rails.application.routes.draw do
   # ==========================================
   # 301 SEO Redirect for www Domain
   # ==========================================
-  constraints ->(req) { req.host == "www.hospedagemdireta.com.br" } do
-    match "*path", to: redirect(status: 301) { |_params, req| "https://hospedagemdireta.com.br#{req.fullpath}" }, via: :all
-    root to: redirect("https://hospedagemdireta.com.br/", status: 301), as: nil
+  constraints ->(req) { req.host == "www.melhoresmecanicos.com.br" } do
+    match "*path", to: redirect(status: 301) { |_params, req| "https://melhoresmecanicos.com.br#{req.fullpath}" }, via: :all
+    root to: redirect("https://melhoresmecanicos.com.br/", status: 301), as: nil
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

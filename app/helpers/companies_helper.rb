@@ -80,36 +80,4 @@ module CompaniesHelper
       { score: nil, label: "Ainda não avaliado", count: 0, has_reviews: false }
     end
   end
-
-  def booking_estimated_price(company)
-    seed = company.id
-    140 + ((seed * 43) % 280)
-  end
-
-  def booking_room_type(company)
-    cat = company.categories.first&.name || "Hospedagem"
-    case cat
-    when /pousada/i
-      "Quarto Duplo Standard com Ar-Condicionado"
-    when /hotel/i, /apart/i
-      "Apartamento Superior com Vista Cidade"
-    when /hostel/i, /albergue/i
-      "Cama em Quarto Compartilhado Climatizado"
-    when /chal/i
-      "Chalé Privativo com Varanda e Rede"
-    when /resort/i
-      "Suíte Deluxe King com Vista para o Mar"
-    else
-      "Acomodação Standard com Café da Manhã"
-    end
-  end
-
-  def booking_bed_info(company)
-    case company.id % 4
-    when 0 then "2 camas (1 solteiro, 1 casal)"
-    when 1 then "1 cama de casal grande"
-    when 2 then "1 cama king-size"
-    else "2 camas de solteiro"
-    end
-  end
 end

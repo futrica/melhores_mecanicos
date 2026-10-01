@@ -6,7 +6,7 @@ RSpec.describe "Search and Autocomplete APIs", type: :request do
   let!(:city) { City.find_by(slug: 'guaratingueta', state: state) || City.create!(state: state, name: 'Guaratinguetá', ibge_code: '3518404') }
   let!(:neighborhood) { Neighborhood.find_by(slug: 'centro', city: city) || Neighborhood.create!(city: city, name: 'Centro') }
   let!(:company) { Company.find_by!(cnpj: '12345678000101') }
-  let!(:category) { Category.find_by(name: 'Hotéis e Pousadas') || Category.create!(name: 'Hotéis e Pousadas') }
+  let!(:category) { Category.find_by(name: 'Mecânica Geral & Reparação') || Category.create!(name: 'Mecânica Geral & Reparação') }
 
   before do
     company.categories << category unless company.categories.include?(category)
@@ -23,14 +23,14 @@ RSpec.describe "Search and Autocomplete APIs", type: :request do
     it "filters results by state" do
       get search_path(state_id: state.id)
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Hospedagens em São Paulo")
-      expect(response.body).to include("Pousada do Zé")
+      expect(response.body).to include("Oficinas Mecânicas em São Paulo")
+      expect(response.body).to include("Auto Mecânica do Zé")
     end
 
     it "filters results by category" do
-      get search_path(state_id: state.id, category: "hoteis")
+      get search_path(state_id: state.id, category: "mecanica")
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Pousada do Zé")
+      expect(response.body).to include("Auto Mecânica do Zé")
     end
 
     it "returns no results for mismatching query term" do
@@ -43,14 +43,14 @@ RSpec.describe "Search and Autocomplete APIs", type: :request do
       # Company has phone_1 loaded in fixtures
       get search_path(state_id: state.id, only_phone: "1")
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Pousada do Zé")
+      expect(response.body).to include("Auto Mecânica do Zé")
     end
 
     it "filters by only_email status" do
       # Company has email loaded in fixtures
       get search_path(state_id: state.id, only_email: "1")
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Pousada do Zé")
+      expect(response.body).to include("Auto Mecânica do Zé")
     end
 
     it "filters by multiple neighborhood ids and tracks searches_count" do
@@ -58,7 +58,7 @@ RSpec.describe "Search and Autocomplete APIs", type: :request do
         get search_path(state_id: state.id, neighborhood_ids: [ neighborhood.id ])
       }.to have_enqueued_job(TrackMetricJob).at_least(:once)
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Pousada do Zé")
+      expect(response.body).to include("Auto Mecânica do Zé")
     end
 
     it "filters by city_ids and tracks searches_count" do
@@ -82,7 +82,7 @@ RSpec.describe "Search and Autocomplete APIs", type: :request do
         legal_name: "Newer Store Ltda",
         trade_name: "Newer Store",
         slug: "newer-store-99999999000199",
-        cnae_principal: "5510-8/01",
+        cnae_principal: "4520-0/01",
         status: "Ativa",
         street: "Rua Nova",
         number: "10",
@@ -97,13 +97,13 @@ RSpec.describe "Search and Autocomplete APIs", type: :request do
         updated_at: Time.current + 1.hour
       )
 
-      # Newer store should appear before Pousada do Zé
+      # Newer store should appear before Auto Mecânica do Zé
       get search_path(state_id: state.id)
       expect(response).to have_http_status(:success)
 
       # Newer store appears first in body
       newer_index = response.body.index("Newer Store")
-      ze_index = response.body.index("Pousada do Zé")
+      ze_index = response.body.index("Auto Mecânica do Zé")
 
       expect(newer_index).to be < ze_index
     end

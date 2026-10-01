@@ -20,12 +20,12 @@
     <!-- Main Booking Bar Grid -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
       
-      <!-- Query / Hotel Name Input -->
+      <!-- Query / Mechanic Name or Service Input -->
       <div class="md:col-span-4 space-y-1">
-        <label for="search-q" class="block text-xs font-bold uppercase tracking-wider text-slate-500">Para onde você vai?</label>
+        <label for="search-q" class="block text-xs font-bold uppercase tracking-wider text-slate-600">Oficina ou Serviço</label>
         <div class="relative">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pointer-events-none text-base">🔍</span>
-          <input type="text" name="q" id="search-q" value="<%= params[:q] %>" placeholder="Nome da hospedagem, pousada ou praia..." class="w-full pl-10 pr-3 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-600 focus:border-blue-600 focus:bg-white transition-all placeholder:text-slate-400">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pointer-events-none text-base">🔧</span>
+          <input type="text" name="q" id="search-q" value="<%= params[:q] %>" placeholder="Ex: Oficina Mecânica Silva, Freios, Injeção..." class="w-full pl-10 pr-3 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-[#00A1FC] focus:border-[#00A1FC] focus:bg-white transition-all placeholder:text-slate-400">
         </div>
       </div>
 
@@ -35,17 +35,17 @@
         <div class="relative" data-search-form-target="stateDropdown">
           <input type="hidden" name="state_id" id="search-state" required data-search-form-target="stateInput" value="<%= params[:state_id] %>">
           
-          <button type="button" class="w-full text-left pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 hover:bg-slate-100 focus:ring-2 focus:ring-blue-600 transition-all truncate" data-search-form-target="stateSelectBtn" data-action="click->search-form#toggleStateDropdown">
+          <button type="button" class="w-full text-left pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 hover:bg-slate-100 focus:ring-2 focus:ring-[#00A1FC] transition-all truncate" data-search-form-target="stateSelectBtn" data-action="click->search-form#toggleStateDropdown">
             <%= state_btn_text %>
           </button>
           <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pointer-events-none text-base">📍</span>
 
           <!-- State Dropdown content -->
           <div class="city-dropdown-content-pane absolute left-0 right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 z-50 p-2 space-y-2">
-            <input type="text" class="w-full px-3 py-2 text-xs bg-slate-100 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Filtrar estado..." data-search-form-target="stateSearch" data-action="input->search-form#filterStates">
+            <input type="text" class="w-full px-3 py-2 text-xs bg-slate-100 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A1FC]" placeholder="Filtrar estado..." data-search-form-target="stateSearch" data-action="input->search-form#filterStates">
             <div class="max-h-48 overflow-y-auto space-y-1 divide-y divide-slate-100" data-search-form-target="stateList">
               <% @states&.each do |state| %>
-                <div class="state-option px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-900 cursor-pointer rounded-lg transition-colors" data-id="<%= state.id %>" data-name="<%= state.name %> (<%= state.acronym %>)" data-action="click->search-form#selectState">
+                <div class="state-option px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#093892] cursor-pointer rounded-lg transition-colors" data-id="<%= state.id %>" data-name="<%= state.name %> (<%= state.acronym %>)" data-action="click->search-form#selectState">
                   <%= state.name %> (<%= state.acronym %>)
                 </div>
               <% end %>
@@ -56,16 +56,16 @@
 
       <!-- City Single Select Dropdown -->
       <div class="md:col-span-3 space-y-1 relative">
-        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">Cidade</label>
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Cidade</label>
         <div class="relative" data-search-form-target="cityDropdown">
           <input type="hidden" name="city_id" id="search-city" data-search-form-target="cityInput" value="<%= preselected_city_id %>">
           
-          <button type="button" class="w-full text-left pl-3 pr-8 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 hover:bg-slate-100 disabled:opacity-60 disabled:cursor-not-allowed focus:ring-2 focus:ring-blue-600 transition-all truncate" data-search-form-target="citySelectBtn" data-action="click->search-form#toggleCityDropdown" disabled>
+          <button type="button" class="w-full text-left pl-3 pr-8 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 hover:bg-slate-100 disabled:opacity-60 disabled:cursor-not-allowed focus:ring-2 focus:ring-[#00A1FC] transition-all truncate" data-search-form-target="citySelectBtn" data-action="click->search-form#toggleCityDropdown" disabled>
             Selecionar cidade...
           </button>
 
           <div class="city-dropdown-content-pane absolute left-0 right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 z-50 p-2 space-y-2">
-            <input type="text" class="w-full px-3 py-2 text-xs bg-slate-100 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Filtrar cidade..." data-search-form-target="citySearch" data-action="input->search-form#filterCities">
+            <input type="text" class="w-full px-3 py-2 text-xs bg-slate-100 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A1FC]" placeholder="Filtrar cidade..." data-search-form-target="citySearch" data-action="input->search-form#filterCities">
             <div class="max-h-48 overflow-y-auto space-y-1 divide-y divide-slate-100 text-xs" data-search-form-target="cityList">
               <!-- Dynamically populated -->
             </div>
@@ -75,15 +75,15 @@
 
       <!-- Neighborhood Select Dropdown -->
       <div class="md:col-span-3 space-y-1 relative">
-        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">Bairro / Região</label>
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Bairro / Região</label>
         <div class="relative" data-search-form-target="neighborhoodDropdown">
-          <button type="button" class="w-full text-left pl-3 pr-8 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 hover:bg-slate-100 disabled:opacity-60 disabled:cursor-not-allowed focus:ring-2 focus:ring-blue-600 transition-all truncate" data-search-form-target="neighborhoodSelectBtn" data-action="click->search-form#toggleNeighborhoodDropdown" disabled>
+          <button type="button" class="w-full text-left pl-3 pr-8 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 hover:bg-slate-100 disabled:opacity-60 disabled:cursor-not-allowed focus:ring-2 focus:ring-[#00A1FC] transition-all truncate" data-search-form-target="neighborhoodSelectBtn" data-action="click->search-form#toggleNeighborhoodDropdown" disabled>
             Selecionar bairros...
           </button>
-          <span class="hidden absolute right-2 top-1/2 -translate-y-1/2 bg-blue-600 text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center" data-search-form-target="neighborhoodCount">0</span>
+          <span class="hidden absolute right-2 top-1/2 -translate-y-1/2 bg-[#093892] text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center" data-search-form-target="neighborhoodCount">0</span>
 
           <div class="city-dropdown-content-pane absolute left-0 right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 z-50 p-2 space-y-2">
-            <input type="text" class="w-full px-3 py-2 text-xs bg-slate-100 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Filtrar bairro..." data-search-form-target="neighborhoodSearch" data-action="input->search-form#filterNeighborhoods">
+            <input type="text" class="w-full px-3 py-2 text-xs bg-slate-100 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A1FC]" placeholder="Filtrar bairro..." data-search-form-target="neighborhoodSearch" data-action="input->search-form#filterNeighborhoods">
             <div class="max-h-48 overflow-y-auto space-y-1 text-xs" data-search-form-target="neighborhoodList">
               <!-- Dynamically populated -->
             </div>
@@ -93,33 +93,15 @@
 
     </div>
 
-    <!-- Submit & Filters Action Row -->
-    <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-      
-      <!-- Direct Contact Checkboxes -->
-      <div class="flex items-center gap-4 text-xs font-semibold text-slate-700">
-        <label class="flex items-center gap-2 cursor-pointer hover:text-blue-900">
-          <input type="checkbox" name="only_phone" value="1" <%= params[:only_phone] == '1' ? 'checked' : '' %> class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
-          <span>📲 WhatsApp / Tel Direto</span>
-        </label>
-
-        <label class="flex items-center gap-2 cursor-pointer hover:text-blue-900">
-          <input type="checkbox" name="only_email" value="1" <%= params[:only_email] == '1' ? 'checked' : '' %> class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
-          <span>✉️ Com E-mail Direto</span>
-        </label>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="flex items-center gap-2 w-full sm:w-auto">
-        <button type="button" data-action="click->search-form#clearForm" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors">
-          Limpar
-        </button>
-        <button type="submit" class="flex-1 sm:flex-initial px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2">
-          <span>🔍</span>
-          <span>Buscar Sem Taxas</span>
-        </button>
-      </div>
-
+    <!-- Submit Action Row -->
+    <div class="pt-2 flex items-center justify-end gap-2">
+      <button type="button" data-action="click->search-form#clearForm" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors">
+        Limpar
+      </button>
+      <button type="submit" class="flex-1 sm:flex-initial px-8 py-3 bg-[#093892] hover:bg-[#072d75] text-white font-black text-sm rounded-xl shadow-lg shadow-[#093892]/25 hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+        <span>🔍</span>
+        <span>Buscar Oficinas</span>
+      </button>
     </div>
   </form>
 
@@ -127,7 +109,7 @@
   <div class="modal-overlay fixed inset-0 bg-slate-900/60 backdrop-blur-sm items-center justify-center z-50 p-4" data-search-form-target="stateRequiredModal" style="display: none;" data-action="click->search-form#closeStateRequiredModalOnOverlay">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 text-left border border-slate-200">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">
+        <div class="w-10 h-10 rounded-xl bg-blue-100 text-[#093892] flex items-center justify-center text-xl font-bold">
           📍
         </div>
         <div>
@@ -136,13 +118,13 @@
         </div>
       </div>
       <p class="text-xs text-slate-600 leading-relaxed">
-        Por favor, selecione um Estado para visualizar as pousadas e hotéis da região com opções de reserva direta.
+        Por favor, selecione um Estado para visualizar as oficinas mecânicas e centros automotivos da região com contato direto no WhatsApp.
       </p>
       <div class="flex items-center justify-end gap-3 pt-2">
         <button type="button" data-action="click->search-form#closeStateRequiredModal" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg transition-colors">
           Fechar
         </button>
-        <button type="button" data-action="click->search-form#openStateSelectFromModal" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg transition-colors">
+        <button type="button" data-action="click->search-form#openStateSelectFromModal" class="px-4 py-2 bg-[#093892] hover:bg-[#072d75] text-white font-bold text-xs rounded-lg transition-colors">
           Selecionar Estado
         </button>
       </div>

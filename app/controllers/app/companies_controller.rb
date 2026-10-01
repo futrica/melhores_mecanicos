@@ -21,6 +21,47 @@ module App
       new_photos = Array(params.dig(:company, :photos)).reject(&:blank?)
       c_params = company_params.except(:photos)
 
+      # Verifica se o CNPJ já existe na base de dados
+      raw_cnpj = c_params[:cnpj].to_s.strip
+      clean_cnpj = raw_cnpj.gsub(/\D/, "")
+
+      existing_company = nil
+      if clean_cnpj.present?
+        existing_company = Company.find_by(cnpj: clean_cnpj)
+        existing_company ||= Company.find_by(cnpj: raw_cnpj)
+        existing_company ||= Company.where("replace(replace(replace(cnpj, '.', ''), '/', ''), '-', '') = ?", clean_cnpj).first
+      end
+
+      if existing_company.present?
+        if existing_company.user_id.present? && existing_company.user_id != current_user.id && !existing_company.unclaimed?
+          @company = Company.new(c_params)
+          @states = State.order(:name)
+          @categories = Category.order(:name)
+          flash.now[:alert] = "O CNPJ informado já está vinculado a outra conta cadastrada. Se você é o titular desta oficina, entre em contato com nosso suporte para comprovação."
+          render :new, status: :unprocessable_entity and return
+        else
+          # Vincula a empresa existente à conta do usuário
+          existing_company.user = current_user
+          existing_company.claim_status = :pending
+          existing_company.claimed_at = Time.current
+          existing_company.claim_expiration_date = 5.days.from_now
+
+          # Atualiza os dados de contato informados pelo usuário
+          existing_company.phone_1 = c_params[:phone_1] if c_params[:phone_1].present?
+          existing_company.phone_1_whatsapp = c_params[:phone_1_whatsapp] if c_params.key?(:phone_1_whatsapp)
+          existing_company.phone_2 = c_params[:phone_2] if c_params[:phone_2].present?
+          existing_company.phone_2_whatsapp = c_params[:phone_2_whatsapp] if c_params.key?(:phone_2_whatsapp)
+          existing_company.website = c_params[:website] if c_params[:website].present?
+          existing_company.description = c_params[:description] if c_params[:description].present?
+          existing_company.save(validate: false)
+
+          existing_company.photos.attach(new_photos) if new_photos.present?
+          current_user.convert_to_company! if current_user.role != "company"
+          AdminNotificationMailer.company_claim_notification(existing_company, current_user, "reivindicação via cadastro").deliver_later
+          redirect_to verify_app_company_path(existing_company), notice: "Identificamos que sua oficina mecânica já possuía cadastro em nossa base oficial da Receita Federal! O perfil foi vinculado à sua conta com sucesso. Agora, envie a documentação para validação." and return
+        end
+      end
+
       @company = Company.new(c_params)
       @company.user = current_user
       @company.email = current_user.email
@@ -253,9 +294,11 @@ module App
 
     def company_params
       params.require(:company).permit(
-        :trade_name, :email, :phone_1, :phone_1_whatsapp,
-        :phone_2, :phone_2_whatsapp, :description, :business_hours,
-        :website, :logo, :logo_url, photos: [], category_ids: []
+        :trade_name, :legal_name, :cnpj, :cnae_principal, :email,
+        :phone_1, :phone_1_whatsapp, :phone_2, :phone_2_whatsapp,
+        :description, :business_hours, :website, :logo, :logo_url,
+        :state_id, :city_id, :neighborhood_id, :street, :number, :complement, :zip_code,
+        photos: [], category_ids: []
       )
     end
   end

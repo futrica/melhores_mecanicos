@@ -6,14 +6,14 @@ RSpec.describe CompanyOutreachService, type: :service do
 
   let!(:eligible_company) do
     Company.create!(
-      trade_name: 'Pousada Exemplo 1',
-      legal_name: 'Pousada Exemplo 1 LTDA',
+      trade_name: 'Oficina Exemplo 1',
+      legal_name: 'Oficina Exemplo 1 LTDA',
       cnpj: '11.111.111/0001-11',
-      email: 'contato@pousada1.com.br',
+      email: 'contato@oficina1.com.br',
       views_count: 15,
       claim_status: :unclaimed,
       status: 'ATIVA',
-      cnae_principal: '5510801',
+      cnae_principal: '4520-0/01',
       state: state,
       city: city
     )
@@ -21,15 +21,15 @@ RSpec.describe CompanyOutreachService, type: :service do
 
   let!(:claimed_company) do
     Company.create!(
-      trade_name: 'Pousada Reivindicada',
-      legal_name: 'Pousada Reivindicada LTDA',
+      trade_name: 'Oficina Reivindicada',
+      legal_name: 'Oficina Reivindicada LTDA',
       cnpj: '22.222.222/0001-22',
-      email: 'contato@pousadaclaimed.com.br',
+      email: 'contato@oficinaclaimed.com.br',
       views_count: 20,
       claim_status: :approved,
       is_claimed: true,
       status: 'ATIVA',
-      cnae_principal: '5510801',
+      cnae_principal: '4520-0/01',
       state: state,
       city: city
     )
@@ -52,7 +52,7 @@ RSpec.describe CompanyOutreachService, type: :service do
 
     log = CompanyOutreachLog.last
     expect(log.company).to eq(eligible_company)
-    expect(log.email).to eq('contato@pousada1.com.br')
+    expect(log.email).to eq('contato@oficina1.com.br')
     expect(log.status).to eq('sent')
   end
 
@@ -66,7 +66,7 @@ RSpec.describe CompanyOutreachService, type: :service do
   end
 
   it 'skips companies that have opted out' do
-    CompanyEmailOptOut.create!(email: 'contato@pousada1.com.br', reason: 'not_interested')
+    CompanyEmailOptOut.create!(email: 'contato@oficina1.com.br', reason: 'not_interested')
 
     service = CompanyOutreachService.new(limit: 10, min_views: 10, dry_run: false, sleep_seconds: 0)
     results = service.perform

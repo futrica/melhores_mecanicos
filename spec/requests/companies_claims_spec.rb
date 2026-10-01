@@ -7,8 +7,8 @@ RSpec.describe "Company Profiles, Claims & Domain Matching", type: :request do
   let!(:company) do
     Company.create!(
       state: state, city: city, neighborhood: neighborhood,
-      cnpj: '11222333000199', legal_name: 'Pousada Trevo LTDA', trade_name: 'Pousada Trevo',
-      email: 'contato@pousadatrevo.com.br', cnae_principal: '5510801', status: 'Ativa'
+      cnpj: '11222333000199', legal_name: 'Oficina Trevo LTDA', trade_name: 'Oficina Trevo',
+      email: 'contato@oficinatrevo.com.br', cnae_principal: '4520-0/01', status: 'Ativa'
     )
   end
 
@@ -30,10 +30,16 @@ RSpec.describe "Company Profiles, Claims & Domain Matching", type: :request do
       expect(response.body).to include("Reivindicar Perfil de Empresa")
     end
 
-    it "searches for unclaimed companies" do
+    it "searches for unclaimed companies by name" do
       get new_claim_path(q: "Trevo")
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Pousada Trevo")
+      expect(response.body).to include("Oficina Trevo")
+    end
+
+    it "searches for unclaimed companies by CNPJ" do
+      get new_claim_path(q: "11.222.333/0001-99")
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Oficina Trevo")
     end
 
     it "allows user with role company but no company attached to access claim page" do
@@ -65,7 +71,7 @@ RSpec.describe "Company Profiles, Claims & Domain Matching", type: :request do
   describe "Domain auto-association on email confirmation" do
     it "automatically links user to company if domain matches custom corporate email" do
       user = User.create!(
-        email: "joao@pousadatrevo.com.br",
+        email: "joao@oficinatrevo.com.br",
         password: "password",
         password_confirmation: "password",
         role: "client",
@@ -89,6 +95,25 @@ RSpec.describe "Company Profiles, Claims & Domain Matching", type: :request do
       expect(company.reload.user).to eq(client_user)
       expect(client_user.reload.role).to eq("company")
       expect(company.claim_status).to eq("pending")
+    end
+
+    it "automatically links an existing unclaimed company when user creates with that CNPJ" do
+      login_as(client_user)
+
+      post app_companies_path, params: {
+        company: {
+          cnpj: company.cnpj,
+          trade_name: "Novo Nome Oficina",
+          phone_1: "(11) 97777-6666",
+          phone_1_whatsapp: "1"
+        }
+      }
+
+      expect(response).to redirect_to(verify_app_company_path(company))
+      expect(company.reload.user).to eq(client_user)
+      expect(company.phone_1).to eq("(11) 97777-6666")
+      expect(company.claim_status).to eq("pending")
+      expect(client_user.reload.role).to eq("company")
     end
 
     it "blocks access to edit page if company is not approved" do

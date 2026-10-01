@@ -1,14 +1,14 @@
 <%# app/views/app/home/client_dashboard.html.erb %>
-<% content_for :title, "Painel do Cliente | Hospedagem Direta" %>
+<% content_for :title, "Painel do Cliente | Melhores Mecânicos" %>
 
 <div class="app-dashboard">
 
   <%# ===== HERO WELCOME ===== %>
   <div class="app-hero-card">
     <div class="app-hero-content">
-      <span class="app-role-badge">🧳 Área do Hóspede</span>
+      <span class="app-role-badge">🚗 Área do Motorista</span>
       <h1>Bem-vindo(a), <%= current_user.name&.split&.first || "Cliente" %>!</h1>
-      <p>Aqui você gerencia suas acomodações favoritas e suas avaliações.</p>
+      <p>Aqui você gerencia suas oficinas favoritas e suas avaliações.</p>
     </div>
     <div class="app-hero-stats">
       <div class="app-stat-card">
@@ -30,7 +30,7 @@
         <div>
           <h4 style="font-family: var(--font-title); font-size: 1rem; font-weight: 800; color: #92400e; margin: 0 0 0.15rem 0;">Confirmação de E-mail Pendente</h4>
           <p style="font-size: 0.88rem; color: #78350f; margin: 0; line-height: 1.4;">
-            Seu e-mail <strong><%= current_user.email %></strong> ainda não foi verificado. Confirme seu e-mail para conseguir favoritar acomodações e enviar avaliações.
+            Seu e-mail <strong><%= current_user.email %></strong> ainda não foi verificado. Confirme seu e-mail para conseguir favoritar oficinas e enviar avaliações.
           </p>
         </div>
       </div>
@@ -46,8 +46,8 @@
   <section class="app-quick-actions">
     <div class="app-quick-card">
       <div class="app-quick-icon">🔍</div>
-      <h3>Buscar Hospedagens</h3>
-      <p>Encontre os melhores hotéis, pousadas, chalés e resorts em todo o Brasil diretamente com os proprietários.</p>
+      <h3>Buscar Oficinas</h3>
+      <p>Encontre as melhores oficinas mecânicas e centros automotivos em todo o Brasil diretamente com os profissionais.</p>
       <a href="/" class="app-btn-secondary">Buscar Agora</a>
     </div>
     <div class="app-quick-card">
@@ -61,7 +61,7 @@
   <%# ===== FAVORITOS ===== %>
   <section class="app-section">
     <div class="app-section-header">
-      <h2>❤️ Minhas Hospedagens Favoritas</h2>
+      <h2>❤️ Minhas Oficinas Favoritas</h2>
       <a href="/" class="app-section-link">Buscar mais →</a>
     </div>
 
@@ -71,7 +71,7 @@
           <div class="app-fav-card">
             <div class="app-fav-header">
               <div class="app-fav-avatar">
-                <%= company.trade_name.present? ? company.trade_name.first(2).upcase : "HD" %>
+                <%= company.trade_name.present? ? company.trade_name.first(2).upcase : "MM" %>
               </div>
               <div class="app-fav-info">
                 <h3><a href="<%= company_seo_path(company) %>" class="app-company-link"><%= company.trade_name.presence || company.legal_name %></a></h3>
@@ -115,8 +115,8 @@
       <div class="app-empty-state">
         <div class="app-empty-icon">❤️</div>
         <h3>Nenhum favorito ainda</h3>
-        <p>Navegue pelas acomodações e clique no coração para salvar suas hospedagens favoritas aqui.</p>
-        <a href="/" class="app-btn-primary">Buscar Hospedagens</a>
+        <p>Navegue pelas oficinas e clique no coração para salvar suas favoritas aqui.</p>
+        <a href="/" class="app-btn-primary">Buscar Oficinas</a>
       </div>
     <% end %>
   </section>
@@ -133,7 +133,7 @@
           <% company = review.company %>
           <div class="app-review-item">
             <div class="app-review-avatar">
-              <%= company.trade_name.present? ? company.trade_name.first(2).upcase : "HD" %>
+              <%= company.trade_name.present? ? company.trade_name.first(2).upcase : "MM" %>
             </div>
             <div class="app-review-body">
               <div class="app-review-top">
@@ -180,8 +180,8 @@
       <div class="app-empty-state">
         <div class="app-empty-icon">⭐</div>
         <h3>Nenhuma avaliação ainda</h3>
-        <p>Suas avaliações ajudam outros viajantes a escolherem as melhores hospedagens da região.</p>
-        <a href="/" class="app-btn-primary">Ver Hospedagens</a>
+        <p>Suas avaliações ajudam outros motoristas a escolherem as melhores oficinas da região.</p>
+        <a href="/" class="app-btn-primary">Ver Oficinas</a>
       </div>
     <% end %>
   </section>

@@ -1,7 +1,7 @@
 <%# app/views/search/index.html.erb %>
 
-<% content_for :title, "Resultados da Busca | Hospedagens Diretas & Pousadas" %>
-<% content_for :meta_description, "Filtre e encontre hotéis, pousadas, apart-hotéis, hostels e alojamentos em todo o Brasil para reservar sem intermediários ou taxas." %>
+<% content_for :title, "Resultados da Busca | Oficinas Mecânicas de Confiança" %>
+<% content_for :meta_description, "Filtre e encontre oficinas mecânicas, auto centers e serviços automotivos em todo o Brasil com contato direto via WhatsApp." %>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans text-slate-800 pt-6 pb-16 space-y-6">
   
@@ -43,13 +43,13 @@
     <div>
       <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
         <% if @state %>
-          Hospedagens em <%= @cities.present? ? @cities.map(&:name).to_sentence : @state.name %> (<%= number_with_delimiter(@pagy.count) %>)
+          Oficinas Mecânicas em <%= @cities.present? ? @cities.map(&:name).to_sentence : @state.name %> (<%= number_with_delimiter(@pagy.count) %>)
         <% else %>
-          Hospedagens no Brasil: <%= number_with_delimiter(@pagy.count) %> <%= @pagy.count == 1 ? "acomodação encontrada" : "acomodações encontradas" %>
+          Oficinas Mecânicas no Brasil: <%= number_with_delimiter(@pagy.count) %> <%= @pagy.count == 1 ? "oficina encontrada" : "oficinas encontradas" %>
         <% end %>
       </h1>
       <p class="text-xs sm:text-sm text-slate-600 font-medium mt-1">
-        Encontre acomodações verificadas com contato direto e sem taxas.
+        Encontre centros automotivos verificados com contato direto e sem taxas de intermediação.
       </p>
     </div>
 

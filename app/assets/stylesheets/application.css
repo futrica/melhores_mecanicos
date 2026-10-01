@@ -57,8 +57,8 @@
 }
 
 .auth-card:hover {
-  border-color: #10b981;
-  box-shadow: 0 20px 30px -10px rgba(16, 185, 129, 0.12);
+  border-color: #00A1FC;
+  box-shadow: 0 20px 30px -10px rgba(0, 161, 252, 0.15);
 }
 
 .auth-header {
@@ -75,8 +75,8 @@
   align-self: center;
   width: 56px;
   height: 56px;
-  background-color: rgba(16, 185, 129, 0.1);
-  color: #10b981;
+  background-color: rgba(9, 56, 146, 0.1);
+  color: #093892;
   border-radius: 16px;
   font-size: 1.8rem;
   margin-bottom: 0.5rem;
@@ -86,7 +86,7 @@
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 1.8rem;
   font-weight: 800;
-  color: #001F54;
+  color: #093892;
 }
 
 .auth-subtitle {
@@ -130,8 +130,8 @@
 
 .auth-input:focus {
   background-color: #ffffff;
-  border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+  border-color: #00A1FC;
+  box-shadow: 0 0 0 3px rgba(0, 161, 252, 0.2);
 }
 
 .auth-password-wrapper {
@@ -170,7 +170,7 @@
 .auth-checkbox {
   width: 16px;
   height: 16px;
-  accent-color: #10b981;
+  accent-color: #093892;
   cursor: pointer;
 }
 
@@ -183,7 +183,7 @@
 .auth-link-button {
   background: none;
   border: none;
-  color: #059669;
+  color: #00A1FC;
   font-weight: 700;
   cursor: pointer;
   padding: 0;
@@ -197,22 +197,22 @@
 .auth-submit-btn {
   width: 100%;
   padding: 0.9rem;
-  background-color: #10b981;
-  color: #022c22;
+  background-color: #093892;
+  color: #ffffff;
   border: none;
   border-radius: 12px;
   font-family: inherit;
   font-size: 0.95rem;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 4px 12px rgba(9, 56, 146, 0.25);
   transition: all 0.2s ease;
 }
 
 .auth-submit-btn:hover {
-  background-color: #34d399;
+  background-color: #072d75;
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 6px 16px rgba(9, 56, 146, 0.35);
 }
 
 .auth-footer {
@@ -224,7 +224,7 @@
 }
 
 .auth-footer a {
-  color: #059669;
+  color: #00A1FC;
   font-weight: 700;
   text-decoration: none;
 }
@@ -285,7 +285,7 @@
 .modal-title {
   font-size: 1.1rem;
   font-weight: 800;
-  color: #001F54;
+  color: #093892;
   margin: 0;
 }
 
@@ -315,12 +315,17 @@
 }
 
 .modal-accept-btn {
-  background: #10b981;
-  color: #022c22;
+  background: #093892;
+  color: #ffffff;
   font-weight: 800;
   border: none;
   padding: 0.65rem 1.25rem;
   border-radius: 10px;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.modal-accept-btn:hover {
+  background: #072d75;
 }
 

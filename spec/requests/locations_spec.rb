@@ -11,7 +11,7 @@ RSpec.describe "Locations", type: :request do
     it "renders the city page successfully with search panel form" do
       get city_page_path(state_slug: state.slug, city_slug: city.slug)
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Hospedagens em Guaratinguetá / SP")
+      expect(response.body).to include("Oficinas Mecânicas em Guaratinguetá / SP")
       expect(response.body).to include("data-controller=\"search-form\"")
       expect(response.body).to include("Bairro")
     end
@@ -22,7 +22,7 @@ RSpec.describe "Locations", type: :request do
       }.to have_enqueued_job(TrackMetricJob).at_least(:once)
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Pousada do Zé")
+      expect(response.body).to include("Auto Mecânica do Zé")
     end
 
     it "sorts neighborhood names starting with numbers at the end of the list in API" do
@@ -32,7 +32,7 @@ RSpec.describe "Locations", type: :request do
         legal_name: "Empresa Lapa Ltda",
         trade_name: "Empresa Lapa",
         slug: "empresa-lapa-11111111000111",
-        cnae_principal: "5510-8/01",
+        cnae_principal: "4520-0/01",
         status: "Ativa",
         street: "Rua Lapa",
         number: "100",
@@ -55,9 +55,9 @@ RSpec.describe "Locations", type: :request do
     it "renders the state page successfully displaying cities grid and companies" do
       get state_page_path(state_slug: state.slug)
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Hospedagens em São Paulo (SP)")
+      expect(response.body).to include("Oficinas Mecânicas em São Paulo (SP)")
       expect(response.body).to include("Guaratinguetá")
-      expect(response.body).to include("Pousada do Zé")
+      expect(response.body).to include("Auto Mecânica do Zé")
     end
 
     it "returns HTTP 404 Not Found without redirect when state slug is invalid" do

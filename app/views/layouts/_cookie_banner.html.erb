@@ -1,5 +1,5 @@
 <%# app/views/layouts/_cookie_banner.html.erb %>
-<div id="cookie-consent-banner" style="display: none; position: fixed; bottom: 1.25rem; left: 1.25rem; right: 1.25rem; max-width: 620px; margin: 0 auto; background: #001F54; color: #ffffff; padding: 1.1rem 1.4rem; border-radius: 16px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 99999; border: 1px solid rgba(255, 255, 255, 0.15); animation: cookieSlideUp 0.3s ease-out;">
+<div id="cookie-consent-banner" style="display: none; position: fixed; bottom: 1.25rem; left: 1.25rem; right: 1.25rem; max-width: 620px; margin: 0 auto; background: #051d4d; color: #ffffff; padding: 1.1rem 1.4rem; border-radius: 16px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); z-index: 99999; border: 1px solid rgba(0, 161, 252, 0.3); animation: cookieSlideUp 0.3s ease-out;">
   <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
     <div style="flex: 1; min-width: 240px;">
       <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
@@ -7,12 +7,12 @@
         <strong style="font-size: 0.95rem; color: #ffffff;">Uso de Cookies e Privacidade</strong>
       </div>
       <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.45; margin: 0;">
-        Utilizamos cookies essenciais e tecnologias semelhantes (como o Google AdSense) para personalizar conteúdos, anúncios e melhorar sua experiência ao buscar acomodações sem comissão. Ao navegar, você concorda com nossa 
-        <a href="<%= privacy_path %>" style="color: #34d399; font-weight: 700; text-decoration: underline;" target="_blank">Política de Privacidade</a> e <a href="<%= terms_path %>" style="color: #34d399; font-weight: 700; text-decoration: underline;" target="_blank">Termos de Uso</a>.
+        Utilizamos cookies essenciais e tecnologias semelhantes para personalizar conteúdos, anúncios e melhorar sua experiência ao buscar oficinas mecânicas de confiança. Ao navegar, você concorda com nossa 
+        <a href="<%= privacy_path %>" style="color: #00A1FC; font-weight: 700; text-decoration: underline;" target="_blank">Política de Privacidade</a> e <a href="<%= terms_path %>" style="color: #00A1FC; font-weight: 700; text-decoration: underline;" target="_blank">Termos de Uso</a>.
       </p>
     </div>
     <div style="display: flex; align-items: center; gap: 0.5rem; align-self: center;">
-      <button type="button" id="accept-cookies-btn" style="background: #10b981; color: #022c22; border: none; padding: 0.65rem 1.25rem; border-radius: 10px; font-weight: 800; font-size: 0.85rem; cursor: pointer; transition: background 0.2s ease; shadow: 0 4px 12px rgba(16,185,129,0.3);">
+      <button type="button" id="accept-cookies-btn" style="background: #00A1FC; color: #ffffff; border: none; padding: 0.65rem 1.25rem; border-radius: 10px; font-weight: 800; font-size: 0.85rem; cursor: pointer; transition: background 0.2s ease; box-shadow: 0 4px 12px rgba(0, 161, 252, 0.35);">
         Aceitar e Continuar
       </button>
     </div>
@@ -25,7 +25,7 @@
     to { opacity: 1; transform: translateY(0); }
   }
   #accept-cookies-btn:hover {
-    background: #34d399 !important;
+    background: #008ee0 !important;
   }
 </style>
 

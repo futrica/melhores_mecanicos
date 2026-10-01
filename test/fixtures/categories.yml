@@ -1,8 +1,8 @@
 # test/fixtures/categories.yml
-hoteis_e_pousadas:
-  name: "Hotéis e Pousadas"
-  slug: "hoteis-e-pousadas"
+mecanica_geral:
+  name: "Mecânica Geral & Reparação"
+  slug: "mecanica-geral-reparacao"
 
-apart_hoteis:
-  name: "Apart-hotéis"
-  slug: "apart-hoteis"
+funilaria_pintura:
+  name: "Funilaria & Pintura"
+  slug: "funilaria-pintura"

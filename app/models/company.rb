@@ -1,36 +1,76 @@
 class Company < ApplicationRecord
   CNAE_MAPPINGS = {
-    "5510801" => "Hotéis e Pousadas",
-    "5510802" => "Apart-hotéis",
-    "5590601" => "Albergues e Hostels",
-    "5590603" => "Pensões e Alojamentos",
-    "5590699" => "Outras Hospedagens"
+    # Manutenção e Reparação de Veículos Automotores (Grupo 45.2)
+    "4520001" => "Mecânica Geral & Reparação",
+    "4520002" => "Funilaria & Pintura",
+    "4520003" => "Auto Elétrica & Eletrônica",
+    "4520004" => "Alinhamento & Balanceamento",
+    "4520005" => "Lavagem, Lubrificação & Polimento",
+    "4520006" => "Borracharia & Pneus",
+    "4520007" => "Instalação de Acessórios & Ar-Condicionado",
+    "4520008" => "Capotaria & Tapeçaria Automotiva",
+
+    # Manutenção e Reparação de Motocicletas (Grupo 45.4)
+    "4543900" => "Oficina de Motos & Motonetas",
+
+    # Socorro Mecânico, Guincho e Inspeção Técnica Automotiva
+    "5229002" => "Guincho & Socorro Mecânico",
+    "7120100" => "Vistoria & Inspeção Veicular",
+
+    # Retífica e Reparação de Motores / Peças Automotivas
+    "2941700" => "Retífica de Motores & Peças",
+
+    # Comércio Varejista com Serviços Automotivos Conexos
+    "4530703" => "Auto Peças Novas",
+    "4530704" => "Auto Peças Usadas & Desmanche Legal",
+    "4530705" => "Pneus & Câmaras de Ar"
   }.freeze
 
   COMMON_CNAE_DESCRIPTIONS = {
-    # Hospedagem
-    "5510801" => "Hotéis e Pousadas",
-    "5510802" => "Apart-hotéis",
-    "5590601" => "Albergues e Hostels",
-    "5590603" => "Pensões e Alojamentos",
-    "5590699" => "Outras Hospedagens",
-    # Alimentação & Eventos
-    "5611201" => "Restaurantes e Similares",
-    "5611203" => "Lanchonetes, Casas de Chá, Sucos e Similares",
-    "5620104" => "Fornecimento de Alimentos Preparados",
-    "8230001" => "Organização de Feiras, Congressos, Exposições e Festas",
-    # Turismo & Viagens
-    "7911200" => "Agências de Viagens",
-    "7990200" => "Serviços de Reservas e Operadores Turísticos",
+    # Manutenção e Reparação Automotiva (Grupo 45.2)
+    "4520001" => "Serviços de Manutenção e Reparação Mecânica de Veículos Automotores",
+    "4520002" => "Serviços de Lanternagem, Funilaria e Pintura de Veículos Automotores",
+    "4520003" => "Serviços de Manutenção e Reparação do Sistema Elétrico e Eletrônico de Veículos Automotores",
+    "4520004" => "Serviços de Alinhamento e Balanceamento de Veículos Automotores",
+    "4520005" => "Serviços de Lavagem, Lubrificação e Polimento de Veículos Automotores",
+    "4520006" => "Serviços de Borracharia para Veículos Automotores",
+    "4520007" => "Serviços de Instalação, Manutenção e Reparação de Acessórios para Veículos Automotores",
+    "4520008" => "Serviços de Capotaria e Tapeçaria para Veículos Automotores",
+
+    # Manutenção de Motocicletas (Grupo 45.4)
+    "4543900" => "Manutenção e Reparação de Motocicletas e Motonetas",
+
+    # Socorro, Guincho, Reboque e Inspeção Veicular
+    "5229002" => "Serviços de Reboque de Veículos (Guincho e Socorro Mecânico)",
+    "7120100" => "Testes e Análises Técnicas (Vistoria e Inspeção Veicular)",
+
+    # Retífica e Fabricação de Peças Automotivas
+    "2941700" => "Fabricação e Retífica de Peças e Acessórios para o Sistema Motor de Veículos Automotores",
+    "2942500" => "Fabricação de Peças e Acessórios para os Sistemas de Marcha e Transmissão de Veículos",
+    "2943300" => "Fabricação de Peças e Acessórios para o Sistema de Freios e Suspensão de Veículos",
+    "2944100" => "Fabricação de Peças e Acessórios para o Sistema de Direção de Veículos",
+    "2945000" => "Fabricação de Material Elétrico e Eletrônico para Veículos Automotores",
+
+    # Comércio Varejista e Atacadista de Peças e Pneus
+    "4530701" => "Comércio por Atacado de Peças e Acessórios Novos para Veículos Automotores",
+    "4530702" => "Comércio por Atacado de Pneumáticos e Câmaras-de-Ar",
+    "4530703" => "Comércio a Varejo de Peças e Acessórios Novos para Veículos Automotores",
+    "4530704" => "Comércio a Varejo de Peças e Acessórios Usados para Veículos Automotores",
+    "4530705" => "Comércio a Varejo de Pneumáticos e Câmaras-de-Ar",
+
+    # Comércio e Locação de Veículos
+    "4511101" => "Comércio a Varejo de Automóveis, Camionetas e Utilitários Novos",
+    "4511102" => "Comércio a Varejo de Automóveis, Camionetas e Utilitários Usados",
+    "4541203" => "Comércio a Varejo de Motocicletas e Motonetas Usadas",
+    "4541204" => "Comércio a Varejo de Peças e Acessórios para Motocicletas e Motonetas",
     "7711000" => "Locação de Automóveis sem Condutor",
-    # Serviços, TI & Imobiliária
-    "6209100" => "Suporte Técnico, Manutenção e Serviços de TI",
-    "4731800" => "Comércio Varejista de Combustíveis (Postos de Gasolina)",
-    "4712100" => "Minimercados, Mercearias e Armazéns",
-    "7319002" => "Promoção de Vendas",
-    "6822600" => "Gestão e Administração Imobiliária",
+    "4731800" => "Comércio Varejista de Combustíveis para Veículos Automotores (Postos de Gasolina)",
+
+    # Atividades de Gestão e Serviços de Apoio Comuns
     "7020400" => "Consultoria em Gestão Empresarial",
-    "4120400" => "Construção de Edifícios"
+    "7490104" => "Atividades de Intermediação e Agenciamento de Serviços e Negócios",
+    "8211300" => "Serviços Combinados de Escritório e Apoio Administrativo",
+    "6209100" => "Suporte Técnico, Manutenção e Serviços de TI"
   }.freeze
 
   def self.cnae_dictionary
@@ -62,6 +102,11 @@ class Company < ApplicationRecord
       cnae_principal
     end
   end
+
+  def name
+    trade_name.presence || legal_name
+  end
+  alias_method :display_name, :name
 
 
   BANKRUPT_TERMS = [
@@ -181,7 +226,12 @@ class Company < ApplicationRecord
   }
 
   scope :lodging_cnae, -> {
-    where("cnae_principal LIKE ? OR cnae_principal IN (?)", "55%", CNAE_MAPPINGS.keys)
+    where("cnae_principal LIKE ? OR cnae_principal LIKE ? OR cnae_principal IN (?)", "4520%", "55%", CNAE_MAPPINGS.keys)
+  }
+  scope :automotive_cnae, -> { lodging_cnae }
+
+  scope :with_direct_contact, -> {
+    where("(companies.phone_1 IS NOT NULL AND companies.phone_1 != '') OR (companies.phone_2 IS NOT NULL AND companies.phone_2 != '') OR (companies.email IS NOT NULL AND companies.email != '')")
   }
 
   scope :non_accounting_email, -> {
@@ -270,10 +320,11 @@ class Company < ApplicationRecord
     all_tags.tally.sort_by { |_tag, count| -count }.map(&:first).first(limit)
   end
 
-  def main_cnae_lodging?
+  def main_cnae_automotive?
     clean_code = cnae_principal.to_s.gsub(/\D/, "")
-    clean_code.start_with?("55") || CNAE_MAPPINGS.key?(clean_code)
+    clean_code.start_with?("4520") || CNAE_MAPPINGS.key?(clean_code)
   end
+  alias_method :main_cnae_lodging?, :main_cnae_automotive?
 
   def has_custom_content?
     is_claimed? || photos.attached? || description.present? || (reviews.loaded? ? reviews.any? : reviews.exists?)
@@ -290,7 +341,7 @@ class Company < ApplicationRecord
 
     return false unless has_contact || (has_partners && has_address)
 
-    main_cnae_lodging? || has_custom_content?
+    main_cnae_automotive? || has_custom_content?
   end
 
   scope :indexable, -> {
@@ -306,7 +357,9 @@ class Company < ApplicationRecord
     has_reviews = "EXISTS (SELECT 1 FROM reviews WHERE reviews.company_id = companies.id)"
     has_custom = "(is_claimed = true OR (description IS NOT NULL AND description != '') OR #{has_photos} OR #{has_reviews})"
 
-    indexable_cnae_or_custom = "(cnae_principal LIKE '55%' OR #{has_custom})"
+    target_cnae_list = Company::CNAE_MAPPINGS.keys.map { |c| "'#{c}'" }.join(", ")
+    target_clean = "replace(replace(replace(cnae_principal, '-', ''), '/', ''), ' ', '')"
+    indexable_cnae_or_custom = "(#{target_clean} IN (#{target_cnae_list}) OR cnae_principal LIKE '4520%' OR #{has_custom})"
 
     where(status: "Ativa")
       .where(contact_or_partners)

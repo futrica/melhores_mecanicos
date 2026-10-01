@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
-    <title><%= content_for(:title) || "Painel | Hospedagem Direta" %></title>
+    <title><%= content_for(:title) || "Painel | Melhores Mecânicos" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="description" content="<%= content_for(:meta_description) || "Gerencie suas hospedagens favoritas, avaliações e perfil de cliente." %>">
+    <meta name="description" content="<%= content_for(:meta_description) || "Gerencie suas oficinas mecânicas favoritas, avaliações e perfil." %>">
     <meta name="robots" content="noindex, nofollow">
     <meta name="turbo-cache-control" content="no-cache">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="/icon-48.png" type="image/png" sizes="48x48">
     <link rel="icon" href="/icon.png" type="image/png" sizes="192x192">
@@ -21,10 +22,11 @@
     <%= render "shared/impersonation_banner" %>
     <header class="app-header" data-controller="menu">
       <div class="app-nav-container">
-        <a href="/" class="logo flex items-baseline flex-nowrap whitespace-nowrap shrink-0 font-black tracking-tight text-lg sm:text-xl text-white group" style="text-decoration: none;">
-          <span class="text-white font-extrabold">hospedagem</span>
-          <span class="text-emerald-400 font-black">direta</span>
-          <span class="text-xs text-blue-300 font-bold ml-1 tracking-normal">.com.br</span>
+        <a href="/" class="logo flex items-center gap-2 font-black tracking-tight text-lg sm:text-xl text-white group" style="text-decoration: none;">
+          <img src="/icon.svg" alt="Melhores Mecânicos" class="w-8 h-8 rounded-lg shadow-sm">
+          <div class="flex items-baseline">
+            <span class="text-white font-extrabold">Melhores</span><span class="text-[#00A1FC] font-black">Mecanicos</span>
+          </div>
         </a>
 
         <nav class="app-nav-links" data-menu-target="links">

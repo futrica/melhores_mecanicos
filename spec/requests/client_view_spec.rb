@@ -117,11 +117,11 @@ RSpec.describe "Client View and Adjustments", type: :request do
       expect(response.body).to include("Editar Perfil")
     end
 
-    it "renders the Avaliar Hospedagem section in company view sidebar" do
+    it "renders the Avaliar Oficina section in company view sidebar" do
       login_as_client
       get company_seo_path(company)
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("⭐ Avaliar Hospedagem")
+      expect(response.body).to include("⭐ Avaliar Oficina")
       expect(response.body).to include('id="review-form"')
     end
   end
@@ -150,13 +150,13 @@ RSpec.describe "Client View and Adjustments", type: :request do
        .and change { Review.count }.by(-1)
     end
 
-    it "renders Minhas Hospedagens Favoritas and Minhas Avaliações at the end of dashboard page" do
+    it "renders Minhas Oficinas Favoritas and Minhas Avaliações at the end of dashboard page" do
       login_as_client
       get app_root_path
       expect(response).to have_http_status(:success)
 
-      quick_index = response.body.index("Buscar Hospedagens")
-      fav_index = response.body.index("Minhas Hospedagens Favoritas")
+      quick_index = response.body.index("Buscar Oficinas")
+      fav_index = response.body.index("Minhas Oficinas Favoritas")
       rev_index = response.body.index("Minhas Avaliações")
 
       expect(quick_index).to be < fav_index

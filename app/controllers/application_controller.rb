@@ -99,6 +99,11 @@ class ApplicationController < ActionController::Base
 
     is_company_or_admin = resource.is_a?(User) && (resource.company? || resource.company.present? || resource.admin?)
 
+    if session[:claim_company_id].present? && resource.is_a?(User) && resource.company.nil?
+      cid = session.delete(:claim_company_id)
+      return new_claim_path(company_id: cid)
+    end
+
     if is_company_or_admin
       app_root_path
     elsif stored_location.present? && stored_location != root_path

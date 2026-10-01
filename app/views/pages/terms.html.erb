@@ -1,45 +1,40 @@
 <%# app/views/pages/terms.html.erb %>
-<% content_for :title, "Termos de Uso | Hospedagem Direta" %>
-<% content_for :meta_description, "Confira os Termos de Uso e Condições do Hospedagem Direta. Entenda as regras para hóspedes, cadastros de hotéis e pousadas, isenção de comissões e conformidade com a LGPD." %>
+<% content_for :title, "Termos de Uso e Isenção de Responsabilidade | Melhores Mecânicos" %>
+<% content_for :meta_description, "Leia os Termos de Uso do Melhores Mecânicos. Conheça as diretrizes de transparência, dados públicos da Receita Federal e isenção de responsabilidade." %>
 
 <div class="bg-slate-50 min-h-screen pb-16">
-  <!-- Hero Section -->
-  <section class="relative bg-gradient-to-b from-[#001F54] via-[#001845] to-[#00153B] text-white py-14 px-4 sm:px-6 lg:px-8 overflow-hidden">
-    <div class="absolute -top-24 -left-24 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
-
-    <div class="max-w-4xl mx-auto text-center relative z-10 space-y-3">
-      <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 font-bold text-xs sm:text-sm tracking-wide uppercase shadow-sm">
-        <span>📜</span> Documento Oficial
+  <!-- Header Section -->
+  <section class="bg-gradient-to-b from-[#001F54] via-[#001845] to-[#00153B] text-white py-14 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto text-center space-y-3">
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 font-bold text-xs uppercase tracking-wider">
+        <span>📜</span> Transparência & Diretrizes Legais
       </span>
-
-      <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight">
-        Termos de Uso e Condições de Serviço
+      <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight">
+        Termos de Uso e Isenção de Responsabilidade
       </h1>
-
-      <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-        Diretrizes de navegação, cadastro para viajantes e estabelecimentos, transparência de dados e isenção de comissões no portal Hospedagem Direta.
+      <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto font-normal">
+        Última atualização: Março de 2026. Entenda como funciona a plataforma e as regras aplicáveis a usuários e oficinas mecânicas cadastradas.
       </p>
     </div>
   </section>
 
-  <!-- Main Terms Content Container -->
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20 space-y-8">
-    
-    <!-- Intro Card -->
+  <!-- Main Content Card -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10 space-y-6">
+
+    <!-- Introdução -->
     <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 text-slate-700 leading-relaxed space-y-4">
       <p class="text-base font-medium text-slate-800">
-        Bem-vindo ao <strong>Hospedagem Direta</strong> (hospedagemdireta.com.br). Ao acessar, navegar ou cadastrar-se em nosso portal, você concorda integralmente em cumprir e estar sujeito aos seguintes Termos de Uso e Isenção de Responsabilidade.
+        Bem-vindo ao <strong>Melhores Mecânicos</strong> (MelhoresMecanicos). Ao acessar, navegar ou cadastrar-se em nosso portal, você concorda integralmente em cumprir e estar sujeito aos seguintes Termos de Uso e Isenção de Responsabilidade.
       </p>
       <p class="text-sm text-slate-600">
-        O objetivo central da nossa plataforma é aproximar viajantes e estabelecimentos de hospedagem (hotéis, pousadas, chalés, resorts e flats) de forma direta e sem cobrança de comissões sobre reservas.
+        O objetivo central da nossa plataforma é aproximar motoristas e oficinas mecânicas (auto centers, funilarias, auto elétricas e serviços automotivos em geral) de forma direta e sem cobrança de comissões sobre os serviços prestados.
       </p>
     </div>
 
     <!-- Section: Termos de Aceite de Cadastro (Cliente vs Empresa) -->
     <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 space-y-6">
       <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
-        <span class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-black text-xl shadow-inner">📝</span>
+        <span class="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-black text-xl shadow-inner">📝</span>
         <div>
           <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">1. Termos de Aceite para Cadastro de Usuários</h2>
           <p class="text-xs sm:text-sm text-slate-500 font-medium">Condições aplicáveis no momento da criação de conta no portal.</p>
@@ -47,15 +42,15 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-        <!-- Hóspedes / Clientes -->
+        <!-- Motoristas / Clientes -->
         <div class="p-5 rounded-xl bg-slate-50 border border-slate-200/90 space-y-3">
           <div class="flex items-center gap-2 font-bold text-slate-900 text-base border-b border-slate-200 pb-2">
-            <span>🧳</span> Hóspede / Viajante (Cliente)
+            <span>🚗</span> Motorista / Proprietário do Veículo (Cliente)
           </div>
           <ul class="text-xs sm:text-sm text-slate-700 space-y-2 leading-relaxed">
-            <li><strong>• Canal Gratuito:</strong> O uso do portal para buscar hospedagens e acessar contatos oficiais de WhatsApp e telefone é 100% gratuito.</li>
-            <li><strong>• Autonomia e Negociação Direta:</strong> Todas as conversas, orçamentos, condições de pagamento, horários de check-in e políticas de cancelamento são combinados diretamente entre você e o estabelecimento.</li>
-            <li><strong>• Confirmação Prévia:</strong> O usuário concorda em verificar a procedência, valores atualizados e detalhes do quarto antes de efetuar qualquer pagamento ou sinal.</li>
+            <li><strong>• Canal Gratuito:</strong> O uso do portal para buscar oficinas mecânicas e acessar contatos oficiais de WhatsApp e telefone é 100% gratuito.</li>
+            <li><strong>• Autonomia e Negociação Direta:</strong> Todas as conversas, orçamentos, diagnósticos, condições de pagamento e prazos de serviço são combinados diretamente entre você e a oficina.</li>
+            <li><strong>• Confirmação Prévia:</strong> O usuário concorda em solicitar sempre a Ordem de Serviço (OS) detalhada e verificar peças e garantias antes de autorizar qualquer reparo ou pagamento.</li>
             <li><strong>• Privacidade dos Dados:</strong> Seus dados cadastrais (como e-mail e telefone) são armazenados em ambiente seguro e utilizados exclusivamente para gestão da conta.</li>
           </ul>
         </div>
@@ -63,13 +58,13 @@
         <!-- Estabelecimentos / Empresas -->
         <div class="p-5 rounded-xl bg-slate-50 border border-slate-200/90 space-y-3">
           <div class="flex items-center gap-2 font-bold text-slate-900 text-base border-b border-slate-200 pb-2">
-            <span>🏢</span> Hotel / Pousada (Empresa)
+            <span>🔧</span> Oficina Mecânica / Auto Center (Empresa)
           </div>
           <ul class="text-xs sm:text-sm text-slate-700 space-y-2 leading-relaxed">
-            <li><strong>• Veracidade de Informações:</strong> O responsável se compromete a fornecer dados verídicos, atualizados e legítimos (CNPJ, nome, contatos, fotos e comodidades).</li>
-            <li><strong>• Autorização de Divulgação:</strong> Ao cadastrar ou reivindicar a página, a empresa autoriza a publicação de seus contatos comerciais no diretório para receber mensagens de viajantes.</li>
+            <li><strong>• Veracidade de Informações:</strong> O responsável se compromete a fornecer dados verídicos, atualizados e legítimos (CNPJ, nome fantasia, contatos, fotos e especialidades).</li>
+            <li><strong>• Autorização de Divulgação:</strong> Ao cadastrar ou reivindicar a página, a empresa autoriza a publicação de seus contatos comerciais no diretório para receber mensagens de motoristas.</li>
             <li><strong>• Atendimento Ético:</strong> A empresa concorda em responder contatos com cortesia e transparência comercial.</li>
-            <li><strong>• Isenção de Comissões:</strong> O Hospedagem Direta não cobra taxa nem percentual por reserva realizada entre o hóspede e o estabelecimento.</li>
+            <li><strong>• Isenção de Comissões:</strong> O Melhores Mecânicos não cobra taxa nem percentual por serviço ou orçamento acordado entre o cliente e a oficina.</li>
           </ul>
         </div>
       </div>
@@ -81,7 +76,7 @@
         <span>🏛️</span> 2. Transparência e Origem dos Dados Públicos
       </h2>
       <p class="text-sm sm:text-base">
-        O Hospedagem Direta consolida e exibe dados cadastrais abertos de Pessoas Jurídicas atuantes no setor de hospedagem (CNAEs relacionados a hotéis, pousadas, albergues, chalés e similares).
+        O Melhores Mecânicos consolida e exibe dados cadastrais abertos de Pessoas Jurídicas atuantes no setor de reparação e manutenção veicular (CNAEs relacionados a oficinas mecânicas, funilarias, auto elétricas e serviços automotivos).
       </p>
       <p class="text-xs sm:text-sm text-slate-600">
         Essas informações (incluindo Razão Social, Nome Fantasia, CNPJ, Endereço e dados públicos de contato) são oriundas das bases abertas da <strong>Secretaria da Receita Federal do Brasil (RFB)</strong> e fontes públicas governamentais, em conformidade com a legislação brasileira de Dados Abertos e com a <strong>Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018)</strong>.
@@ -91,14 +86,14 @@
     <!-- Section: Isenção de Responsabilidade Comercial -->
     <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 space-y-4 text-slate-700 leading-relaxed">
       <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-        <span>🛡️</span> 3. Isenção de Responsabilidade sobre Reservas e Estadias
+        <span>🛡️</span> 3. Isenção de Responsabilidade sobre Serviços Automotivos
       </h2>
       <p class="text-sm sm:text-base">
-        O portal Hospedagem Direta <strong>não atua como agência de viagens (OTA)</strong>, não realiza intermediação financeira de hospedagens, não recebe pagamentos de diárias e não retém qualquer valor de reservas efetuadas.
+        O portal Melhores Mecânicos <strong>não realiza serviços de mecânica, não intermedia pagamentos</strong>, não recebe transferências de peças ou mão de obra e não retém qualquer valor sobre manutenções realizadas.
       </p>
 
       <div class="p-4 rounded-xl bg-amber-50 border-l-4 border-amber-500 text-amber-900 text-xs sm:text-sm leading-relaxed">
-        <strong>Atenção ao Usuário:</strong> Todas as contratações de diárias, depósitos bancários, transferências de sinal ou pagamentos no check-in ocorrem exclusivamente entre o hóspede e o estabelecimento escolhido. O portal exime-se de responsabilidade por desacordos comerciais, cancelamentos, overbooking ou insatisfação com as acomodações.
+        <strong>Atenção ao Usuário:</strong> Todas as contratações de conserto, revisões, garantias de peças e pagamentos ocorrem exclusivamente entre o motorista e a oficina escolhida. O portal exime-se de responsabilidade por desacordos comerciais, prazos de entrega de peças ou qualidade técnica dos serviços executados pelas oficinas cadastradas.
       </div>
     </div>
 
@@ -108,45 +103,12 @@
         <span>⚡</span> 4. Reivindicação de Página e Gestão por Proprietários
       </h2>
       <p class="text-sm sm:text-base">
-        Proprietários ou gestores autorizados podem reivindicar gratuitamente a página da sua pousada ou hotel no portal para adicionar links oficiais, número de WhatsApp e fotos personalizadas.
+        Se você é proprietário ou representante legal de uma oficina mecânica listada em nosso diretório, pode a qualquer momento reivindicar gratuitamente a gestão do seu perfil para atualizar telefones, WhatsApp, fotos, descrição e horário de funcionamento.
       </p>
       <p class="text-xs sm:text-sm text-slate-600">
-        Caso o proprietário prefira não gerenciar o perfil e solicite a alteração de dados cadastrais ou a remoção do seu estabelecimento do nosso catálogo de busca, o atendimento será realizado de forma simples e totalmente gratuita através da nossa página de <%= link_to "Contato", contact_path, class: "text-emerald-600 font-bold underline hover:text-emerald-700" %>.
+        Caso prefira solicitar a remoção ou retificação de dados da sua empresa, disponibilizamos canal expresso de suporte pelo e-mail <strong>contato@melhoresmecanicos.com.br</strong> ou pelo link de solicitação de remoção presente no rodapé da página da empresa, com atendimento em até 48 horas úteis.
       </p>
-    </div>
-
-    <!-- Section: Planos de Destaque -->
-    <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 space-y-4 text-slate-700 leading-relaxed">
-      <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-        <span>⭐</span> 5. Assinaturas e Planos de Destaque Opcionais
-      </h2>
-      <p class="text-sm sm:text-base">
-        Oferecemos planos de visibilidade premium opcionais para hotéis e pousadas que desejam priorização nas buscas por cidade ou estado.
-      </p>
-      <p class="text-xs sm:text-sm text-slate-600">
-        Estes planos consistem em um valor fixo de assinatura (mensal ou anual) para promoção de mídia. <strong>Jamais cobramos porcentagem por reservas geradas.</strong> O cancelamento da assinatura pode ser efetuado a qualquer momento no painel da empresa.
-      </p>
-    </div>
-
-    <!-- Section: Publicidade e Cookies -->
-    <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 space-y-4 text-slate-700 leading-relaxed">
-      <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-        <span>🍪</span> 6. Publicidade e Uso de Cookies
-      </h2>
-      <p class="text-sm sm:text-base">
-        Para manter o portal gratuito para viajantes e pousadas, exibimos anúncios publicitários de redes parceiras, incluindo o Google Ads (AdSense).
-      </p>
-      <p class="text-xs sm:text-sm text-slate-600">
-        Fornecedores terceiros utilizam cookies para veicular anúncios baseados em suas visitas anteriores. Você pode gerenciar suas preferências de anúncios a qualquer momento nas configurações do seu navegador ou consultar nossa <%= link_to "Política de Privacidade", privacy_path, class: "text-blue-600 font-bold underline hover:text-blue-700" %>.
-      </p>
-    </div>
-
-    <!-- Footer of Document -->
-    <div class="p-6 rounded-2xl bg-slate-200/60 border border-slate-300/70 text-xs text-slate-600 text-center space-y-1">
-      <p>Estes Termos de Uso são regidos pela legislação da República Federativa do Brasil.</p>
-      <p class="font-semibold text-slate-700">Última atualização: Fevereiro de 2026.</p>
     </div>
 
   </div>
 </div>
-

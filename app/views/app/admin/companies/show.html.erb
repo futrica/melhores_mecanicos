@@ -30,11 +30,11 @@
   <%
     clean_cnae = @company.cnae_principal.to_s.gsub(/\D/, "")
     mapped_main_cnae = Company::CNAE_MAPPINGS[clean_cnae]
-    is_main_cnae_lodging = mapped_main_cnae.present?
+    is_main_cnae_automotive = mapped_main_cnae.present?
 
     cnae_sec_array = @company.cnae_secundarios.to_s.split(",").map { |c| c.gsub(/\D/, "").strip }.reject(&:blank?)
     total_cnaes = 1 + cnae_sec_array.size
-    lodging_sec_cnaes = cnae_sec_array.select { |c| Company::CNAE_MAPPINGS.key?(c) }
+    automotive_sec_cnaes = cnae_sec_array.select { |c| Company::CNAE_MAPPINGS.key?(c) }
   %>
 
   <!-- CNAE & Business Activity Analysis Card -->
@@ -45,25 +45,25 @@
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
       <!-- Main Activity Status -->
-      <div style="background: <%= is_main_cnae_lodging ? '#f0fdf4' : '#fefce8' %>; border: 1px solid <%= is_main_cnae_lodging ? '#bbf7d0' : '#fef08a' %>; border-radius: 12px; padding: 1.1rem;">
+      <div style="background: <%= is_main_cnae_automotive ? '#f0fdf4' : '#fefce8' %>; border: 1px solid <%= is_main_cnae_automotive ? '#bbf7d0' : '#fef08a' %>; border-radius: 12px; padding: 1.1rem;">
         <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: #64748b; display: block; margin-bottom: 0.3rem;">Foco Principal do Negócio</span>
         
-        <% if is_main_cnae_lodging %>
+        <% if is_main_cnae_automotive %>
           <strong style="display: flex; align-items: center; gap: 0.4rem; font-size: 1rem; color: #15803d; margin-bottom: 0.3rem;">
-            🏨 CNAE Principal em Hospedagem: SIM
+            🔧 CNAE Principal em Manutenção Automotiva: SIM
           </strong>
           <span style="font-size: 0.83rem; color: #166534; display: block;">
             CNAE Principal: <strong><%= @company.cnae_principal %></strong> (<%= mapped_main_cnae %>).
           </span>
         <% else %>
           <strong style="display: flex; align-items: center; gap: 0.4rem; font-size: 1rem; color: #a16207; margin-bottom: 0.3rem;">
-            ⚠️ CNAE Principal NÃO é Hospedagem
+            ⚠️ CNAE Principal NÃO é Manutenção Automotiva
           </strong>
           <span style="font-size: 0.85rem; color: #854d0e; display: block; font-weight: 700; background: rgba(255,255,255,0.7); padding: 0.4rem 0.6rem; border-radius: 6px; margin: 0.3rem 0;">
             CNAE Principal: <%= @company.cnae_principal_display %>
           </span>
           <span style="font-size: 0.8rem; color: #a16207; font-weight: 700; display: block; margin-top: 0.4rem;">
-            📌 Esta empresa foi listada por possuir serviço de hospedagem cadastrado como <u>CNAE Secundário</u> na Receita Federal.
+            📌 Esta empresa foi listada por possuir serviço automotivo ou mecânico cadastrado como <u>CNAE Secundário</u> na Receita Federal.
           </span>
         <% end %>
       </div>
@@ -77,9 +77,9 @@
         <span style="font-size: 0.83rem; color: #475569; display: block;">
           1 CNAE Principal + <%= cnae_sec_array.size %> <%= cnae_sec_array.size == 1 ? 'CNAE Secundário' : 'CNAEs Secundários' %>.
         </span>
-        <% if lodging_sec_cnaes.any? %>
-          <div style="font-size: 0.8rem; color: #2563eb; font-weight: 700; margin-top: 0.4rem;">
-            ✓ CNAE Secundário de Hospedagem: <%= lodging_sec_cnaes.map { |code| "#{code} (#{Company::CNAE_MAPPINGS[code]})" }.join(", ") %>
+        <% if automotive_sec_cnaes.any? %>
+          <div style="font-size: 0.8rem; color: #0284c7; font-weight: 700; margin-top: 0.4rem;">
+            ✓ CNAE Secundário Automotivo: <%= automotive_sec_cnaes.map { |code| "#{code} (#{Company::CNAE_MAPPINGS[code]})" }.join(", ") %>
           </div>
         <% end %>
       </div>

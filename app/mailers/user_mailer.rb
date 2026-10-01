@@ -1,13 +1,13 @@
 class UserMailer < ApplicationMailer
-  default from: "Hospedagem Direta <contato@hospedagemdireta.com.br>"
+  default from: "Melhores Mecânicos <contato@melhoresmecanicos.com.br>"
 
   def client_welcome(user)
     @user = user
-    @first_name = user.name.presence&.split&.first || "Viajante"
+    @first_name = user.name.presence&.split&.first || "Motorista"
 
     mail(
       to: user.email,
-      subject: "Bem-vindo(a) ao Hospedagem Direta, #{@first_name}! 🏨"
+      subject: "Bem-vindo(a) ao Melhores Mecânicos, #{@first_name}! 🚗"
     )
   end
 
@@ -15,11 +15,11 @@ class UserMailer < ApplicationMailer
     @user = user
     @company = user.company
     @first_name = user.name.presence&.split&.first || "Parceiro"
-    @company_name = @company&.trade_name.presence || @company&.legal_name || "seu estabelecimento"
+    @company_name = @company&.trade_name.presence || @company&.legal_name || "sua oficina"
 
     mail(
       to: user.email,
-      subject: "Bem-vindo(a) ao Hospedagem Direta! Gerencie seu perfil de hospedagem 🏨"
+      subject: "Bem-vindo(a) ao Melhores Mecânicos! Gerencie seu perfil de oficina 🔧"
     )
   end
 
@@ -30,12 +30,12 @@ class UserMailer < ApplicationMailer
     return if @recipient_email.blank?
 
     @first_name = @user&.name.presence&.split&.first || "Parceiro"
-    @company_name = company.trade_name.presence || company.legal_name || "seu estabelecimento"
+    @company_name = company.trade_name.presence || company.legal_name || "sua oficina"
 
     mail(
       to: @recipient_email,
       bcc: "jmfutrica@gmail.com",
-      subject: "🎉 Seu perfil no Hospedagem Direta foi aprovado!"
+      subject: "🎉 Seu perfil no Melhores Mecânicos foi aprovado!"
     )
   end
 end

@@ -1,10 +1,33 @@
 # db/seeds.rb
 
-puts "=== Populating Base Categories for Hospedagem Direta ==="
+puts "=== Populating Base Categories for Melhores Mecânicos ==="
 
-valid_category_names = Company::CNAE_MAPPINGS.values.uniq
+automotive_categories = [
+  "Mecânica Geral & Reparação",
+  "Funilaria & Pintura",
+  "Auto Elétrica & Eletrônica",
+  "Alinhamento & Balanceamento",
+  "Lavagem, Lubrificação & Polimento",
+  "Borracharia & Pneus",
+  "Instalação de Acessórios & Ar-Condicionado",
+  "Capotaria & Tapeçaria Automotiva",
+  "Oficina de Motos & Motonetas",
+  "Guincho & Socorro Mecânico",
+  "Vistoria & Inspeção Veicular",
+  "Retífica de Motores & Peças",
+  "Auto Peças Novas",
+  "Auto Peças Usadas & Desmanche Legal",
+  "Pneus & Câmaras de Ar",
+  "Injeção Eletrônica",
+  "Freios & Suspensão",
+  "Câmbio Automático & Manual",
+  "Ar-Condicionado Automotivo",
+  "Troca de Óleo Rápida"
+]
 
-# 1. Create or update valid lodging categories
+valid_category_names = (Company::CNAE_MAPPINGS.values + automotive_categories).uniq
+
+# 1. Create or update valid automotive categories
 valid_category_names.each do |cat_name|
   cat_slug = cat_name.parameterize
   category = Category.find_or_create_by!(name: cat_name) do |c|
@@ -13,14 +36,26 @@ valid_category_names.each do |cat_name|
   puts "  - #{category.name} (#{category.slug})"
 end
 
-# 2. Clean up obsolete categories from legacy project
-obsolete = Category.where.not(name: valid_category_names)
-if obsolete.any?
-  puts "🧹 Cleaning #{obsolete.count} obsolete categories..."
-  obsolete.destroy_all
-end
-
 puts "✅ #{Category.count} Categories active and verified!"
+
+puts "\n=== Populating Brazilian States (27 UFs) ==="
+brazilian_states = [
+  ["Acre", "AC"], ["Alagoas", "AL"], ["Amapá", "AP"], ["Amazonas", "AM"], ["Bahia", "BA"],
+  ["Ceará", "CE"], ["Distrito Federal", "DF"], ["Espírito Santo", "ES"], ["Goiás", "GO"],
+  ["Maranhão", "MA"], ["Mato Grosso", "MT"], ["Mato Grosso do Sul", "MS"], ["Minas Gerais", "MG"],
+  ["Pará", "PA"], ["Paraíba", "PB"], ["Paraná", "PR"], ["Pernambuco", "PE"], ["Piauí", "PI"],
+  ["Rio de Janeiro", "RJ"], ["Rio Grande do Norte", "RN"], ["Rio Grande do Sul", "RS"],
+  ["Rondônia", "RO"], ["Roraima", "RR"], ["Santa Catarina", "SC"], ["São Paulo", "SP"],
+  ["Sergipe", "SE"], ["Tocantins", "TO"]
+]
+
+brazilian_states.each do |name, acronym|
+  State.find_or_create_by!(acronym: acronym) do |s|
+    s.name = name
+    s.slug = acronym.downcase
+  end
+end
+puts "✅ #{State.count} States populated!"
 
 puts "\n=== Creating/Updating Admin User ==="
 admin_user = User.find_or_initialize_by(email: "jmfutrica@gmail.com")
@@ -37,13 +72,13 @@ puts "✅ Admin user ready: #{admin_user.email}"
 puts "\n=== Creating Stripe Products and Prices ==="
 free_product = StripeProduct.find_or_create_by!(slug: "free") do |p|
   p.name = "Plano Gratuito"
-  p.description = "Plano inicial com suporte a até 3 fotos e 3 quartos ad aeternum."
+  p.description = "Plano inicial com perfil da oficina verificado e dados públicos."
   p.active = true
 end
 
 free_price = StripePrice.find_or_initialize_by(stripe_product: free_product)
 free_price.update!(
-  name: "Gratuito ad aeternum",
+  name: "Gratuito",
   amount_cents: 0.00,
   currency: "brl",
   interval: "month",
@@ -52,15 +87,15 @@ free_price.update!(
 )
 
 premium_product = StripeProduct.find_or_create_by!(slug: "premium") do |p|
-  p.name = "Plano Premium"
-  p.description = "Até 20 fotos, quartos ilimitados, WhatsApp em destaque e prioridade nas buscas."
+  p.name = "Plano Pro Mecânicos"
+  p.description = "Mini-site profissional, botão direto de WhatsApp, fotos dos serviços e destaque nas buscas locais."
   p.active = true
 end
 premium_product.update!(stripe_product_id: "prod_V5xyTxcWLpMtEl", active: true)
 
 premium_price = StripePrice.find_or_initialize_by(stripe_product: premium_product)
 premium_price.update!(
-  name: "Plano Premium (R$ 39,90/mês)",
+  name: "Plano Pro (R$ 39,90/mês)",
   amount_cents: 39.90,
   currency: "brl",
   interval: "month",
@@ -69,25 +104,4 @@ premium_price.update!(
   active: true
 )
 
-ultra_web_product = StripeProduct.find_or_create_by!(slug: "ultra_web") do |p|
-  p.name = "Plano Ultra Web"
-  p.description = "Website completo exclusivo com domínio próprio + todas as vantagens do Premium."
-  p.active = false
-end
-ultra_web_product.update!(active: false)
-
-ultra_price = StripePrice.find_or_initialize_by(stripe_product: ultra_web_product)
-ultra_price.update!(
-  name: "Plano Ultra Web (R$ 299,00/mês)",
-  amount_cents: 299.00,
-  currency: "brl",
-  interval: "month",
-  interval_count: 1,
-  active: false
-)
-
-
-puts "✅ Stripe products & prices updated for recurring monthly subscriptions!"
-
-
-puts "✅ Stripe products & prices seeded!"
+puts "✅ Stripe products & prices updated for Melhores Mecânicos!"

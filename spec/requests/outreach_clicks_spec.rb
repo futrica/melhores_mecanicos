@@ -6,14 +6,14 @@ RSpec.describe "OutreachClicks", type: :request do
 
   let!(:company) do
     Company.create!(
-      trade_name: 'Pousada Mar Ubatuba',
-      legal_name: 'Pousada Mar Ubatuba LTDA',
+      trade_name: 'Oficina Auto Mar',
+      legal_name: 'Oficina Auto Mar LTDA',
       cnpj: '33.333.333/0001-33',
-      email: 'contato@pousadamarubatuba.com.br',
+      email: 'contato@oficinaautomar.com.br',
       views_count: 10,
       claim_status: :unclaimed,
       status: 'ATIVA',
-      cnae_principal: '5510801',
+      cnae_principal: '4520-0/01',
       state: state,
       city: city
     )

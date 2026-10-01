@@ -41,37 +41,40 @@ class CompanySchemaMapper
     "4732"    => "AutoPartsStore",
     "4511"    => "AutoDealer",
     "4512"    => "AutoDealer",
+    "4520001" => "AutoRepair",
+    "4520002" => "AutoBodyShop",
+    "4520003" => "AutoRepair",
+    "4520004" => "AutoRepair",
+    "4520005" => "AutoWash",
+    "4520006" => "TireShop",
+    "4520007" => "AutoRepair",
+    "4520008" => "AutoRepair",
     "4520"    => "AutoRepair",
+    "4530703" => "AutoPartsStore",
+    "4530704" => "AutoPartsStore",
+    "4530705" => "TireShop",
     "4530"    => "AutoPartsStore",
     "4541"    => "MotorcycleDealer",
     "4542"    => "MotorcycleRepair",
+    "4543"    => "MotorcycleRepair",
+    "4543900" => "MotorcycleRepair",
+    "5229002" => "AutomotiveBusiness",
+    "7120100" => "AutomotiveBusiness",
+    "2941700" => "AutoRepair",
 
-    # 2. Alimentação & Hospedagem (Divisões 55 e 56)
-    "5510801" => "Hotel",
-    "5510802" => "Hotel",
-    "5590601" => "Hostel",
-    "5590603" => "LodgingBusiness",
-    "5590699" => "LodgingBusiness",
-    "5510"    => "Hotel",
-    "5590"    => "LodgingBusiness",
+    # 2. Serviços Comerciais & Apoio
     "5611"    => "Restaurant",
     "5612"    => "FoodEstablishment",
     "5620"    => "FoodEstablishment",
 
-    # 3. Serviços Profissionais, Imobiliária & Saúde (Divisões 68, 69, 70, 71, 75, 86)
+    # 3. Serviços Profissionais & Especializados
     "6910"    => "LegalService",
     "6920"    => "AccountingService",
-    "6821"    => "RealEstateAgent",
-    "6822"    => "RealEstateAgent",
     "7111"    => "ArchitecturalService",
     "7112"    => "EngineeringService",
     "7500"    => "VeterinaryCare",
-    "8630"    => "MedicalClinic",
-    "8640"    => "MedicalLaboratory",
-    "8650"    => "MedicalBusiness",
-    "8690"    => "MedicalBusiness",
 
-    # 4. Serviços de Manutenção & Construção (Divisões 41, 42, 43, 95, 96)
+    # 4. Serviços de Manutenção & Construção
     "4120"    => "GeneralContractor",
     "4321"    => "Electrician",
     "4322"    => "Plumber",
@@ -82,10 +85,7 @@ class CompanySchemaMapper
     "9511"    => "ComputerRepair",
     "9512"    => "ElectronicsRepair",
     "9521"    => "ElectronicsRepair",
-    "9529"    => "Locksmith",
-    "9602"    => "BeautySalon",
-    "9603"    => "FuneralHome",
-    "9609"    => "PetGrooming"
+    "9529"    => "Locksmith"
   }.freeze
 
   def initialize(company, base_url: nil, reviews: nil)
@@ -105,18 +105,20 @@ class CompanySchemaMapper
     end
 
     category_name = @company.categories.first&.name.to_s.downcase
-    if category_name.include?("pousada")
-      "BedAndBreakfast"
-    elsif category_name.include?("hotel")
-      "Hotel"
-    elsif category_name.include?("restaurante")
-      "Restaurant"
-    elsif category_name.include?("farmácia") || category_name.include?("drogaria")
-      "Pharmacy"
-    elsif category_name.include?("construção") || category_name.include?("depósito")
-      "BuildingSupplyStore"
+    if category_name.include?("funilaria") || category_name.include?("pintura")
+      "AutoBodyShop"
+    elsif category_name.include?("lavagem") || category_name.include?("polimento")
+      "AutoWash"
+    elsif category_name.include?("borracharia") || category_name.include?("pneu")
+      "TireShop"
+    elsif category_name.include?("peça")
+      "AutoPartsStore"
+    elsif category_name.include?("moto")
+      "MotorcycleRepair"
+    elsif category_name.include?("mecânica") || category_name.include?("auto") || category_name.include?("oficina")
+      "AutoRepair"
     else
-      "LocalBusiness"
+      "AutoRepair"
     end
   end
 

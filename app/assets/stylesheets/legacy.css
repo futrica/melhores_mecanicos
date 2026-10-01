@@ -2,9 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Hospedagem Direta Brand Palette */
-  --navy: #001F54;          /* Deep navy blue */
-  --orange: #10b981;        /* Emerald green accent */
+  /* Melhores Mecânicos - Porto Seguro Auto Brand Palette */
+  --navy: #093892;          /* Porto Seguro Primary Blue */
+  --blue-primary: #093892;  /* Buttons & Primary elements */
+  --blue-accent: #00A1FC;   /* Links & Secondary Highlights */
+  --orange: #00A1FC;        /* Accent color */
   --cement-light: #cbd5e1;  /* Light slate gray */
   --cement-dark: #94a3b8;   /* Muted slate gray */
   
@@ -13,16 +15,16 @@
   --bg-tertiary: #f1f5f9;
   --card-bg: #ffffff;
   --card-border: #e2e8f0;
-  --card-hover-border: #10b981;
+  --card-hover-border: #00A1FC;
   
-  --primary: #10b981;
-  --primary-hover: #059669;
-  --primary-glow: rgba(16, 185, 129, 0.12);
-  --gradient-primary: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --primary: #093892;
+  --primary-hover: #072d75;
+  --primary-glow: rgba(9, 56, 146, 0.15);
+  --gradient-primary: linear-gradient(135deg, #093892 0%, #00A1FC 100%);
   
-  --text-main: #001F54;
+  --text-main: #0f172a;
   --text-muted: #475569;
-  --text-dark: #1e293b;
+  --text-dark: #0f172a;
   
   --success: #10b981;
   --success-glow: #d1fae5;
@@ -31,10 +33,10 @@
   --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
   
   --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  --shadow-sm: 0 1px 3px rgba(0, 31, 84, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 31, 84, 0.08), 0 2px 4px -1px rgba(0, 31, 84, 0.04);
-  --shadow-lg: 0 10px 25px -5px rgba(0, 31, 84, 0.1), 0 8px 16px -6px rgba(0, 31, 84, 0.05);
-  --shadow-glow: 0 0 15px 0 rgba(16, 185, 129, 0.15);
+  --shadow-sm: 0 1px 3px rgba(9, 56, 146, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(9, 56, 146, 0.08), 0 2px 4px -1px rgba(9, 56, 146, 0.04);
+  --shadow-lg: 0 10px 25px -5px rgba(9, 56, 146, 0.1), 0 8px 16px -6px rgba(9, 56, 146, 0.05);
+  --shadow-glow: 0 0 15px 0 rgba(0, 161, 252, 0.2);
 }
 
 /* Global Reset & Body */
@@ -1802,11 +1804,11 @@ main.container {
 }
 
 /* Specific category gradients when checked */
-.category-tab-label input:checked + .category-tab-btn-custom.hoteis-e-pousadas { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-.category-tab-label input:checked + .category-tab-btn-custom.apart-hoteis { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
-.category-tab-label input:checked + .category-tab-btn-custom.albergues-e-hostels { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
-.category-tab-label input:checked + .category-tab-btn-custom.pensoes-e-alojamentos { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-.category-tab-label input:checked + .category-tab-btn-custom.outras-hospedagens { background: linear-gradient(135deg, #64748b 0%, #475569 100%); }
+.category-tab-label input:checked + .category-tab-btn-custom.mecanica-geral-reparacao { background: linear-gradient(135deg, #093892 0%, #00A1FC 100%); }
+.category-tab-label input:checked + .category-tab-btn-custom.funilaria-pintura { background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); }
+.category-tab-label input:checked + .category-tab-btn-custom.auto-eletrica-eletronica { background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); }
+.category-tab-label input:checked + .category-tab-btn-custom.alinhamento-balanceamento { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+.category-tab-label input:checked + .category-tab-btn-custom.borracharia-pneus { background: linear-gradient(135deg, #475569 0%, #334155 100%); }
 
 .category-tab-label input:checked + .category-tab-btn-custom.materiais-de-construcao { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
 .category-tab-label input:checked + .category-tab-btn-custom.ferragens-e-ferramentas { background: linear-gradient(135deg, #64748b 0%, #475569 100%); }

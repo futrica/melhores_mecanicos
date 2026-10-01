@@ -14,9 +14,9 @@ RSpec.describe "SEO Pages", type: :request do
     it "renders the home page successfully with categories and no CNAE badge" do
       get root_path
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Reserve")
+      expect(response.body).to include("Melhores Mecânicos")
       expect(response.body).to include("São Paulo")
-      expect(response.body).to include("Pousadas")
+      expect(response.body).to include("SERVIÇOS DE FREIOS")
       expect(response.body).not_to include("CNAE 5510-8/01")
     end
   end
@@ -28,10 +28,10 @@ RSpec.describe "SEO Pages", type: :request do
       }.to have_enqueued_job(TrackMetricJob).at_least(:once)
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Hospedagens em Guaratinguetá")
-      expect(response.body).to include("Pousada do Zé")
-      expect(response.body).to include("Hotéis e Pousadas")
-      expect(response.body).not_to include("CNAE 5510-8/01")
+      expect(response.body).to include("Oficinas Mecânicas em Guaratinguetá")
+      expect(response.body).to include("Auto Mecânica do Zé")
+      expect(response.body).to include("Mecânica Geral")
+      expect(response.body).not_to include("CNAE 4520-0/01")
     end
 
     it "paginates the companies listing when there are more than 15 companies" do
@@ -41,7 +41,7 @@ RSpec.describe "SEO Pages", type: :request do
           legal_name: "Legal Name #{i} Ltda",
           trade_name: "Store Number #{i}",
           slug: "store-number-#{i}",
-          cnae_principal: "5510-8/01",
+          cnae_principal: "4520-0/01",
           status: "Ativa",
           street: "Rua Teste #{i}",
           number: i.to_s,
@@ -75,10 +75,10 @@ RSpec.describe "SEO Pages", type: :request do
       }.to have_enqueued_job(TrackMetricJob).at_least(:once)
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Hospedagens no Centro em Guaratinguetá")
-      expect(response.body).to include("Pousada do Zé")
-      expect(response.body).to include("Hotéis e Pousadas")
-      expect(response.body).not_to include("CNAE 5510-8/01")
+      expect(response.body).to include("Oficinas Mecânicas no Centro em Guaratinguetá")
+      expect(response.body).to include("Auto Mecânica do Zé")
+      expect(response.body).to include("Mecânica Geral")
+      expect(response.body).not_to include("CNAE 4520-0/01")
     end
 
     it "paginates the neighborhood companies listing when there are more than 15 companies" do
@@ -88,7 +88,7 @@ RSpec.describe "SEO Pages", type: :request do
           legal_name: "Legal Name N #{i} Ltda",
           trade_name: "N Store Number #{i}",
           slug: "n-store-number-#{i}",
-          cnae_principal: "5510-8/01",
+          cnae_principal: "4520-0/01",
           status: "Ativa",
           street: "Rua Teste N #{i}",
           number: i.to_s,
@@ -127,10 +127,10 @@ RSpec.describe "SEO Pages", type: :request do
       }.to have_enqueued_job(TrackMetricJob).at_least(:once)
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Pousada do Zé")
+      expect(response.body).to include("Auto Mecânica do Zé")
       expect(response.body).to include("12345678000101")
-      expect(response.body).to include("5510-8/01")
-      expect(response.body).to include("Hotéis e Pousadas")
+      expect(response.body).to include("4520-0/01")
+      expect(response.body).to include("Mecânica Geral")
     end
   end
 
@@ -140,7 +140,7 @@ RSpec.describe "SEO Pages", type: :request do
       expect(response).to have_http_status(:success)
       expect(response.body).to include("Quem Somos")
       expect(response.body).to include("Por que criamos o")
-      expect(response.body).to include("OTAs")
+      expect(response.body).to include("Intermediários")
     end
 
     it "renders the terms of use page successfully" do

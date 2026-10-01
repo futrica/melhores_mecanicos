@@ -109,14 +109,14 @@ RSpec.describe User, type: :model do
       city = City.find_by(slug: 'guaratingueta', state: state) || City.create!(state: state, name: 'Guaratinguetá', ibge_code: '3518404')
       company = Company.create!(
         state: state, city: city, cnpj: '77665544000199',
-        legal_name: 'Pousada do João LTDA', email: 'contato@pousadadojoao.com.br',
-        cnae_principal: '5510801', status: 'Ativa'
+        legal_name: 'Auto Mecânica do João LTDA', email: 'contato@mecanicadojoao.com.br',
+        cnae_principal: '4520-0/01', status: 'Ativa'
       )
 
       google_auth = double(
         provider: "google_oauth2",
         uid: "998877",
-        info: double(email: "joao@pousadadojoao.com.br", name: "João Silva")
+        info: double(email: "joao@mecanicadojoao.com.br", name: "João Silva")
       )
 
       user = User.from_omniauth(google_auth)
@@ -134,12 +134,12 @@ RSpec.describe User, type: :model do
       city = City.find_by(slug: 'guaratingueta', state: state) || City.create!(state: state, name: 'Guaratinguetá', ibge_code: '3518404')
       company = Company.create!(
         state: state, city: city, cnpj: '77665544000198',
-        legal_name: 'Pousada e Hotel LTDA', email: 'atendimento@pousadaehotel.com.br',
-        cnae_principal: '5510801', status: 'Ativa'
+        legal_name: 'Auto Center do Vale LTDA', email: 'atendimento@oficinadovale.com.br',
+        cnae_principal: '4520-0/01', status: 'Ativa'
       )
 
       user = User.create!(
-        email: "diretoria@pousadaehotel.com.br",
+        email: "diretoria@oficinadovale.com.br",
         password: "password",
         password_confirmation: "password",
         terms_accepted: "1"
@@ -158,12 +158,12 @@ RSpec.describe User, type: :model do
       city = City.find_by(slug: 'guaratingueta', state: state) || City.create!(state: state, name: 'Guaratinguetá', ibge_code: '3518404')
       company = Company.create!(
         state: state, city: city, cnpj: '11223344000155',
-        legal_name: 'Hotel Teste LTDA', email: 'hotel@teste.com',
-        cnae_principal: '5510801', status: 'Ativa'
+        legal_name: 'Oficina Teste LTDA', email: 'oficina@teste.com',
+        cnae_principal: '4520-0/01', status: 'Ativa'
       )
 
       user = User.create!(
-        email: "hospede@teste.com",
+        email: "cliente@teste.com",
         password: "password123",
         password_confirmation: "password123",
         terms_accepted: "1",

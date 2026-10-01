@@ -10,7 +10,7 @@ RSpec.describe CompanyGeocoder do
       c.zip_code = "01001-000"
       c.street = "Praça da Sé"
       c.number = "1"
-      c.cnae_principal = "5510801"
+      c.cnae_principal = "4520-0/01"
       c.status = "Ativa"
       c.state = state
       c.city = city

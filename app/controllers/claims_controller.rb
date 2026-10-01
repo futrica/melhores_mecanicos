@@ -3,11 +3,19 @@ class ClaimsController < ApplicationController
 
   def new
     @company = Company.find_by(id: params[:company_id])
+    session[:claim_company_id] = @company.id if @company.present?
+
     if @company.nil? && params[:q].present?
-      query = "%#{params[:q].downcase}%"
-      @companies = Company.where(claim_status: :unclaimed)
-                           .where("lower(trade_name) LIKE ? OR lower(legal_name) LIKE ?", query, query)
-                           .limit(10)
+      raw_query = params[:q].to_s.strip
+      clean_cnpj = raw_query.gsub(/\D/, "")
+      query = "%#{raw_query.downcase}%"
+
+      scope = Company.where(claim_status: :unclaimed)
+      if clean_cnpj.length >= 8
+        @companies = scope.where("replace(replace(replace(cnpj, '.', ''), '/', ''), '-', '') LIKE ? OR lower(trade_name) LIKE ? OR lower(legal_name) LIKE ?", "%#{clean_cnpj}%", query, query).limit(10)
+      else
+        @companies = scope.where("lower(trade_name) LIKE ? OR lower(legal_name) LIKE ?", query, query).limit(10)
+      end
     end
   end
 

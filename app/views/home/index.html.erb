@@ -1,63 +1,70 @@
 <%# app/views/home/index.html.erb %>
 
-<!-- HERO SECTION -->
-<section class="relative bg-[#001F54] text-white py-12 lg:py-20 overflow-hidden">
+<!-- HERO SECTION: Modern Automotive Photo Banner with Porto Seguro Palette -->
+<section class="relative text-white py-14 lg:py-24 overflow-hidden bg-[#051d4d]">
   
-  <!-- Ambient Glow Overlay -->
-  <div class="absolute inset-0 z-0 bg-gradient-to-b from-[#00153B]/80 via-[#001F54]/90 to-[#00153B]"></div>
+  <!-- Background Car Image with Optimized Gradient for Car Visibility -->
+  <div class="absolute inset-0 z-0">
+    <img src="/images/hero/hero_car.jpg" alt="Carro em oficina mecânica" class="w-full h-full object-cover object-right sm:object-center opacity-85">
+    <div class="absolute inset-0 bg-gradient-to-r from-[#051d4d] via-[#051d4d]/85 via-45% to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#051d4d] via-transparent via-50% to-[#051d4d]/40"></div>
+  </div>
 
   <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
     
-    <!-- Hero Text -->
+    <!-- Hero Text: Focus on proximity to residence -->
     <div class="max-w-3xl space-y-4 text-left">
-      <div class="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase shadow-sm backdrop-blur-md">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-        <span>Economize nas suas férias com a Reserva Direta</span>
-      </div>
-
-      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none text-white">
-        Reserve direto com a hospedagem. <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">Sem taxas abusivas.</span>
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white drop-shadow-md">
+        Encontre as melhores oficinas mecânicas <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#00A1FC] via-sky-300 to-white">próximas à sua residência.</span>
       </h1>
 
       <p class="text-base sm:text-xl text-blue-100/90 leading-relaxed font-medium">
-        As grandes plataformas de reservas online cobram até 25% de comissão dos hotéis. No <strong>Hospedagem Direta</strong>, você fala direto pelo WhatsApp ou telefone com a recepção, garante o menor preço e economiza em cada diária.
+        Quem ama e cuida do carro sabe o valor de ter um mecânico de confiança pertinho de casa. Localize centros automotivos qualificados no seu bairro ou cidade, com dados públicos oficiais da Receita Federal e serviços de ponta.
       </p>
+
+      <% if @stats.present? && @stats[:total_companies].to_i > 0 %>
+        <div class="flex items-center gap-4 pt-1 text-xs text-blue-200 font-semibold">
+          <span>📍 <strong><%= @stats[:total_cities] %></strong> cidades mapeadas</span>
+          <span>&bull;</span>
+          <span>🔧 +<strong><%= number_with_delimiter(@stats[:total_companies]) %></strong> oficinas cadastradas</span>
+        </div>
+      <% end %>
     </div>
 
-    <!-- Search Panel -->
+    <!-- Search Panel: State, City, Neighborhood & Service -->
     <div class="pt-2">
       <%= render 'shared/search_panel' %>
     </div>
 
-    <!-- Trust Badges Bar -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-blue-900/60">
-      <div class="flex items-center gap-3 bg-blue-950/50 backdrop-blur border border-blue-800/40 p-3.5 rounded-xl">
-        <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold">
-          ⚡
+    <!-- Proximity & Quality Trust Badges -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-white/15">
+      <div class="flex items-center gap-3 bg-white/10 backdrop-blur border border-white/15 p-3.5 rounded-xl">
+        <div class="w-10 h-10 rounded-lg bg-[#00A1FC]/30 text-white flex items-center justify-center text-xl font-bold shadow-inner">
+          📍
         </div>
         <div>
-          <h4 class="font-extrabold text-sm text-white">0% de Comissão</h4>
-          <p class="text-xs text-blue-200">Sem intermediação nem taxas escondidas.</p>
+          <h4 class="font-extrabold text-sm text-white">No Seu Bairro</h4>
+          <p class="text-xs text-blue-100/80">Oficinas a poucos minutos da sua residência.</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-3 bg-blue-950/50 backdrop-blur border border-blue-800/40 p-3.5 rounded-xl">
-        <div class="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-300 flex items-center justify-center text-xl font-bold">
-          💬
+      <div class="flex items-center gap-3 bg-white/10 backdrop-blur border border-white/15 p-3.5 rounded-xl">
+        <div class="w-10 h-10 rounded-lg bg-[#00A1FC]/30 text-white flex items-center justify-center text-xl font-bold shadow-inner">
+          ⭐
         </div>
         <div>
-          <h4 class="font-extrabold text-sm text-white">Contato Direto no WhatsApp</h4>
-          <p class="text-xs text-blue-200">Fale com o dono ou recepção em segundos.</p>
+          <h4 class="font-extrabold text-sm text-white">Mecânicos Qualificados</h4>
+          <p class="text-xs text-blue-100/80">Especialistas experientes em todas as marcas.</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-3 bg-blue-950/50 backdrop-blur border border-blue-800/40 p-3.5 rounded-xl">
-        <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center text-xl font-bold">
-          💰
+      <div class="flex items-center gap-3 bg-white/10 backdrop-blur border border-white/15 p-3.5 rounded-xl">
+        <div class="w-10 h-10 rounded-lg bg-[#00A1FC]/30 text-white flex items-center justify-center text-xl font-bold shadow-inner">
+          📋
         </div>
         <div>
-          <h4 class="font-extrabold text-sm text-white">Menor Preço Garantido</h4>
-          <p class="text-xs text-blue-200">Preços mais baixos do que em intermediários.</p>
+          <h4 class="font-extrabold text-sm text-white">Dados Oficiais da RFB</h4>
+          <p class="text-xs text-blue-100/80">Endereço real, CNPJ ativo e histórico transparente.</p>
         </div>
       </div>
     </div>
@@ -70,100 +77,143 @@
   <%= adsense_ad_tag(:top) %>
 </div>
 
-<!-- VALUE PROPOSITION SECTION: Why Book Direct? -->
-<section class="py-12 bg-white border-y border-slate-200/80">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+<!-- SECTION: PRINCIPAIS SERVIÇOS AUTOMOTIVOS (Visual Photo Cards based on reference image) -->
+<section id="especialidades" class="py-14 bg-white border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
     
-    <div class="text-center max-w-3xl mx-auto space-y-3">
-      <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-        Vantagem Real
+    <div class="text-center max-w-3xl mx-auto space-y-2">
+      <span class="text-xs font-black uppercase tracking-widest text-[#093892] bg-blue-50 px-3.5 py-1.5 rounded-full border border-blue-200">
+        Conheça Nossos Serviços
       </span>
-      <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-        Por que é mais inteligente reservar no <span class="text-blue-600">Hospedagem Direta</span>?
+      <h2 class="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
+        Especialidades para Manter seu Carro Perfeito
       </h2>
-      <p class="text-slate-600 text-sm sm:text-base">
-        Entenda a diferença entre pagar comissões para grandes agregadores e fechar direto com a pousada.
+      <p class="text-xs sm:text-sm text-slate-600">
+        Clique na especialidade desejada para encontrar oficinas mecânicas especializadas perto da sua casa.
       </p>
     </div>
 
-    <!-- Comparison Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-      
-      <!-- Card Intermediaries (The Problem) -->
-      <div class="bg-rose-50/50 border border-rose-200 rounded-2xl p-6 sm:p-8 space-y-6 relative overflow-hidden">
-        <div class="absolute top-0 right-0 bg-rose-500 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1 rounded-bl-xl shadow-sm">
-          Plataformas de Reserva Online (OTAs)
-        </div>
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-2xl font-bold">
-            ❌
+    <!-- Row 1: 5 Photos (Freios, Elétrica, Mecânica Geral, Balanceamento, Alinhamento) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      <% (@popular_services || []).first(5).each do |service| %>
+        <div class="flex flex-col space-y-3 group">
+          <!-- Title above photo matching the user's reference image -->
+          <div class="text-center">
+            <span class="text-xs font-black uppercase tracking-wider text-slate-700 group-hover:text-[#093892] transition-colors">
+              <%= service[:title] %>
+            </span>
           </div>
-          <div>
-            <h3 class="font-extrabold text-lg text-slate-900">Reservando por Agências Intermediárias</h3>
-            <p class="text-xs text-rose-700 font-medium">As taxas tornam tudo mais caro</p>
-          </div>
-        </div>
 
-        <ul class="space-y-3 text-sm text-slate-700">
-          <li class="flex items-start gap-2.5">
-            <span class="text-rose-500 font-bold text-base mt-0.5">&bull;</span>
-            <span><strong>Comissão de 15% a 25%</strong> repassada ao valor final da sua diária.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <span class="text-rose-500 font-bold text-base mt-0.5">&bull;</span>
-            <span>Atendimento impessoal e comunicação engessada por mensagens do aplicativo.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <span class="text-rose-500 font-bold text-base mt-0.5">&bull;</span>
-            <span>Dificuldade para negociar descontos, horários de check-in flexíveis ou mimos.</span>
-          </li>
-        </ul>
+          <!-- Photo Container -->
+          <a href="/busca?q=<%= ERB::Util.url_encode(service[:query]) %>" class="block aspect-square w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shadow-sm group-hover:shadow-lg group-hover:border-[#00A1FC] transition-all relative">
+            <img src="<%= service[:image] %>" alt="<%= service[:name] %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3">
+              <span class="text-[11px] font-black text-white bg-[#093892]/90 px-3 py-1 rounded-full shadow">
+                Ver oficinas próximas &rarr;
+              </span>
+            </div>
+          </a>
+
+          <!-- Description below photo matching user's reference image -->
+          <p class="text-xs text-slate-600 text-center leading-relaxed">
+            <%= service[:desc] %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Row 2: 4 Photos (Troca de Pneu, Revisão, Troca de Óleo, Suspensão) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+      <% (@popular_services || []).drop(5).each do |service| %>
+        <div class="flex flex-col space-y-3 group">
+          <!-- Title above photo matching reference -->
+          <div class="text-center">
+            <span class="text-xs font-black uppercase tracking-wider text-slate-700 group-hover:text-[#093892] transition-colors">
+              <%= service[:title] %>
+            </span>
+          </div>
+
+          <!-- Photo Container -->
+          <a href="/busca?q=<%= ERB::Util.url_encode(service[:query]) %>" class="block aspect-square w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shadow-sm group-hover:shadow-lg group-hover:border-[#00A1FC] transition-all relative">
+            <img src="<%= service[:image] %>" alt="<%= service[:name] %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3">
+              <span class="text-[11px] font-black text-white bg-[#093892]/90 px-3 py-1 rounded-full shadow">
+                Ver oficinas próximas &rarr;
+              </span>
+            </div>
+          </a>
+
+          <!-- Description below photo -->
+          <p class="text-xs text-slate-600 text-center leading-relaxed">
+            <%= service[:desc] %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+</section>
+
+<!-- SECTION: "SOMOS APAIXONADOS POR CARROS" (Visual Storytelling Banner) -->
+<section class="py-16 bg-gradient-to-br from-[#051d4d] via-[#093892] to-[#072461] text-white relative overflow-hidden">
+  <!-- Subtle Glow -->
+  <div class="absolute top-0 right-1/4 w-96 h-96 bg-[#00A1FC]/10 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      
+      <!-- Left: Engine Bay Photo Card -->
+      <div class="lg:col-span-5">
+        <div class="relative rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl shadow-black/40 group">
+          <img src="/images/services/mecanica_geral.jpg" alt="Motor de carro e ferramentas em oficina" class="w-full h-80 sm:h-96 object-cover group-hover:scale-105 transition-transform duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-6">
+            <div class="space-y-1">
+              <span class="text-[10px] font-black uppercase tracking-widest text-[#00A1FC] bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20 inline-block">
+                Engenharia & Precisão
+              </span>
+              <h4 class="text-white font-black text-lg sm:text-xl">Coração do Carro em Mãos Especializadas</h4>
+              <p class="text-xs text-blue-100">Motores modernos exigem ferramentas calibradas e paixão pelo ofício.</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Card Hospedagem Direta (The Solution) -->
-      <div class="bg-gradient-to-b from-emerald-50/70 to-white border-2 border-emerald-500/80 rounded-2xl p-6 sm:p-8 space-y-6 relative shadow-xl shadow-emerald-500/10">
-        <div class="absolute top-0 right-0 bg-emerald-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3.5 py-1.5 rounded-bl-xl shadow-sm flex items-center gap-1">
-          <span>⚡</span> Hospedagem Direta
+      <!-- Right: Narrative & Quality Pillars -->
+      <div class="lg:col-span-7 space-y-6 text-left">
+        <div class="inline-flex items-center gap-2 bg-[#00A1FC]/20 border border-[#00A1FC]/40 text-blue-100 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
+          <span>❤️</span>
+          <span>Nossa Filosofia</span>
         </div>
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-2xl font-bold shadow-lg shadow-emerald-500/30">
-            ✅
+
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white">
+          Somos apaixonados por carros e pela precisão da boa mecânica.
+        </h2>
+
+        <p class="text-blue-100 text-sm sm:text-base leading-relaxed">
+          Sabemos o quanto você valoriza seu carro e a tranquilidade da sua família. Seja para uma revisão preventiva antes de uma viagem importante, um diagnóstico computadorizado de injeção ou aquele ajuste fino nos freios e suspensão, nosso compromisso é conectar você às melhores oficinas mecânicas do seu bairro.
+        </p>
+
+        <!-- 3 Feature Pillars -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+          <div class="bg-white/10 border border-white/15 rounded-xl p-4 space-y-1.5">
+            <span class="text-2xl">🔍</span>
+            <h4 class="font-extrabold text-sm text-white">Diagnóstico Preciso</h4>
+            <p class="text-[11px] text-blue-200">Equipamentos para identificar falhas com exatidão.</p>
           </div>
-          <div>
-            <h3 class="font-extrabold text-lg text-slate-900">Reservando no Hospedagem Direta</h3>
-            <p class="text-xs text-emerald-700 font-bold">100% Direto com o proprietário</p>
+
+          <div class="bg-white/10 border border-white/15 rounded-xl p-4 space-y-1.5">
+            <span class="text-2xl">🏠</span>
+            <h4 class="font-extrabold text-sm text-white">Perto de Você</h4>
+            <p class="text-[11px] text-blue-200">Comodidade de deixar e buscar seu carro no seu bairro.</p>
+          </div>
+
+          <div class="bg-white/10 border border-white/15 rounded-xl p-4 space-y-1.5">
+            <span class="text-2xl">🤝</span>
+            <h4 class="font-extrabold text-sm text-white">Transparência</h4>
+            <p class="text-[11px] text-blue-200">Acesso a dados cadastrais públicos e histórico da oficina.</p>
           </div>
         </div>
 
-        <ul class="space-y-3 text-sm text-slate-700">
-          <li class="flex items-start gap-2.5">
-            <span class="text-emerald-600 font-bold text-base mt-0.5">✓</span>
-            <span><strong>0% de comissão:</strong> O hotel não paga taxa e você ganha o menor preço.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <span class="text-emerald-600 font-bold text-base mt-0.5">✓</span>
-            <span>Fale na hora pelo <strong>WhatsApp ou Telefone</strong> direto com a recepção.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <span class="text-emerald-600 font-bold text-base mt-0.5">✓</span>
-            <span>Facilidade total para combinar upgrades, café da manhã especial e passeios locais.</span>
-          </li>
-        </ul>
-
-        <!-- YouTube Video CTA -->
-        <div class="pt-3 border-t border-emerald-100/80">
-          <a href="https://www.youtube.com/watch?v=N2MpAi8AQSg" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-between gap-2 bg-emerald-100/50 hover:bg-rose-50 border border-emerald-200/80 hover:border-rose-200 px-3.5 py-2.5 rounded-xl transition-all group">
-            <span class="flex items-center gap-2 min-w-0">
-              <svg class="w-5 h-5 text-rose-600 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-              </svg>
-              <span class="text-xs font-semibold text-slate-800 group-hover:text-rose-700 truncate">Veja no vídeo como economizar sem taxas</span>
-            </span>
-            <span class="text-xs font-bold text-rose-600 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5 flex-shrink-0">
-              Assista ↗
-            </span>
-          </a>
-        </div>
       </div>
 
     </div>
@@ -175,89 +225,207 @@
   <%= adsense_ad_tag(:inline) %>
 </div>
 
-<!-- STAY AT OUR TOP UNIQUE PROPERTIES (Acomodações em Destaque) -->
-<section id="acomodacoes-destaque" class="py-14 bg-white border-t border-slate-200/80">
+<!-- FEATURED WORKSHOPS (Oficinas Mecânicas Recomendadas) -->
+<section id="oficinas-destaque" class="py-14 bg-white border-t border-slate-200">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
     
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
       <div>
-        <div class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-emerald-600 mb-1">
-          <span>✨</span> Hospedagens em Destaque
+        <div class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-[#093892] mb-1">
+          <span>✨</span> Oficinas em Destaque
         </div>
         <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-          Acomodações em Destaque &bull; Reserva Direta
+          Oficinas Mecânicas Recomendadas
         </h2>
         <p class="text-xs sm:text-sm text-slate-500 mt-1">
-          Propriedades verificadas que oferecem contato direto e 0% de taxa.
+          Centros automotivos e oficinas avaliadas para cuidar do seu veículo com total segurança.
         </p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a href="/busca" class="text-xs font-extrabold text-[#093892] hover:text-[#00A1FC] flex items-center gap-1">
+          <span>Ver todas as oficinas</span>
+          <span>&rarr;</span>
+        </a>
       </div>
     </div>
 
-    <!-- Featured Properties List -->
-    <div class="space-y-4">
-      <% @featured_companies.each do |company| %>
-        <%= render 'shared/booking_company_card', company: company %>
-      <% end %>
-    </div>
+    <!-- Featured Workshops List -->
+    <% if @featured_companies.present? && @featured_companies.any? %>
+      <div class="space-y-4">
+        <% @featured_companies.each do |company| %>
+          <%= render 'shared/booking_company_card', company: company %>
+        <% end %>
+      </div>
+    <% else %>
+      <!-- Friendly State when database is bootstrapping -->
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-8 text-center space-y-4 max-w-2xl mx-auto">
+        <span class="text-4xl">🔧</span>
+        <h3 class="text-lg font-extrabold text-slate-800">Encontre mecânicas qualificadas perto da sua casa</h3>
+        <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
+          Nossa plataforma reúne oficinas em todo o território nacional. Use o filtro por Estado e Cidade acima para encontrar especialistas no seu bairro.
+        </p>
+        <div class="pt-2">
+          <% if can_claim_company? %>
+            <a href="<%= new_claim_path %>" class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#093892] hover:bg-[#072d75] text-white font-extrabold text-xs rounded-xl shadow-md transition-all">
+              <span>⚡</span> Reivindicar Minha Oficina
+            </a>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
 
   </div>
 </section>
 
-<!-- PUBLIC DATA TRANSPARENCY CARD -->
-<section class="py-8 bg-slate-100 border-t border-slate-200">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-      <div class="space-y-1.5 max-w-4xl">
-        <div class="flex items-center gap-2 text-slate-900 font-extrabold text-sm">
-          <span class="text-base">📋</span>
-          <span>Transparência de Dados Públicos (Receita Federal do Brasil)</span>
+<!-- POPULAR AUTOMOTIVE HUBS & CITIES (SEO) -->
+<section class="py-14 bg-slate-50 border-t border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-[#093892] mb-1">
+          <span>📍</span> Busca por Cidade
         </div>
-        <p class="text-xs text-slate-600 leading-relaxed">
-          Os dados de CNPJ, endereço e telefone exibidos neste portal são oriundos de cadastros públicos oficiais da Receita Federal do Brasil. O <strong>Hospedagem Direta</strong> atua unicamente como um índice público para facilitar a conexão direta entre viajantes e hospedagens. Se você é proprietário ou gestor e identificou dados desatualizados ou deseja reivindicar o controle do perfil do seu estabelecimento, acesse a área de reivindicação.
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+          Principais Polos Automotivos
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">
+          Encontre mecânicas de confiança perto da sua residência nas principais cidades brasileiras.
         </p>
       </div>
+    </div>
 
-      <% if can_claim_company? %>
-        <a href="<%= new_claim_path %>" class="whitespace-nowrap px-4 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-900 font-extrabold text-xs border border-blue-200 rounded-xl transition-colors">
-          Reivindicar Empresa
+    <!-- Cities Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3.5">
+      <% if @popular_cities.present? && @popular_cities.any? %>
+        <% @popular_cities.each do |city| %>
+          <a href="/<%= city.state.slug %>/<%= city.slug %>" class="bg-white hover:bg-blue-50/50 border border-slate-200 hover:border-[#00A1FC] p-3.5 rounded-xl transition-all group flex items-center justify-between">
+            <div>
+              <h4 class="font-extrabold text-xs sm:text-sm text-slate-800 group-hover:text-[#093892] transition-colors truncate">
+                <%= city.name %>
+              </h4>
+              <span class="text-[11px] text-slate-400 font-semibold"><%= city.state.acronym %></span>
+            </div>
+            <% if city.respond_to?(:companies_count) && city.companies_count.to_i > 0 %>
+              <span class="text-[10px] font-bold bg-blue-50 text-[#093892] px-2 py-0.5 rounded-full border border-blue-100">
+                <%= city.companies_count %> <%= city.companies_count == 1 ? "oficina" : "oficinas" %>
+              </span>
+            <% end %>
+          </a>
+        <% end %>
+      <% else %>
+        <!-- Default Popular Cities for SEO -->
+        <% [
+          ["São Paulo", "SP", "sp", "sao-paulo"],
+          ["Rio de Janeiro", "RJ", "rj", "rio-de-janeiro"],
+          ["Belo Horizonte", "MG", "mg", "belo-horizonte"],
+          ["Curitiba", "PR", "pr", "curitiba"],
+          ["Porto Alegre", "RS", "rs", "porto-alegre"],
+          ["Campinas", "SP", "sp", "campinas"],
+          ["Goiânia", "GO", "go", "goiania"],
+          ["Salvador", "BA", "ba", "salvador"]
+        ].each do |city_name, state_uf, state_slug, city_slug| %>
+          <a href="/<%= state_slug %>/<%= city_slug %>" class="bg-white hover:bg-blue-50/50 border border-slate-200 hover:border-[#00A1FC] p-3.5 rounded-xl transition-all group flex items-center justify-between">
+            <div>
+              <h4 class="font-extrabold text-xs sm:text-sm text-slate-800 group-hover:text-[#093892] transition-colors truncate">
+                <%= city_name %>
+              </h4>
+              <span class="text-[11px] text-slate-400 font-semibold"><%= state_uf %></span>
+            </div>
+            <span class="text-[10px] font-bold text-[#00A1FC] group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+          </a>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- BROWSE BY STATE (SEO Local) -->
+<section class="py-10 bg-white border-t border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+    <div class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-[#093892]">
+      <span>🗺️</span>
+      <span>Navegue por Estados em Todo o Brasil</span>
+    </div>
+    
+    <div class="flex flex-wrap gap-2 pt-1">
+      <% (State.any? ? State.order(:acronym) : [
+        OpenStruct.new(slug: "sp", acronym: "SP", name: "São Paulo"),
+        OpenStruct.new(slug: "rj", acronym: "RJ", name: "Rio de Janeiro"),
+        OpenStruct.new(slug: "mg", acronym: "MG", name: "Minas Gerais"),
+        OpenStruct.new(slug: "pr", acronym: "PR", name: "Paraná"),
+        OpenStruct.new(slug: "rs", acronym: "RS", name: "Rio Grande do Sul"),
+        OpenStruct.new(slug: "sc", acronym: "SC", name: "Santa Catarina"),
+        OpenStruct.new(slug: "ba", acronym: "BA", name: "Bahia"),
+        OpenStruct.new(slug: "go", acronym: "GO", name: "Goiás"),
+        OpenStruct.new(slug: "pe", acronym: "PE", name: "Pernambuco"),
+        OpenStruct.new(slug: "ce", acronym: "CE", name: "Ceará"),
+        OpenStruct.new(slug: "df", acronym: "DF", name: "Distrito Federal"),
+        OpenStruct.new(slug: "es", acronym: "ES", name: "Espírito Santo")
+      ]).each do |state| %>
+        <a href="/<%= state.slug %>" class="px-3 py-1.5 bg-slate-100 hover:bg-[#093892] hover:text-white text-slate-700 text-xs font-bold rounded-lg border border-slate-200 transition-colors" title="Oficinas mecânicas em <%= state.name %>">
+          <%= state.acronym %> - <%= state.name %>
         </a>
       <% end %>
     </div>
   </div>
 </section>
 
-<!-- CALL TO ACTION FOR HOSTELIERS / PROPERTY OWNERS -->
-<section class="py-16 bg-gradient-to-br from-[#00153B] via-[#001F54] to-blue-900 text-white relative overflow-hidden">
+<!-- PUBLIC DATA TRANSPARENCY CARD (RFB Official Notice) -->
+<section class="py-8 bg-slate-100 border-t border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div class="space-y-1.5 max-w-4xl">
+        <div class="flex items-center gap-2 text-slate-900 font-extrabold text-sm">
+          <span class="text-base">📋</span>
+          <span>Transparência e Dados Públicos Oficiais (Receita Federal do Brasil)</span>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Os dados de CNPJ, razão social, nome fantasia, endereço e telefone exibidos no portal <strong>Melhores Mecânicos</strong> são oriundos de cadastros públicos oficiais da Receita Federal do Brasil (RFB), sob o amparo da Lei de Acesso à Informação (Lei nº 12.527/2011). O portal funciona como um índice público para facilitar o encontro entre motoristas e estabelecimentos automotivos de confiança. Se você é o responsável pela oficina e identificou dados desatualizados ou deseja assumir a administração do perfil, acesse a área de reivindicação.
+        </p>
+      </div>
+
+      <% if can_claim_company? %>
+        <a href="<%= new_claim_path %>" class="whitespace-nowrap px-4 py-2.5 bg-blue-50 hover:bg-blue-100 text-[#093892] font-black text-xs border border-blue-200 rounded-xl transition-colors">
+          Reivindicar Oficina
+        </a>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- CALL TO ACTION FOR MECHANIC SHOP OWNERS (Digital Presence & Mini-sites) -->
+<section class="py-16 bg-gradient-to-br from-[#051d4d] via-[#093892] to-[#072461] text-white relative overflow-hidden">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
       
       <div class="lg:col-span-8 space-y-4 text-left">
-        <span class="bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 font-extrabold text-xs px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-block">
-          Proprietário / Gerente de Hospedagem
+        <span class="bg-[#00A1FC]/25 border border-[#00A1FC]/40 text-blue-100 font-extrabold text-xs px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-block">
+          Proprietário de Oficina / Auto Center
         </span>
 
         <h2 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-          Chega de pagar até 25% de comissão por cada reserva.
+          Sua oficina encontrada pelos motoristas do seu bairro.
         </h2>
 
         <p class="text-blue-100 text-base sm:text-lg leading-relaxed">
-          Reivindique a página da sua pousada, hotel ou chalé no <strong>Hospedagem Direta</strong>. Receba pedidos de reserva direto no seu WhatsApp, site ou telefone sem intermediários!
+          Reivindique o perfil da sua oficina mecânica gratuitamente no <strong>Melhores Mecânicos</strong>. Ganhe um mini-site profissional pronto para ser encontrado no Google da sua cidade e receba novos clientes pertinho de você.
         </p>
       </div>
 
       <div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-end">
         <% if can_claim_company? %>
-          <a href="<%= new_claim_path %>" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-base py-4 px-6 rounded-2xl shadow-xl shadow-emerald-500/20 text-center transition-all flex items-center justify-center gap-2">
+          <a href="<%= new_claim_path %>" class="bg-[#00A1FC] hover:bg-[#008ee0] text-white font-black text-base py-4 px-6 rounded-2xl shadow-xl shadow-[#00A1FC]/25 text-center transition-all flex items-center justify-center gap-2">
             <span>⚡</span>
-            <span>Reivindicar Minha Hospedagem</span>
+            <span>Reivindicar Minha Oficina Grátis</span>
           </a>
         <% else %>
-          <a href="<%= app_root_path %>" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-base py-4 px-6 rounded-2xl shadow-xl shadow-emerald-500/20 text-center transition-all flex items-center justify-center gap-2">
+          <a href="<%= app_root_path %>" class="bg-[#00A1FC] hover:bg-[#008ee0] text-white font-black text-base py-4 px-6 rounded-2xl shadow-xl shadow-[#00A1FC]/25 text-center transition-all flex items-center justify-center gap-2">
             <span>👤</span>
             <span>Acessar Meu Painel</span>
           </a>
         <% end %>
-        <a href="<%= contact_path %>" class="bg-blue-900/60 hover:bg-blue-900 text-white font-bold text-sm py-3 px-6 rounded-2xl border border-blue-700/50 text-center transition-all">
+        <a href="<%= contact_path %>" class="bg-white/10 hover:bg-white/20 text-white font-bold text-sm py-3 px-6 rounded-2xl border border-white/20 text-center transition-all">
           Falar com Nossa Equipe
         </a>
       </div>

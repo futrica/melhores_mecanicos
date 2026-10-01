@@ -22,45 +22,45 @@ RSpec.describe CompanySchemaMapper do
   end
 
   describe '#schema_type' do
-    it 'maps hotel CNAE to Hotel' do
-      company = build_company('5510801')
+    it 'maps general mechanics CNAE to AutoRepair' do
+      company = build_company('4520001')
       mapper = described_class.new(company)
-      expect(mapper.schema_type).to eq('Hotel')
+      expect(mapper.schema_type).to eq('AutoRepair')
     end
 
-    it 'maps hostel CNAE to Hostel' do
-      company = build_company('5590601')
+    it 'maps body shop CNAE to AutoBodyShop' do
+      company = build_company('4520002')
       mapper = described_class.new(company)
-      expect(mapper.schema_type).to eq('Hostel')
+      expect(mapper.schema_type).to eq('AutoBodyShop')
     end
 
-    it 'maps pharmacy CNAE to Pharmacy' do
-      company = build_company('4771701')
+    it 'maps auto parts CNAE to AutoPartsStore' do
+      company = build_company('4530703')
       mapper = described_class.new(company)
-      expect(mapper.schema_type).to eq('Pharmacy')
+      expect(mapper.schema_type).to eq('AutoPartsStore')
     end
 
-    it 'maps restaurant CNAE to Restaurant' do
-      company = build_company('5611201')
+    it 'maps tire shop CNAE to TireShop' do
+      company = build_company('4520006')
       mapper = described_class.new(company)
-      expect(mapper.schema_type).to eq('Restaurant')
+      expect(mapper.schema_type).to eq('TireShop')
     end
 
-    it 'defaults unknown CNAE to LocalBusiness' do
+    it 'defaults unknown CNAE to AutoRepair' do
       company = build_company('9999999')
       mapper = described_class.new(company)
-      expect(mapper.schema_type).to eq('LocalBusiness')
+      expect(mapper.schema_type).to eq('AutoRepair')
     end
   end
 
   describe '#to_schema_hash' do
     it 'returns valid JSON-LD schema structure' do
-      company = build_company('5510801')
-      mapper = described_class.new(company, base_url: 'https://hospedagemdireta.com.br')
+      company = build_company('4520001')
+      mapper = described_class.new(company, base_url: 'https://melhoresmecanicos.com.br')
       hash = mapper.to_schema_hash
 
       expect(hash['@context']).to eq('https://schema.org')
-      expect(hash['@type']).to eq('Hotel')
+      expect(hash['@type']).to eq('AutoRepair')
       expect(hash['name']).to eq('Empresa Teste')
       expect(hash['taxID']).to eq('11222333000199')
       expect(hash['address']['addressLocality']).to eq('São Paulo')

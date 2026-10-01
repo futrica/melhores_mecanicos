@@ -1,44 +1,52 @@
 module ApplicationHelper
   def category_style_for(category_name)
-    case category_name
-    when "Hotéis e Pousadas", "Hotéis", "Hotel", "Pousadas", "Pousada"
-      { icon: "🏨", gradient: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)" }
-    when "Apart-hotéis"
-      { icon: "🏢", gradient: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)" }
-    when "Albergues e Hostels", "Hostel", "Hostels"
-      { icon: "🎒", gradient: "linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)" }
-    when "Pensões e Alojamentos", "Pensões"
-      { icon: "🏡", gradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)" }
-    when "Outras Hospedagens", "Chalés", "Resorts", "Casas de Temporada"
-      { icon: "🔑", gradient: "linear-gradient(135deg, #d97706 0%, #b45309 100%)" }
+    case category_name.to_s
+    when /Mecânica|Reparação|Motor|Injeção/i
+      { icon: "🔧", gradient: "linear-gradient(135deg, #093892 0%, #00A1FC 100%)" }
+    when /Elétrica|Baterias|Eletrônica/i
+      { icon: "⚡", gradient: "linear-gradient(135deg, #0284c7 0%, #00A1FC 100%)" }
+    when /Freio|Suspensão|Amortecedor/i
+      { icon: "🛑", gradient: "linear-gradient(135deg, #0f172a 0%, #093892 100%)" }
+    when /Câmbio|Embreagem|Transmissão/i
+      { icon: "⚙️", gradient: "linear-gradient(135deg, #0f172a 0%, #334155 100%)" }
+    when /Ar-Condicionado|Climatização/i
+      { icon: "❄️", gradient: "linear-gradient(135deg, #00A1FC 0%, #38bdf8 100%)" }
+    when /Óleo|Lubrific/i
+      { icon: "🛢️", gradient: "linear-gradient(135deg, #093892 0%, #0284c7 100%)" }
+    when /Funilaria|Pintura|Martelinho/i
+      { icon: "🔨", gradient: "linear-gradient(135deg, #475569 0%, #093892 100%)" }
+    when /Alinhamento|Balanceamento|Pneus|Borracharia/i
+      { icon: "🚗", gradient: "linear-gradient(135deg, #093892 0%, #00A1FC 100%)" }
     else
-      { icon: "🏨", gradient: "linear-gradient(135deg, #2563eb 0%, #10b981 100%)" }
+      { icon: "🔧", gradient: "linear-gradient(135deg, #093892 0%, #00A1FC 100%)" }
     end
   end
 
   def grouped_categories
-    Rails.cache.fetch("grouped_categories_v4") do
+    Rails.cache.fetch("grouped_categories_v5") do
       categories = Category.order(:name).to_a
       {
-        "Tipo de Propriedade" => categories
+        "Especialidade Automotiva" => categories
       }.select { |_, cats| cats.any? }
     end
   end
 
   def map_search_category(category)
-    case category
-    when "pousadas", "hoteis-e-pousadas"
-      [ "Hotéis e Pousadas" ]
-    when "hoteis"
-      [ "Hotéis e Pousadas", "Apart-hotéis" ]
-    when "apart-hoteis"
-      [ "Apart-hotéis" ]
-    when "hostels", "albergues", "albergues-e-hostels"
-      [ "Albergues e Hostels" ]
-    when "pensoes", "pensoes-e-alojamentos"
-      [ "Pensões e Alojamentos" ]
-    when "chales", "resorts", "casas", "outras", "outras-hospedagens"
-      [ "Outras Hospedagens" ]
+    case category.to_s.downcase
+    when "mecanica", "mecanica-geral", "reparacao"
+      [ "Mecânica Geral & Reparação" ]
+    when "eletrica", "auto-eletrica", "eletronica"
+      [ "Auto Elétrica & Eletrônica" ]
+    when "funilaria", "pintura", "funilaria-e-pintura"
+      [ "Funilaria & Pintura" ]
+    when "alinhamento", "balanceamento"
+      [ "Alinhamento & Balanceamento" ]
+    when "lavagem", "lubrificacao", "troca-de-oleo"
+      [ "Lavagem & Lubrificação" ]
+    when "borracharia", "pneus"
+      [ "Borracharia & Pneus" ]
+    when "acessorios"
+      [ "Acessórios & Equipamentos" ]
     else
       []
     end

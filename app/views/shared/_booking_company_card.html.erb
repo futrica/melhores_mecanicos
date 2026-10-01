@@ -3,7 +3,7 @@
   avg_rating = company.average_rating
   reviews_cnt = company.reviews.size
   categories = company.categories.to_a
-  main_category = categories.first&.name || "Hospedagem"
+  main_category = categories.first&.name || "Oficina Mecânica"
   style = category_style_for(main_category)
 %>
 
@@ -14,11 +14,9 @@
     <% if company.primary_photo_url.present? %>
       <img src="<%= company.primary_photo_url %>" alt="<%= company.name %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
     <% else %>
-      <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900 text-slate-400 p-4 text-center">
-        <svg class="w-12 h-12 mb-2 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
-        </svg>
-        <span class="text-xs font-medium text-slate-400">Oficina Mecânica</span>
+      <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#093892] to-[#051d4d] text-white p-4 text-center">
+        <span class="text-4xl mb-2 drop-shadow">🔧</span>
+        <span class="text-xs font-bold text-blue-100 tracking-wide uppercase">Oficina Mecânica</span>
       </div>
     <% end %>
 
@@ -49,33 +47,32 @@
       <!-- Title & Badges -->
       <div class="flex items-start justify-between gap-2 flex-wrap">
         <div class="flex items-center gap-2 flex-wrap">
-          <h3 class="font-extrabold text-lg sm:text-xl text-[#006ce4] hover:underline leading-snug">
+          <h3 class="font-black text-lg sm:text-xl text-[#093892] hover:text-[#00A1FC] leading-snug transition-colors">
             <a href="<%= company_seo_path(company) %>"><%= company.trade_name.presence || company.legal_name %></a>
           </h3>
 
           <% if company.premium? %>
-            <span class="bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 text-[11px] font-black px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-xs">
+            <span class="bg-[#00A1FC] text-white text-[11px] font-black px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-xs">
               ⭐ Destaque
             </span>
           <% end %>
           <% if company.approved? %>
-            <span class="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+            <span class="bg-blue-50 text-[#093892] border border-[#093892]/30 text-[11px] font-extrabold px-2 py-0.5 rounded-full inline-flex items-center gap-1">
               ✓ Verificada
             </span>
           <% end %>
-
         </div>
       </div>
 
       <!-- Location Breadcrumb Line -->
       <div class="text-xs font-medium text-slate-600 mt-1 flex items-center gap-1.5 flex-wrap">
         <span>📍</span>
-        <a href="/<%= company.state.slug %>" class="font-bold text-[#006ce4] hover:underline" title="Ver hospedagens em <%= company.state.name %>"><%= company.state.acronym %></a>
+        <a href="/<%= company.state.slug %>" class="font-bold text-[#093892] hover:text-[#00A1FC] hover:underline" title="Ver oficinas em <%= company.state.name %>"><%= company.state.acronym %></a>
         <span>&rsaquo;</span>
-        <a href="/<%= company.state.slug %>/<%= company.city.slug %>" class="font-bold text-[#006ce4] hover:underline" title="Ver hospedagens em <%= company.city.name %>"><%= company.city.name %></a>
+        <a href="/<%= company.state.slug %>/<%= company.city.slug %>" class="font-bold text-[#093892] hover:text-[#00A1FC] hover:underline" title="Ver oficinas em <%= company.city.name %>"><%= company.city.name %></a>
         <% if company.neighborhood.present? %>
           <span>&rsaquo;</span>
-          <a href="/<%= company.state.slug %>/<%= company.city.slug %>/<%= company.neighborhood.slug %>" class="font-bold text-[#006ce4] hover:underline" title="Ver hospedagens no bairro <%= company.neighborhood.name %>"><%= company.neighborhood.name %></a>
+          <a href="/<%= company.state.slug %>/<%= company.city.slug %>/<%= company.neighborhood.slug %>" class="font-bold text-[#093892] hover:text-[#00A1FC] hover:underline" title="Ver oficinas no bairro <%= company.neighborhood.name %>"><%= company.neighborhood.name %></a>
         <% end %>
         <% if company.street.present? %>
           <span class="text-slate-400">&bull;</span>
@@ -94,28 +91,25 @@
             </span>
           <% end %>
         <% else %>
-          <span class="inline-flex items-center gap-1 text-[11px] font-bold text-slate-700 bg-slate-100 border border-slate-200/80 px-2.5 py-0.5 rounded-md">
-            <span>🏨</span>
-            <span>Hospedagem</span>
+          <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#093892] bg-blue-50 border border-[#00A1FC]/30 px-2.5 py-0.5 rounded-md">
+            <span>🔧</span>
+            <span>Mecânica Geral</span>
           </span>
         <% end %>
       </div>
-
 
       <!-- Review Endorsement Badges -->
       <% top_tags = company.top_review_tags(3) %>
       <% if top_tags.any? %>
         <div class="mt-2 flex items-center gap-1.5 flex-wrap">
           <% top_tags.each do |tag| %>
-            <span class="inline-flex items-center gap-1 text-[11px] font-extrabold text-amber-900 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-md">
+            <span class="inline-flex items-center gap-1 text-[11px] font-extrabold text-[#093892] bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md">
               <span><%= Review.tag_icon(tag) %></span>
               <span><%= tag %></span>
             </span>
           <% end %>
         </div>
       <% end %>
-
-
 
     </div>
   </div>
@@ -132,14 +126,14 @@
           </div>
           <div class="text-[11px] text-slate-500 font-medium"><%= reviews_cnt %> <%= reviews_cnt == 1 ? "avaliação" : "avaliações" %></div>
         </div>
-        <div class="bg-[#001F54] text-white font-extrabold text-sm px-2.5 py-1.5 rounded-lg font-mono text-center shadow-sm flex items-center gap-1">
+        <div class="bg-[#093892] text-white font-extrabold text-sm px-2.5 py-1.5 rounded-lg font-mono text-center shadow-sm flex items-center gap-1">
           <span class="text-amber-400 text-xs">★</span>
           <span><%= avg_rating %></span>
         </div>
       <% else %>
         <div class="text-right leading-tight">
-          <div class="font-extrabold text-emerald-800 text-xs bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
-            ⚡ Reserva Direta
+          <div class="font-extrabold text-[#093892] text-xs bg-blue-50 border border-[#00A1FC]/30 px-2 py-0.5 rounded-md">
+            ⚡ Contato Direto
           </div>
         </div>
       <% end %>
@@ -147,15 +141,15 @@
 
     <!-- Price & CTA Box Footer (Bottom Right) -->
     <div class="mt-4 md:mt-0 text-right w-full space-y-1">
-      <div class="text-[11px] text-slate-500 font-semibold">Sem comissões ou intermediários</div>
+      <div class="text-[11px] text-slate-500 font-semibold">Sem taxas ou intermediários</div>
       
       <div class="text-xs text-slate-500 font-bold">
-        Diárias sob consulta
+        Orçamento sob consulta
       </div>
 
       <div class="pt-2">
-        <a href="<%= company_seo_path(company) %>" class="w-full bg-[#006ce4] hover:bg-[#0052b4] text-white font-extrabold text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 shadow transition-all hover:scale-[1.02] active:scale-95">
-          <span>Ver detalhes</span>
+        <a href="<%= company_seo_path(company) %>" class="w-full bg-[#093892] hover:bg-[#072d75] text-white font-extrabold text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 shadow transition-all hover:scale-[1.02] active:scale-95">
+          <span>Ver oficina</span>
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
         </a>
       </div>

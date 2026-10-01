@@ -8,8 +8,8 @@ RSpec.describe Partner, type: :model do
       state: state,
       city: city,
       cnpj: '11223344000199',
-      legal_name: 'Empresa Teste Ltda',
-      cnae_principal: '5510801',
+      legal_name: 'Auto Mecânica Teste Ltda',
+      cnae_principal: '4520-0/01',
       status: 'Ativa'
     )
   end

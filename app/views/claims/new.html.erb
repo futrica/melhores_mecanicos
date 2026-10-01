@@ -1,5 +1,5 @@
-<% content_for :title, "Reivindicar Perfil de Empresa | Hospedagem Direta" %>
-<% content_for :meta_description, "Reivindique o perfil da sua pousada, hotel ou chalé gratuitamente. Adicione WhatsApp e receba reservas diretas sem comissão." %>
+<% content_for :title, "Reivindicar Perfil de Empresa | Melhores Mecânicos" %>
+<% content_for :meta_description, "Reivindique o perfil da sua oficina mecânica gratuitamente. Adicione WhatsApp e receba solicitações diretas de motoristas sem comissão." %>
 
 <style>
   .claim-page-container {
@@ -165,7 +165,7 @@
       Reivindicar Perfil de Empresa
     </h1>
     <p class="claim-subtitle">
-      Dados públicos da Receita Federal foram importados para o portal para facilitar a conexão direta de viajantes com a sua hospedagem.
+      Dados públicos da Receita Federal foram importados para o portal para facilitar a conexão direta de motoristas com a sua oficina.
     </p>
   </div>
 
@@ -215,17 +215,17 @@
 
     <% else %>
       <!-- Scenario B: No Profile Selected, show Search -->
-      <div style="background: #eff6ff; border: 1px solid #dbeafe; color: #1e40af; border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem; font-size: 0.88rem; line-height: 1.5;">
-        <h4 style="font-weight: 800; margin: 0 0 0.4rem 0; font-size: 0.95rem;">💡 Importação de Cadastros Públicos</h4>
-        <p style="margin: 0 0 0.4rem 0;">Se seu hotel, pousada ou chalé está ativo na Receita Federal, ele provavelmente já possui uma ficha cadastrada no portal.</p>
-        <p style="margin: 0;">Busque pelo nome fantasia ou razão social do estabelecimento abaixo para reivindicar a ficha e incluir seu WhatsApp e dados de contato.</p>
+      <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem; font-size: 0.88rem; line-height: 1.5;">
+        <h4 style="font-weight: 800; margin: 0 0 0.4rem 0; font-size: 0.95rem;">💡 Importação de Cadastros Públicos da Receita Federal</h4>
+        <p style="margin: 0 0 0.4rem 0;">Se sua oficina mecânica, auto center, auto elétrica ou funilaria está ativa na Receita Federal, ela já possui uma ficha cadastrada em nosso portal.</p>
+        <p style="margin: 0;">Busque pelo CNPJ, nome fantasia ou razão social da empresa abaixo para reivindicar a ficha e incluir seu WhatsApp e fotos.</p>
       </div>
 
       <!-- Search Box -->
       <%= form_with url: new_claim_path, method: :get, local: true, style: "display: flex; flex-direction: column; gap: 0.5rem;" do |f| %>
-        <%= f.label :q, "Buscar Empresa por Nome Fantasia ou Razão Social", style: "font-size: 0.85rem; font-weight: 700; color: var(--text-main, #1e293b);" %>
+        <%= f.label :q, "Buscar Empresa por CNPJ, Nome Fantasia ou Razão Social", style: "font-size: 0.85rem; font-weight: 700; color: var(--text-main, #1e293b);" %>
         <div class="claim-search-row">
-          <%= f.text_field :q, value: params[:q], placeholder: "Ex: Pousada Recanto do Sol", required: true, style: "flex: 1; font-size: 0.95rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); padding: 0.75rem 1rem; outline: none; width: 100%; box-sizing: border-box;" %>
+          <%= f.text_field :q, value: params[:q], placeholder: "Ex: 00.000.000/0001-00 ou Auto Mecânica Silva", required: true, style: "flex: 1; font-size: 0.95rem; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); padding: 0.75rem 1rem; outline: none; width: 100%; box-sizing: border-box;" %>
           <%= f.submit "Buscar", style: "background: var(--navy, #1e293b); color: white; font-weight: 700; border: none; border-radius: 10px; padding: 0.75rem 1.5rem; font-size: 0.95rem; cursor: pointer; min-width: 100px;" %>
         </div>
       <% end %>

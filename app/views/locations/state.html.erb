@@ -1,7 +1,7 @@
 <%# app/views/locations/state.html.erb %>
 
-<% content_for :title, "Hospedagens em #{@state.name} (#{@state.acronym}) | Reserva Direta" %>
-<% content_for :meta_description, "Encontre os melhores hotéis, pousadas, apart-hotéis e hostels em #{@state.name} (#{@state.acronym}). Reserve direto com o estabelecimento sem taxas." %>
+<% content_for :title, "Oficinas Mecânicas em #{@state.name} (#{@state.acronym}) | Contato Direto" %>
+<% content_for :meta_description, "Encontre as melhores oficinas mecânicas, auto elétricas e auto centers em #{@state.name} (#{@state.acronym}). Negocie direto com o mecânico." %>
 <% content_for :meta_robots, (@pagy.count.positive? ? "index, follow" : "noindex, follow") %>
 
 
@@ -27,10 +27,10 @@
   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
     <div>
       <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-        Hospedagens em <%= @state.name %> (<%= number_with_delimiter(@pagy.count) %>)
+        Oficinas Mecânicas em <%= @state.name %> (<%= number_with_delimiter(@pagy.count) %>)
       </h1>
       <p class="text-xs sm:text-sm text-slate-600 font-medium mt-1">
-        Reserve hotéis, pousadas e chalés em <%= @state.name %> direto com a propriedade sem comissões.
+        Encontre centros automotivos qualificados em <%= @state.name %> direto com o profissional sem comissões.
       </p>
     </div>
 
@@ -43,7 +43,7 @@
         <div class="relative inline-flex items-center">
           <select name="sort" onchange="this.form.submit()" class="bg-white border border-slate-300 hover:border-slate-400 font-bold text-xs sm:text-sm text-slate-800 py-2.5 pl-4 pr-9 rounded-full shadow-sm appearance-none cursor-pointer outline-none focus:ring-2 focus:ring-[#006ce4]/30">
             <option value="recommended" <%= params[:sort] == 'recommended' || params[:sort].blank? ? 'selected' : '' %>>⇅ Ordenar por: Nossas recomendações</option>
-            <option value="rating" <%= params[:sort] == 'rating' ? 'selected' : '' %>>★ Avaliação dos hóspedes (maior)</option>
+            <option value="rating" <%= params[:sort] == 'rating' ? 'selected' : '' %>>★ Melhores avaliações</option>
             <option value="newest" <%= params[:sort] == 'newest' ? 'selected' : '' %>>🆕 Mais recentes</option>
             <option value="name" <%= params[:sort] == 'name' ? 'selected' : '' %>>🔤 Nome (A-Z)</option>
           </select>
@@ -86,9 +86,9 @@
       <% else %>
         <div class="bg-white border border-slate-200 rounded-2xl p-10 text-center shadow-sm space-y-4">
           <div class="text-5xl">🔍</div>
-          <h3 class="text-xl font-black text-slate-900">Nenhuma acomodação encontrada</h3>
+          <h3 class="text-xl font-black text-slate-900">Nenhuma oficina encontrada</h3>
           <p class="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-            Não encontramos propriedades ativas correspondentes aos filtros selecionados em <%= @state.name %>.
+            Não encontramos oficinas ativas correspondentes aos filtros selecionados em <%= @state.name %>.
           </p>
           <a href="/<%= @state.slug %>" class="inline-block bg-[#006ce4] hover:bg-[#0052b4] text-white font-extrabold text-sm px-6 py-3 rounded-xl shadow transition-all">
             Limpar filtros de busca

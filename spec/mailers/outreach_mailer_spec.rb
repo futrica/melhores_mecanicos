@@ -5,13 +5,13 @@ RSpec.describe OutreachMailer, type: :mailer do
   let!(:city) { City.find_by(slug: 'guaratingueta', state: state) || City.create!(state: state, name: 'Guaratinguetá', ibge_code: '3518404') }
   let!(:company) do
     Company.create!(
-      trade_name: 'Pousada Teste BCC',
-      legal_name: 'Pousada Teste BCC LTDA',
+      trade_name: 'Oficina Teste BCC',
+      legal_name: 'Oficina Teste BCC LTDA',
       cnpj: '99.999.999/0001-99',
-      email: 'pousada@teste.com.br',
+      email: 'oficina@teste.com.br',
       views_count: 50,
       status: 'ATIVA',
-      cnae_principal: '5510801',
+      cnae_principal: '4520-0/01',
       state: state,
       city: city
     )
@@ -25,8 +25,8 @@ RSpec.describe OutreachMailer, type: :mailer do
     end
 
     it 'sets recipient and subject correctly' do
-      expect(mail.to).to eq([ 'pousada@teste.com.br' ])
-      expect(mail.subject).to include('Pousada Teste BCC')
+      expect(mail.to).to eq([ 'oficina@teste.com.br' ])
+      expect(mail.subject).to include('Oficina Teste BCC')
     end
   end
 end

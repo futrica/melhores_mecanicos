@@ -114,7 +114,7 @@ class CompanyGeocoder
     end
 
     req = Net::HTTP::Get.new(uri)
-    req["User-Agent"] = "HospedagemDiretaApp/1.0"
+    req["User-Agent"] = "MelhoresMecanicosApp/1.0"
 
     res = http.request(req)
     return nil unless res.is_a?(Net::HTTPSuccess)
@@ -176,7 +176,7 @@ class CompanyGeocoder
     begin
       uri = URI("#{BRASIL_API_URL}#{clean_cep}")
       req = Net::HTTP::Get.new(uri)
-      req["User-Agent"] = "HospedagemDiretaApp/1.0"
+      req["User-Agent"] = "MelhoresMecanicosApp/1.0"
 
       res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, open_timeout: 3, read_timeout: 3) do |http|
         http.request(req)
@@ -240,7 +240,7 @@ class CompanyGeocoder
     uri.query = URI.encode_www_form(q: query, format: "json", limit: 1)
 
     req = Net::HTTP::Get.new(uri)
-    req["User-Agent"] = "HospedagemDiretaApp/1.0"
+    req["User-Agent"] = "MelhoresMecanicosApp/1.0"
 
     res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, open_timeout: 2, read_timeout: 2) do |http|
       http.request(req)

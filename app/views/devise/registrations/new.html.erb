@@ -1,15 +1,15 @@
-<% content_for :title, "Criar Conta | Hospedagem Direta" %>
+<% content_for :title, "Criar Conta | Melhores Mecânicos" %>
 
 <div class="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-2">
-    <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-600 font-bold text-2xl shadow-inner mx-auto mb-2">
+    <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-500/10 text-[#093892] font-bold text-2xl shadow-inner mx-auto mb-2">
       👤
     </div>
     <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
       Criar uma conta
     </h2>
     <p class="text-sm text-slate-600 font-medium">
-      Conecte-se direto a hotéis e pousadas sem pagar comissão
+      Conecte-se direto a oficinas mecânicas sem intermediários nem comissão
     </p>
   </div>
 
@@ -43,19 +43,19 @@
           <div class="city-multiselect-wrapper relative" id="role-select-wrapper">
             <%= f.hidden_field :role, value: "client", id: "user_role_input" %>
             
-            <button type="button" class="w-full text-left font-semibold text-sm px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 hover:bg-slate-100 focus:bg-white focus:border-emerald-500 outline-none flex items-center justify-between shadow-sm transition-all text-slate-800" id="role-select-trigger">
-              <span>🧳 Hóspede / Viajante (Quero encontrar acomodações)</span>
+            <button type="button" class="w-full text-left font-semibold text-sm px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 hover:bg-slate-100 focus:bg-white focus:border-[#00A1FC] outline-none flex items-center justify-between shadow-sm transition-all text-slate-800" id="role-select-trigger">
+              <span>🚗 Motorista / Cliente (Quero encontrar oficinas mecânicas)</span>
               <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
             
             <div class="city-dropdown-content-pane bg-white border border-slate-200 rounded-xl shadow-xl mt-1 overflow-hidden" id="role-dropdown-pane" style="z-index: 100;">
-              <div class="state-option role-option p-3 hover:bg-emerald-50 cursor-pointer text-sm font-semibold text-slate-800 transition-colors" data-value="client">
-                🧳 Hóspede / Viajante (Quero encontrar acomodações)
+              <div class="state-option role-option p-3 hover:bg-blue-50 cursor-pointer text-sm font-semibold text-slate-800 transition-colors" data-value="client">
+                🚗 Motorista / Cliente (Quero encontrar oficinas mecânicas)
               </div>
-              <div class="state-option role-option p-3 hover:bg-emerald-50 cursor-pointer text-sm font-semibold text-slate-800 border-t border-slate-100 transition-colors" data-value="company">
-                🏨 Hotel / Pousada (Quero cadastrar meu estabelecimento)
+              <div class="state-option role-option p-3 hover:bg-blue-50 cursor-pointer text-sm font-semibold text-slate-800 border-t border-slate-100 transition-colors" data-value="company">
+                🔧 Dono de Oficina / Centro Automotivo (Quero cadastrar minha empresa)
               </div>
             </div>
           </div>

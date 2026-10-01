@@ -14,9 +14,9 @@ RSpec.describe Company, type: :model do
         city: city,
         neighborhood: neighborhood,
         cnpj: '55443322000111', # unique CNPJ
-        legal_name: 'Nova Loja Ltda',
-        trade_name: 'Nova Loja',
-        cnae_principal: '5510801',
+        legal_name: 'Nova Oficina Ltda',
+        trade_name: 'Nova Oficina',
+        cnae_principal: '4520-0/01',
         status: 'Ativa'
       )
       expect(company).to be_valid
@@ -34,8 +34,8 @@ RSpec.describe Company, type: :model do
         state: state,
         city: city,
         cnpj: '12345678000101',
-        legal_name: 'Mais Um Depósito',
-        cnae_principal: '5510801',
+        legal_name: 'Mais Uma Oficina',
+        cnae_principal: '4520-0/01',
         status: 'Ativa'
       )
       expect(duplicate).not_to be_valid
@@ -63,12 +63,12 @@ RSpec.describe Company, type: :model do
         state: state,
         city: city,
         cnpj: '11998877000122',
-        legal_name: 'Pedregulho Novo Eireli',
-        trade_name: 'Pedregulho Novo',
-        cnae_principal: '4744001',
+        legal_name: 'Auto Mecânica Nova Eireli',
+        trade_name: 'Auto Mecânica Nova',
+        cnae_principal: '4520-0/01',
         status: 'Ativa'
       )
-      expect(company.slug).to eq('pedregulho-novo-11998877000122')
+      expect(company.slug).to eq('auto-mecanica-nova-11998877000122')
     end
 
     it 'uses legal_name for slug if trade_name is blank' do
@@ -78,7 +78,7 @@ RSpec.describe Company, type: :model do
         cnpj: '22887766000133',
         legal_name: 'Sem Nome Fantasia S/A',
         trade_name: '',
-        cnae_principal: '4744001',
+        cnae_principal: '4520-0/01',
         status: 'Ativa'
       )
       expect(company.slug).to eq('sem-nome-fantasia-s-a-22887766000133')
@@ -87,15 +87,15 @@ RSpec.describe Company, type: :model do
 
   describe 'categories association' do
     it 'can have multiple associated Category records' do
-      cat1 = Category.find_by(slug: 'hoteis-e-pousadas') || Category.create!(name: 'Hotéis e Pousadas', slug: 'hoteis-e-pousadas')
-      cat2 = Category.find_by(slug: 'apart-hoteis') || Category.create!(name: 'Apart-hotéis', slug: 'apart-hoteis')
+      cat1 = Category.find_by(slug: 'mecanica-geral-reparacao') || Category.create!(name: 'Mecânica Geral & Reparação', slug: 'mecanica-geral-reparacao')
+      cat2 = Category.find_by(slug: 'funilaria-pintura') || Category.create!(name: 'Funilaria & Pintura', slug: 'funilaria-pintura')
 
       company = Company.create!(
         state: state,
         city: city,
         cnpj: '99887766000155',
-        legal_name: 'Loja Completa Ltda',
-        cnae_principal: '5510801',
+        legal_name: 'Oficina Completa Ltda',
+        cnae_principal: '4520-0/01',
         status: 'Ativa'
       )
       company.categories << cat1
@@ -109,20 +109,20 @@ RSpec.describe Company, type: :model do
     it 'finds company by exact email' do
       comp = Company.create!(
         state: state, city: city, cnpj: '88776655000101',
-        legal_name: 'Exact Match Ltda', email: 'contato@exactpousada.com.br',
-        cnae_principal: '5510801', status: 'Ativa'
+        legal_name: 'Exact Match Ltda', email: 'contato@exactmecanica.com.br',
+        cnae_principal: '4520001', status: 'Ativa'
       )
-      match = Company.find_matching_company_for('contato@exactpousada.com.br')
+      match = Company.find_matching_company_for('contato@exactmecanica.com.br')
       expect(match).to eq(comp)
     end
 
     it 'finds company by domain match if email domain is custom' do
       comp = Company.create!(
         state: state, city: city, cnpj: '88776655000102',
-        legal_name: 'Domain Match Ltda', email: 'vendas@pousadadojoao.com.br',
-        cnae_principal: '5510801', status: 'Ativa'
+        legal_name: 'Domain Match Ltda', email: 'vendas@mecanicadojoao.com.br',
+        cnae_principal: '4520001', status: 'Ativa'
       )
-      match = Company.find_matching_company_for('joao@pousadadojoao.com.br')
+      match = Company.find_matching_company_for('joao@mecanicadojoao.com.br')
       expect(match).to eq(comp)
     end
 
@@ -130,7 +130,7 @@ RSpec.describe Company, type: :model do
       Company.create!(
         state: state, city: city, cnpj: '88776655000103',
         legal_name: 'Public Domain Ltda', email: 'vendas@gmail.com',
-        cnae_principal: '5510801', status: 'Ativa'
+        cnae_principal: '4520001', status: 'Ativa'
       )
       match = Company.find_matching_company_for('joao@gmail.com')
       expect(match).to be_nil
@@ -141,13 +141,13 @@ RSpec.describe Company, type: :model do
     it 'prioritizes approved (verified) companies first before unclaimed/pending ones' do
       unclaimed_comp = Company.create!(
         state: state, city: city, cnpj: '88776655000188',
-        legal_name: 'Unclaimed Pousada', claim_status: 'unclaimed',
-        cnae_principal: '5510801', status: 'Ativa'
+        legal_name: 'Unclaimed Mecanica', claim_status: 'unclaimed',
+        cnae_principal: '4520001', status: 'Ativa'
       )
       approved_comp = Company.create!(
         state: state, city: city, cnpj: '88776655000199',
-        legal_name: 'Approved Pousada', claim_status: 'approved',
-        cnae_principal: '5510801', status: 'Ativa'
+        legal_name: 'Approved Mecanica', claim_status: 'approved',
+        cnae_principal: '4520001', status: 'Ativa'
       )
 
       results = Company.where(id: [ unclaimed_comp.id, approved_comp.id ]).by_search_priority
@@ -157,11 +157,11 @@ RSpec.describe Company, type: :model do
   end
 
   describe '.indexable scope and #indexable? method alignment' do
-    it 'includes active lodging companies with valid >= 8 digit phones' do
+    it 'includes active automotive companies with valid >= 8 digit phones' do
       valid_comp = Company.create!(
         state: state, city: city, cnpj: '88776655000201',
-        legal_name: 'Pousada Sol', phone_1: '(51) 82722347',
-        cnae_principal: '5510801', status: 'Ativa'
+        legal_name: 'Auto Mecânica Sol', phone_1: '(51) 82722347',
+        cnae_principal: '4520001', status: 'Ativa'
       )
       expect(Company.indexable).to include(valid_comp)
       expect(valid_comp.indexable?).to be true
@@ -170,8 +170,8 @@ RSpec.describe Company, type: :model do
     it 'excludes companies with malformed/short phones like (35) 0 and no email/partners' do
       invalid_comp = Company.create!(
         state: state, city: city, cnpj: '88776655000202',
-        legal_name: 'Pousada Invalida', phone_1: '(35) 0',
-        cnae_principal: '5510801', status: 'Ativa'
+        legal_name: 'Oficina Invalida', phone_1: '(35) 0',
+        cnae_principal: '4520001', status: 'Ativa'
       )
       expect(Company.indexable).not_to include(invalid_comp)
       expect(invalid_comp.indexable?).to be false
@@ -183,7 +183,7 @@ RSpec.describe Company, type: :model do
       company = Company.create!(
         state: state, city: city, cnpj: '88776655000999',
         legal_name: 'Soft Delete Test Ltda', claim_status: 'pending',
-        removal_requested: true, cnae_principal: '5510801', status: 'Ativa'
+        removal_requested: true, cnae_principal: '4520001', status: 'Ativa'
       )
       company.soft_delete!
       company.reload
